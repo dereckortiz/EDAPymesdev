@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EDAPymes - Tecnología con Calidad y Calidez</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="stylesheet" href="../static/css/estilo.css">
+
+<script>
+    // Configuración unificada de Tailwind
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    // Tus colores base del index
+                    'primary': '#034AB0',
+                    'primary-hover': '#023a8a',
+                    
+                    // Colores necesarios para que la sección Servicios se vea Premium
+                    'cobalt': '#034AB0',
+                    'navy-dark': '#001a3d',
+                    'tech-gray': '#1e293b',
+                    'slate-mid': '#e2e8f0',
+                    'slate-light': '#f1f5f9',
+                },
+                fontFamily: {
+                    'headline': ['Manrope', 'sans-serif'],
+                    'body': ['Inter', 'sans-serif'],
+                }
+            }
+        }
+    }
+</script>
+</head>
+
+<body class="bg-white font-['Inter']">
+
+<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+    <div class="flex justify-between items-center px-8 py-5 max-w-7xl mx-auto">
+
+        <div class="flex items-center gap-3">
+            <img src="../src/image/TU-LOGO.png" class="h-12" alt="Logo">
+            <div class="text-2xl font-black text-gray-900">EDAPymes</div>
+        </div>
+
+        <div class="hidden md:flex items-center nav-links-container" id="main-nav">
+            <a class="nav-link active" onclick="cargarSeccion('inicio.html', this)">Inicio</a>
+            <a class="nav-link" onclick="cargarSeccion('servicios.html', this)">Servicios</a>
+            <a class="nav-link" onclick="cargarSeccion('Catalogo.html', this)">Catálogo</a>
+            <a class="nav-link" onclick="cargarSeccion('Nosotros.html', this)">Nosotros</a>
+            <a class="nav-link" onclick="cargarSeccion('ventanaC.html', this)">Contacto</a>
+            
+            <div id="nav-indicator"></div>
+        </div>
+
+        <button onclick="cargarSeccion('ventanaC.html', document.querySelector('[onclick*=\'ventanaC\']'))" 
+                class="bg-primary text-white px-6 py-2 rounded-full font-bold hover:bg-primary-hover transition-all">
+            Contacto
+        </button>
+    </div>
+</nav>
+
+<main id="contenido" class="pt-20">
+    </main>
+
+<footer class="relative bg-slate-50 text-gray-800 pt-20 pb-10 overflow-hidden border-t-4 border-[#034AB0]">
+    <div class="max-w-7xl mx-auto px-8 relative z-10">
+        <div class="grid md:grid-cols-4 gap-12 mb-12">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <img src="../src/image/TU-LOGO.png" class="h-10" alt="Logo">
+                    <span class="text-xl font-bold text-primary">EDAPymes</span>
+                </div>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    Impulsamos tu negocio con soluciones tecnológicas modernas y eficientes.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Enlaces</h4>
+                <ul class="space-y-3 text-gray-600 text-sm font-medium">
+                    <li><a href="#" onclick="cargarSeccion('inicio.html', document.querySelectorAll('.nav-link')[0])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span> Inicio</a></li>
+                    <li><a href="#" onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span> Servicios</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Contacto</h4>
+                <div class="space-y-2">
+                    <p class="text-sm text-gray-600 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">location_on</span> Nicaragua
+                    </p>
+                    <p class="text-sm text-gray-600 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">mail</span> contacto@edapymes.com
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Redes Sociales</h4>
+                <div class="flex gap-5">
+                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all duration-300">
+                        <span class="material-symbols-outlined">public</span>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all duration-300">
+                        <span class="material-symbols-outlined">photo_camera</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t-2 border-[#034AB0] pt-8 mt-8 text-center">
+            <p class="text-gray-500 text-sm font-semibold">
+                © 2026 <span class="text-[#034AB0]">EDAPymes</span>. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</footer>
+<script>
+/**
+ * FUNCIÓN MAESTRA DE ANIMACIONES
+ * Se encarga de que las secciones aparezcan suavemente al hacer scroll
+ */
+function activarAnimacionesScroll() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Aplicamos las clases de visibilidad de Tailwind
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-20');
+                // Una vez animado, dejamos de observar para ahorrar recursos
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    // Seleccionamos los elementos recién inyectados
+    const elementosParaAnimar = document.querySelectorAll('#contenido section, #contenido .py-32 > div, #contenido .group');
+    
+    elementosParaAnimar.forEach(el => {
+        // Estado inicial: invisible y abajo
+        el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-20');
+        observer.observe(el);
+    });
+}
+function cargarSeccion(pagina, linkElement) {
+    const contenedor = document.getElementById("contenido");
+    
+    // 1. Efecto de salida
+    contenedor.style.opacity = "0";
+    contenedor.style.transform = "translateY(10px)";
+    contenedor.style.transition = "all 0.3s ease";
+
+    setTimeout(() => {
+        fetch(pagina)
+            .then(response => {
+                if (!response.ok) throw new Error("No se pudo cargar la página");
+                return response.text();
+            })
+            .then(html => {
+
+                // 🔥 2. Insertar HTML
+                contenedor.innerHTML = html;
+
+                // 🔥 3. Reset scroll + animación entrada
+                window.scrollTo(0, 0);
+                contenedor.style.opacity = "1";
+                contenedor.style.transform = "translateY(0)";
+
+                // 🔥 4. Activar animaciones
+                activarAnimacionesScroll();
+
+                // 🔥 5. ACTIVAR TU JS (CLAVE)
+                setTimeout(() => {
+                    if (typeof iniciarTodo === "function") {
+                        iniciarTodo();
+                    }
+                }, 100);
+
+                // 🔥 6. Navbar activo
+                if(linkElement) {
+                    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+                    linkElement.classList.add("active");
+                    if (typeof moverIndicador === 'function') moverIndicador(linkElement);
+                }
+
+            })
+            .catch(error => {
+                console.error("Error en EDAPymes:", error);
+                contenedor.innerHTML = "<div class='py-20 text-center text-red-500'>Error al cargar la sección.</div>";
+                contenedor.style.opacity = "1";
+            });
+
+    }, 300);
+}
+// Inicialización
+window.addEventListener("DOMContentLoaded", () => {
+    const inicioLink = document.querySelector(".nav-link.active");
+    // Cargamos inicio por defecto
+    cargarSeccion('inicio.html', inicioLink);
+});
+
+// Función para el indicador del Navbar (la línea azul)
+function moverIndicador(elemento) {
+    const indicador = document.getElementById("nav-indicator");
+    if (elemento && indicador) {
+        indicador.style.left = elemento.offsetLeft + "px";
+        indicador.style.width = elemento.offsetWidth + "px";
+    }
+}
+</script>
+</body>
+</html>

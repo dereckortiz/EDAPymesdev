@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>EDAPymes - Impulsando el Crecimiento de tu Pyme</title>
+    
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0059b6",
+                        "primary-dim": "#004ea0",
+                        "primary-container": "#68a0ff",
+                        "surface": "#f8fafc",
+                        "on-surface": "#2d2f2f",
+                        "on-surface-variant": "#5a5c5c",
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <style>
+        .edapymes-pro { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; line-height: 1; }
+        .bg-mesh {
+            background-color: #f8fafc;
+            background-image: radial-gradient(at 0% 0%, rgba(0, 89, 182, 0.03) 0px, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(104, 160, 255, 0.03) 0px, transparent 50%);
+        }
+        .premium-card { transition: all 0.3s ease; border: 1px solid rgba(0, 0, 0, 0.03); }
+        .premium-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(0, 89, 182, 0.1); border-color: rgba(0, 89, 182, 0.08); }
+        .btn-smooth { transition: all 0.2s ease-in-out; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased edapymes-pro">
+
+    <header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-lg border-b border-black/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-on-surface rounded-full flex items-center justify-center overflow-hidden">
+                    <span class="text-white text-xs font-bold uppercase">EDA</span>
+                </div>
+                <span class="font-headline font-extrabold text-xl tracking-tight text-on-surface">EDAPymes</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-on-surface-variant">
+                <a href="#inicio" class="hover:text-primary btn-smooth">Inicio</a>
+                <a href="#por-que" class="hover:text-primary btn-smooth">Nuestro Por Qué</a>
+                <a href="#fundamentos" class="hover:text-primary btn-smooth">Fundamentos</a>
+                <a href="#servicios" class="hover:text-primary btn-smooth">Servicios</a>
+                <a href="#contacto" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary-dim shadow-md shadow-primary/20">Contacto</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-24 bg-mesh">
+        
+        <section id="inicio" class="relative min-h-[85vh] flex items-center px-8">
+            <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
+                <div class="py-12">
+                    <span class="inline-block px-3 py-1 bg-primary/10 text-primary font-headline font-bold text-xs tracking-widest uppercase mb-6 rounded-sm border border-primary/20">Desde 2026</span>
+                    <h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface mb-8 leading-[1.1]">
+                        Impulsando el <span class="text-primary italic">Crecimiento</span> de tu Pyme
+                    </h1>
+                    <p class="text-xl md:text-2xl text-on-surface-variant font-light max-w-lg leading-relaxed mb-10">
+                        Soluciones integrales en tecnología y asesoría empresarial diseñadas específicamente para la pequeña y mediana empresa nacional.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="bg-primary text-white px-8 py-4 rounded-lg font-headline font-bold btn-smooth hover:shadow-xl hover:shadow-primary/20 transform hover:-translate-y-1">
+                            Solicitar Asesoría
+                        </button>
+                        <button class="bg-transparent text-primary px-8 py-4 rounded-lg font-headline font-bold border border-primary/20 hover:bg-primary/5">
+                            Ver Catálogo de Productos
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative flex justify-center py-12">
+                    <div class="aspect-[4/5] w-full max-w-[450px] bg-white p-4 rounded-3xl shadow-2xl overflow-hidden border border-black/5">
+                        <img alt="Equipo profesional" class="w-full h-full object-cover rounded-2xl grayscale hover:grayscale-0 transition-all duration-700" src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80&w=1000"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="por-que" class="py-32 px-8 bg-white border-y border-black/5">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-12 gap-12 items-start">
+                    <div class="md:col-span-4 md:sticky md:top-32">
+                        <h2 class="font-headline text-4xl font-black uppercase tracking-tighter text-on-surface">NUESTRO POR QUÉ</h2>
+                        <div class="h-1.5 w-20 bg-primary mt-4 rounded-full"></div>
+                    </div>
+                    <div class="md:col-span-8 space-y-10">
+                        <p class="font-headline text-3xl font-medium leading-tight text-on-surface">
+                            EDAPymes nace de la convicción de que las pequeñas y medianas empresas son el motor de nuestra economía y merecen acceso a tecnología de punta y servicios profesionales de clase mundial.
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-10 text-on-surface-variant leading-relaxed text-lg">
+                            <p>
+                                Observamos que muchas pymes enfrentaban barreras tecnológicas y operativas que limitaban su potencial. Nuestra inspiración fue crear un centro de soluciones 360° que combine mantenimiento técnico, venta de equipo especializado y asesoría estratégica en un solo lugar.
+                            </p>
+                            <p>
+                                Desde capacitaciones y traducciones hasta préstamos prendatarios, EDAPymes está diseñada para ser el socio estratégico que toda pyme necesita para escalar sus operaciones con confianza, calidez humana y precisión técnica.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fundamentos" class="py-32 px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-16">
+                    <h2 class="font-headline text-sm font-bold tracking-[0.2em] uppercase text-primary mb-2">Fundamentos</h2>
+                    <p class="font-headline text-4xl font-extrabold text-on-surface">Misión y Visión</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="md:col-span-2 premium-card bg-white p-12 rounded-3xl">
+                        <span class="material-symbols-outlined text-4xl text-primary mb-6">rocket_launch</span>
+                        <h3 class="font-headline text-2xl font-bold mb-4 text-on-surface">Misión</h3>
+                        <p class="text-xl text-on-surface-variant leading-relaxed font-light">
+                            Brindar servicios con calidad y calidez, así como ofertar computadoras, accesorios para computadoras y para móviles con las mejores y más modernas especificaciones que satisfagan las necesidades de nuestros clientes.
+                        </p>
+                    </div>
+                    <div class="bg-[#00224c] p-12 rounded-3xl text-white relative overflow-hidden shadow-xl">
+                        <span class="material-symbols-outlined text-4xl text-primary-container mb-6">visibility</span>
+                        <h3 class="font-headline text-2xl font-bold mb-4">Visión</h3>
+                        <p class="text-lg opacity-80 leading-relaxed font-light">
+                            Ser una empresa especializada en la atención a las necesidades de la pequeña y mediana empresa nacional.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="servicios" class="py-20 px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary">
+                        <span class="material-symbols-outlined text-2xl text-on-surface mb-4">laptop_mac</span>
+                        <h4 class="font-headline font-bold text-lg mb-2">Tecnología</h4>
+                        <p class="text-sm text-on-surface-variant">Mantenimiento, reparación y venta de laptops y accesorios.</p>
+                    </div>
+                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary">
+                        <span class="material-symbols-outlined text-2xl text-primary mb-4">group</span>
+                        <h4 class="font-headline font-bold text-lg mb-2">Capacitación</h4>
+                        <p class="text-sm text-on-surface-variant">Programas de formación y asesorías empresariales.</p>
+                    </div>
+                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary-container">
+                        <span class="material-symbols-outlined text-2xl text-primary-container mb-4">security</span>
+                        <h4 class="font-headline font-bold text-lg mb-2">Seguridad</h4>
+                        <p class="text-sm text-on-surface-variant">Instalación de cámaras y sistemas de vigilancia.</p>
+                    </div>
+                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary-container">
+                        <span class="material-symbols-outlined text-2xl text-on-surface mb-4">translate</span>
+                        <h4 class="font-headline font-bold text-lg mb-2">Globalización</h4>
+                        <p class="text-sm text-on-surface-variant">Servicios de traducción profesional Inglés - Español.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-32 px-8 overflow-hidden">
+            <div class="max-w-7xl mx-auto bg-white rounded-[3rem] p-12 md:p-24 relative border border-black/5 shadow-sm">
+                <div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                    <span class="material-symbols-outlined text-[15rem]">format_quote</span>
+                </div>
+                <div class="max-w-3xl relative z-10">
+                    <h2 class="font-headline text-sm font-bold tracking-[0.2em] uppercase text-primary mb-8">Nuestra Promesa</h2>
+                    <blockquote class="font-headline text-3xl md:text-5xl font-extralight italic text-on-surface leading-tight mb-12">
+                        "En EDAPymes, entendemos que el éxito de una pequeña empresa no solo depende de una buena idea, sino de las herramientas y el respaldo que tiene detrás. Estamos aquí para asegurar que ese respaldo sea sólido, moderno y confiable."
+                    </blockquote>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-1 bg-primary rounded-full"></div>
+                        <p class="font-headline font-bold tracking-tight text-on-surface uppercase">Dirección General, EDAPymes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto" class="py-32 px-8 text-center bg-mesh">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="font-headline text-4xl md:text-5xl font-black tracking-tighter text-on-surface mb-6">¿Listo para potenciar tu negocio?</h2>
+                <p class="text-on-surface-variant mb-12 text-lg">Descubre cómo nuestra gama de servicios, desde soporte técnico hasta préstamos prendatarios, puede impulsar tu crecimiento hoy mismo.</p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    <button class="bg-primary text-white px-10 py-5 rounded-xl font-headline font-bold btn-smooth hover:bg-primary-dim hover:shadow-xl hover:shadow-primary/20">
+                        Solicitar Asesoría
+                    </button>
+                    <button class="bg-white text-primary px-10 py-5 rounded-xl font-headline font-bold border border-primary/20 hover:bg-primary/5">
+                        Ver Catálogo de Productos
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

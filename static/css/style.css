@@ -1,0 +1,147 @@
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#0f172a;
+  color:white;
+}
+
+/* NAV */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  background:#020617;
+}
+
+.navbar ul{
+  display:flex;
+  gap:20px;
+  list-style:none;
+}
+
+.navbar a{
+  color:white;
+  text-decoration:none;
+}
+
+/* HERO */
+.hero{
+  height:80vh;
+  display:flex;
+  align-items:center;
+  padding:50px;
+  background:linear-gradient(120deg,#06b6d4,#9333ea);
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.hero-text{
+  max-width:500px;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:15px;
+  padding:10px 20px;
+  background:white;
+  color:black;
+  border-radius:20px;
+}
+
+/* SERVICIOS */
+.servicios{
+  padding:80px 40px;
+}
+
+.servicio-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.servicio{
+  padding:30px;
+  background:#1e293b;
+  border-radius:15px;
+  transition:0.3s;
+}
+
+.servicio:hover{
+  transform:translateY(-10px);
+}
+
+/* MISION VISION */
+.mision-vision{
+  display:flex;
+}
+
+.box{
+  flex:1;
+  padding:60px;
+  background:#1e293b;
+}
+
+.box.dark{
+  background:#020617;
+}
+
+/* CATALOGO */
+.catalogo{
+  padding:80px 40px;
+}
+
+.productos{
+  display:flex;
+  gap:30px;
+}
+
+.producto{
+  background:#1e293b;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+  transition:0.3s;
+}
+
+.producto img{
+  width:100%;
+  border-radius:10px;
+}
+
+.producto:hover{
+  transform:scale(1.05);
+}
+
+.producto span{
+  color:#06b6d4;
+  font-weight:bold;
+}
+
+/* CONTACTO */
+.contacto{
+  padding:80px 40px;
+  background:#020617;
+}
+
+.contact-container{
+  display:flex;
+  gap:40px;
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+input,textarea{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+}
+
+button{
+  padding:10px;
+  background:#06b6d4;
+  border:none;
+  color:white;
+}

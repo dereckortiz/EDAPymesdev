@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#3c4675",
+              "on-tertiary-container": "#333d6c",
+              "inverse-surface": "#0c0f0f",
+              "on-tertiary": "#f2f1ff",
+              "on-secondary-fixed-variant": "#394d8e",
+              "tertiary-fixed": "#b9c4fb",
+              "surface-tint": "#0059b6",
+              "primary-fixed-dim": "#4c92fd",
+              "tertiary-dim": "#424d7c",
+              "outline-variant": "#acadad",
+              "tertiary-fixed-dim": "#acb6ec",
+              "on-primary-fixed": "#000000",
+              "primary-container": "#68a0ff",
+              "surface-bright": "#f6f6f6",
+              "on-tertiary-fixed": "#1e2956",
+              "inverse-primary": "#498ffa",
+              "on-background": "#2d2f2f",
+              "secondary-fixed-dim": "#b1c1ff",
+              "on-error-container": "#570008",
+              "tertiary-container": "#b9c4fb",
+              "error-container": "#fb5151",
+              "background": "#f6f6f6",
+              "on-primary-fixed-variant": "#002b5e",
+              "on-secondary": "#f1f2ff",
+              "primary-dim": "#004ea0",
+              "primary": "#0059b6",
+              "on-secondary-container": "#2f4484",
+              "secondary-dim": "#384c8d",
+              "on-secondary-fixed": "#19306f",
+              "surface-container-high": "#e1e3e3",
+              "secondary-fixed": "#c5d0ff",
+              "on-error": "#ffefee",
+              "error-dim": "#9f0519",
+              "secondary-container": "#c5d0ff",
+              "surface": "#f6f6f6",
+              "inverse-on-surface": "#9c9d9d",
+              "error": "#b31b25",
+              "on-primary": "#eff2ff",
+              "surface-container": "#e7e8e8",
+              "surface-container-highest": "#dbdddd",
+              "surface-container-low": "#f0f1f1",
+              "outline": "#757777",
+              "on-surface": "#2d2f2f",
+              "secondary": "#445899",
+              "on-surface-variant": "#5a5c5c",
+              "tertiary": "#4e5989",
+              "on-primary-container": "#00224c",
+              "primary-fixed": "#68a0ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-variant": "#dbdddd",
+              "surface-dim": "#d2d5d5"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f6f6f6;
+            color: #2d2f2f;
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .editorial-shadow { box-shadow: 0 20px 40px -20px rgba(0, 89, 182, 0.06); }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 flex flex-col gap-2 z-40">
+  <div class="px-8 py-6">
+    <h2 class="font-bold text-lg text-slate-900">Collections</h2>
+    <p class="text-xs text-slate-500">Precision Curated Tech</p>
+  </div>
+
+  <nav class="flex flex-col gap-1">
+    <a class="flex items-center gap-3 bg-blue-50 text-blue-700 font-bold rounded-r-full mr-4 px-6 py-3">
+      <span class="material-symbols-outlined">videocam</span>
+      <span>Security Cameras</span>
+    </a>
+
+    <a class="flex items-center gap-3 text-slate-500 px-6 py-3 hover:bg-slate-100">
+      <span class="material-symbols-outlined">laptop_mac</span>
+      <span>Computers</span>
+    </a>
+
+    <a class="flex items-center gap-3 text-slate-500 px-6 py-3 hover:bg-slate-100">
+      <span class="material-symbols-outlined">headphones</span>
+      <span>Accessories</span>
+    </a>
+  </nav>
+</aside>
+
+<!-- CONTENIDO -->
+<main class="ml-64 flex-1">
+
+<!-- 🔥 CARRUSEL -->
+<section class="relative w-full h-[400px] overflow-hidden">
+
+  <!-- Slides -->
+  <div id="carousel" class="flex transition-transform duration-700">
+
+    <!-- Slide 1 -->
+    <div class="min-w-full h-[400px] relative">
+      <img src="/src/image/image/foto11.jpg" 
+           class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
+        <h2 class="text-4xl font-bold">Tecnología de Última Generación</h2>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="min-w-full h-[400px] relative">
+      <img src="/src/image/image/foto12.jpg" 
+           class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
+        <h2 class="text-4xl font-bold">Equipos Profesionales</h2>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="min-w-full h-[400px] relative">
+      <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8" 
+           class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
+        <h2 class="text-4xl font-bold">Accesorios Premium</h2>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🔍 BUSCADOR DENTRO DEL CARRUSEL -->
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-md px-4">
+    <input type="text" placeholder="Buscar productos..."
+      class="w-full px-4 py-3 rounded-full shadow-lg outline-none focus:ring-2 focus:ring-blue-500">
+  </div>
+
+</section>
+
+<!-- CONTENIDO ORIGINAL -->
+<div class="p-12">
+
+<header class="mb-16 max-w-4xl">
+  <span class="text-[10px] uppercase tracking-[0.3em] font-bold text-primary mb-4 block">
+    Soluciones Tecnológicas 2026
+  </span>
+
+  <h1 class="text-5xl font-bold mb-6">
+    Tecnología <span class="text-primary italic">Empresarial </span>& Soluciones Digitales
+  </h1>
+
+  <p class="text-lg text-gray-500">
+     Soluciones tecnológicas de alto rendimiento diseñadas para impulsar el crecimiento y la eficiencia de tu negocio.
+  </p>
+</header>
+
+<!-- PRODUCT GRID -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+
+  <!-- CARD -->
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C9.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Cámaras</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Cámara con Panel Solar
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$1,650.00
+        </span>
+
+         
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+    
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C1.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Microsoft, Surface
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$14,850.00
+        </span>
+       </a>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C2.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Dell latitude 3420, Intel i5 11 VA
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$12,870.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C7.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Cámaras</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Cámara 1 Lente
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$550.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C8.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Cámaras</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Cámara Doble Lente
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$825.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C3.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Dell Inspiron, Intel i5-11 VA
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$12,650.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C4.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Dell 5430, Intel i5-12 VA
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$15,620.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C5.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Dell 5420, Intel i5-11 VA
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$13,090.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/C6.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        Dell 3510, Intel i5-10 MA
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          C$12,098.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C9.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        EliteBook X-Pro 14"
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          $1,299.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C9.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        EliteBook X-Pro 14"
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          $1,299.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div onclick="verProducto('Cámara con Panel Solar','1650','/src/image/image/C9.png')"class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-0 overflow-hidden">
+
+    <!-- Imagen -->
+    <div class="relative">
+      <img src="/src/image/image/C9.png" class="w-full h-56 object-cover">
+
+      <!-- Badge -->
+      <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+        Disponible
+      </span>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-5 space-y-2">
+      <p class="text-sm text-gray-400">Laptops</p>
+
+      <h3 class="font-bold text-lg text-gray-800">
+        EliteBook X-Pro 14"
+      </h3>
+
+      <div class="flex justify-between items-center pt-2">
+        <span class="text-blue-600 font-bold text-lg">
+          $1,299.00
+        </span>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          Cotizar
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+</main>
+</div>
+
+<!-- SCRIPT CARRUSEL -->
+<script>
+let index = 0;
+const carousel = document.getElementById("carousel");
+
+setInterval(() => {
+  index = (index + 1) % 3;
+  carousel.style.transform = `translateX(-${index * 100}%)`;
+}, 3000);
+</script>
+
+<script>
+function verProducto(nombre, precio, imagen){
+
+  const url = `ventanaC.html?nombre=${encodeURIComponent(nombre)}&precio=${precio}&imagen=${imagen}`;
+  
+  window.location.href = url;
+}
+</script>
+</body>
+</html>

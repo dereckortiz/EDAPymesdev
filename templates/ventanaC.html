@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#498ffa",
+              "on-secondary-fixed-variant": "#394d8e",
+              "error": "#b31b25",
+              "surface-dim": "#d2d5d5",
+              "on-secondary-container": "#2f4484",
+              "surface-tint": "#034AB0",
+              "on-primary-fixed-variant": "#002b5e",
+              "primary-container": "#D6E3FF",
+              "error-dim": "#9f0519",
+              "on-tertiary-container": "#333d6c",
+              "inverse-surface": "#0c0f0f",
+              "surface-container-highest": "#dbdddd",
+              "surface-container-high": "#e1e3e3",
+              "on-error-container": "#570008",
+              "on-background": "#2d2f2f",
+              "outline-variant": "#acadad",
+              "secondary": "#445899",
+              "secondary-fixed-dim": "#b1c1ff",
+              "tertiary-dim": "#424d7c",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#2d2f2f",
+              "on-error": "#ffefee",
+              "secondary-container": "#c5d0ff",
+              "inverse-on-surface": "#9c9d9d",
+              "on-primary-fixed": "#000000",
+              "primary-dim": "#004ea0",
+              "surface-variant": "#dbdddd",
+              "primary-fixed": "#68a0ff",
+              "surface-bright": "#f6f6f6",
+              "secondary-fixed": "#c5d0ff",
+              "on-tertiary-fixed-variant": "#3c4675",
+              "tertiary-fixed": "#b9c4fb",
+              "background": "#f6f6f6",
+              "surface-container-low": "#f0f1f1",
+              "on-surface-variant": "#5a5c5c",
+              "on-primary-container": "#00224c",
+              "on-tertiary": "#f2f1ff",
+              "surface": "#f6f6f6",
+              "primary-fixed-dim": "#4c92fd",
+              "tertiary": "#4e5989",
+              "primary": "#034AB0",
+              "on-tertiary-fixed": "#1e2956",
+              "surface-container": "#e7e8e8",
+              "outline": "#757777",
+              "on-secondary-fixed": "#19306f",
+              "on-secondary": "#f1f2ff",
+              "on-primary": "#ffffff",
+              "tertiary-fixed-dim": "#acb6ec",
+              "tertiary-container": "#b9c4fb",
+              "secondary-dim": "#384c8d",
+              "error-container": "#fb5151"
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Manrope", "sans-serif"],
+              "label": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<main class="pt-12 pb-16 px-6 max-w-7xl mx-auto">
+<!-- Breadcrumb Navigation -->
+<nav class="flex items-center gap-2 mb-8 text-[10px] font-bold uppercase tracking-[0.2em] text-outline">
+<a class="hover:text-primary transition-colors" href="#">Seguridad</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Monitoreo</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-on-surface">Lumina Pro 4K Cam</span>
+</nav>
+<!-- Product Hero Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Left: High-Quality Product Gallery -->
+<div class="lg:col-span-7 space-y-6">
+<div class="relative bg-surface-container-lowest overflow-hidden group rounded-xl">
+<img id="imagenProducto"       alt="Cámara de seguridad 4k blanca minimalista" class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDuEkWGrIHv3AzHZsD5WKU5d0JW6OA8FAQxmFwJigSR4RtnPhISOq9QoQU3ESKIg_H8rOdUqMXZLrh17__-yLCe_vhnbmo7VmUnMpdNfVpY7ni6212L2R8eB-96a_o6xPEIW1pHnLj10mVZpUP_p5GuZ7fdWM1lj4zFzJc8_Tq_zlWjFOSGtGX7NOgbW0TlAHWMVbtUiLPCndI5vVa5ELscBkNArwyTlpJABQqhGOvcwTe8pXOOif7sCnq-fB58nv1WOXnt8u4eJQw"/>
+<div class="absolute top-6 left-6 bg-primary text-on-primary px-4 py-2 text-[10px] font-bold tracking-widest uppercase rounded-sm shadow-lg">
+                    Elección Editorial
+                </div>
+</div>
+<div class="grid grid-cols-2 gap-6 px-4">
+<div class="bg-surface-container-low rounded-xl p-4 h-48 flex items-center justify-center overflow-hidden">
+<img alt="Detalle de lentes y sensor" class="max-h-full mix-blend-multiply opacity-90 transition-transform hover:scale-110 duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyjc_w10TKKtLrQ_Eky9lwgdfM0N-1-YrmaFlhckw2refmDz_KuA-qtlmV_MKseaeGx83tBnS6ymOl6kF9ZU3Fa5jZKguoY8fiLCmWvGTlRgf0HNhSYm8oxEWyFNc4-tMVBCETg2KCz1uLt3i50n5VoTbz5y6vW5kyOjRMlvNPBJnd3Pf2QOhI1hjb-bPm_hqYJRpFOGvELRaEh07J7-Qq_44swzcu6xryEkT3n0uaHo4f6EJVPeGAYvdHxregCDYnWlucAsrgN-95"/>
+</div>
+<div class="bg-surface-container-low rounded-xl p-4 h-48 flex items-center justify-center overflow-hidden">
+<img alt="Interfaz de aplicación en smartphone" class="max-h-full mix-blend-multiply opacity-90 transition-transform hover:scale-110 duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzBwXZCovvX8ft8EfPHiILDhLHT8eZngE-Pm4nxgTmuzOgzbf_Jz2gDg3Pkhv0Je22nR8QpPZekbJGd-eCleTa_uwweUL2-2FYyGqzS5JnyOffQShyUeIylmFu9ZmwllvhPd-OtqUmXF2f_ZFXlXxxaY12M1OFYcWaW6T1CNwYrD6wVkPuS54NP7TPUS2hQcLE4iBymEUSgWR7Q3Ody0NCn594vnG2hrOuKRgyvP6n2Sw9THOU9bg81kwNtYjiY5I8ZQRO5YqK1g9c"/>
+</div>
+</div>
+</div>
+<!-- Right: Product Information -->
+<div class="lg:col-span-5 space-y-8">
+<header class="space-y-4">
+<div class="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-[0.3em]">
+<span class="w-8 h-[2px] bg-primary"></span>
+                    Precisión Premium
+                </div>
+<h1 id="nombreProducto"class="text-5xl font-headline font-extrabold tracking-tighter text-on-surface leading-none">
+                    Lumina Pro 4K Cam
+                </h1>
+<div class="flex items-center justify-between pt-2">
+<span id="precioProducto"  class="text-3xl font-headline font-light tracking-tighter text-on-surface">$299.00</span>
+<div class="flex items-center gap-3">
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">star_half</span>
+</div>
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">(128 Reseñas)</span>
+</div>
+</div>
+</header>
+<div class="space-y-6">
+<p class="text-lg leading-relaxed text-on-surface-variant font-medium opacity-80">
+                    Experimente la máxima seguridad con monitoreo 4K de ultra alta definición. Incluye seguimiento de movimiento neural, almacenamiento en la nube cifrado de extremo a extremo y visión nocturna cristalina.
+                </p>
+<div class="flex flex-wrap gap-2">
+<div class="bg-surface-container-highest px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Resolución 4K</div>
+<div class="bg-surface-container-highest px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">120° FOV</div>
+<div class="bg-surface-container-highest px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Movimiento IA</div>
+</div>
+</div>
+<!-- Purchase Section -->
+<div class="space-y-6 pt-4">
+<div class="flex flex-col sm:flex-row gap-3">
+<button class="flex-1 bg-primary text-on-primary py-5 rounded-lg font-headline font-extrabold text-xs tracking-widest uppercase hover:brightness-110 transition-all active:scale-[0.98] shadow-lg">
+                        Consultar
+                    </button>
+<button class="flex-1 border-2 border-primary text-primary py-5 rounded-lg font-headline font-extrabold text-xs tracking-widest uppercase hover:bg-primary/5 transition-all active:scale-[0.98]">
+                        Solicitar Información
+                    </button>
+</div>
+<!-- Relocated Characteristics Cards -->
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-low p-4 rounded-lg flex items-center gap-4 transition-colors hover:bg-surface-container">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="visibility">visibility</span>
+<div class="space-y-0.5">
+<h4 class="text-[10px] font-bold uppercase tracking-wider">Visión Nocturna</h4>
+<p class="text-[10px] text-on-surface-variant">IR hasta 30m</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex items-center gap-4 transition-colors hover:bg-surface-container">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="cloud">cloud</span>
+<div class="space-y-0.5">
+<h4 class="text-[10px] font-bold uppercase tracking-wider">Almacenamiento</h4>
+<p class="text-[10px] text-on-surface-variant">AES de 256 bits</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex items-center gap-4 transition-colors hover:bg-surface-container">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="shield">shield</span>
+<div class="space-y-0.5">
+<h4 class="text-[10px] font-bold uppercase tracking-wider">Resistente</h4>
+<p class="text-[10px] text-on-surface-variant">Clasificación IP67</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex items-center gap-4 transition-colors hover:bg-surface-container">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="bolt">bolt</span>
+<div class="space-y-0.5">
+<h4 class="text-[10px] font-bold uppercase tracking-wider">Conectividad</h4>
+<p class="text-[10px] text-on-surface-variant">PoE o Wi-Fi 6</p>
+</div>
+</div>
+</div>
+<p class="text-[10px] text-center text-outline uppercase tracking-[0.2em] font-bold opacity-70">Envío Express Gratuito &amp; 2 Años de Garantía de Precisión</p>
+</div>
+</div>
+</div>
+<!-- Editorial Feature Section -->
+<section class="mt-24 py-16 border-t border-outline-variant/10">
+<div class="flex flex-col md:flex-row gap-16 items-center">
+<div class="md:w-1/2 space-y-8">
+<h2 class="text-4xl font-headline font-extrabold tracking-tighter leading-tight">
+                    Seguimiento de precisión mediante algoritmos neurales.
+                </h2>
+<p class="text-on-surface-variant font-medium leading-relaxed opacity-80">
+                    La Lumina Pro no solo observa; comprende. Nuestro procesador neural patentado diferencia entre el movimiento ambiental y la presencia humana con una precisión del 99.8%.
+                </p>
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-full">check</span>
+<div>
+<h4 class="font-bold text-sm uppercase tracking-wide">Aislamiento Dinámico del Sujeto</h4>
+<p class="text-xs text-on-surface-variant">Enfoca el ancho de banda en áreas activas para máxima claridad.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="md:w-1/2 relative">
+<div class="absolute -inset-4 bg-surface-container rotate-1 -z-10 rounded-2xl"></div>
+<img alt="Vista detallada de componentes de cámara de alta tecnología" class="w-full shadow-2xl rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoNd74pSeHk7ZJHF7dBZRQ09M3UhIH-4nsp-pU2d908RxPU53eMBErckWI5Fpkb7YVjyCt69jmlZA7das-8XoFQbo7KvwiP-5x8I7mKTw0hqAQegayJEfayBH4lHPwl1Oc0S2tkGJolhvZCa70_3PwKbwZKT7ledGdw6l2zWVdbz5ZoUNLnAhA7auxsz0e8Njngq_wvnFeR6D-nhaecwzPMjmgVWP36jQ197mywe9MnYM8WW6RnFAvSc2SHkF4bFj1g6ySGXdFtNGM"/>
+</div>
+</div>
+</section>
+<!-- Suggested Products / You May Also Like -->
+<section class="mt-24 space-y-12">
+<div class="flex justify-between items-end border-b border-outline-variant/20 pb-4">
+<h3 class="text-2xl font-headline font-extrabold tracking-tighter uppercase">También te puede interesar</h3>
+<a class="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline" href="#">Ver todo</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low rounded-xl mb-4 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors"></div>
+<img alt="Lumina Compact" class="w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDuEkWGrIHv3AzHZsD5WKU5d0JW6OA8FAQxmFwJigSR4RtnPhISOq9QoQU3ESKIg_H8rOdUqMXZLrh17__-yLCe_vhnbmo7VmUnMpdNfVpY7ni6212L2R8eB-96a_o6xPEIW1pHnLj10mVZpUP_p5GuZ7fdWM1lj4zFzJc8_Tq_zlWjFOSGtGX7NOgbW0TlAHWMVbtUiLPCndI5vVa5ELscBkNArwyTlpJABQqhGOvcwTe8pXOOif7sCnq-fB58nv1WOXnt8u4eJQw"/>
+</div>
+<h4 class="text-sm font-bold uppercase tracking-wider mb-1">Lumina Compact</h4>
+<p class="text-xs text-on-surface-variant font-bold">$189.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low rounded-xl mb-4 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors"></div>
+<img alt="Sentinel Hub" class="w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDuEkWGrIHv3AzHZsD5WKU5d0JW6OA8FAQxmFwJigSR4RtnPhISOq9QoQU3ESKIg_H8rOdUqMXZLrh17__-yLCe_vhnbmo7VmUnMpdNfVpY7ni6212L2R8eB-96a_o6xPEIW1pHnLj10mVZpUP_p5GuZ7fdWM1lj4zFzJc8_Tq_zlWjFOSGtGX7NOgbW0TlAHWMVbtUiLPCndI5vVa5ELscBkNArwyTlpJABQqhGOvcwTe8pXOOif7sCnq-fB58nv1WOXnt8u4eJQw"/>
+</div>
+<h4 class="text-sm font-bold uppercase tracking-wider mb-1">Sentinel Hub</h4>
+<p class="text-xs text-on-surface-variant font-bold">$450.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low rounded-xl mb-4 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors"></div>
+<img alt="Apex Sensor Pack" class="w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDuEkWGrIHv3AzHZsD5WKU5d0JW6OA8FAQxmFwJigSR4RtnPhISOq9QoQU3ESKIg_H8rOdUqMXZLrh17__-yLCe_vhnbmo7VmUnMpdNfVpY7ni6212L2R8eB-96a_o6xPEIW1pHnLj10mVZpUP_p5GuZ7fdWM1lj4zFzJc8_Tq_zlWjFOSGtGX7NOgbW0TlAHWMVbtUiLPCndI5vVa5ELscBkNArwyTlpJABQqhGOvcwTe8pXOOif7sCnq-fB58nv1WOXnt8u4eJQw"/>
+</div>
+<h4 class="text-sm font-bold uppercase tracking-wider mb-1">Apex Sensor Pack</h4>
+<p class="text-xs text-on-surface-variant font-bold">$120.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square bg-surface-container-low rounded-xl mb-4 overflow-hidden relative">
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors"></div>
+<img alt="Vision Pro Lens" class="w-full h-full object-cover mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDuEkWGrIHv3AzHZsD5WKU5d0JW6OA8FAQxmFwJigSR4RtnPhISOq9QoQU3ESKIg_H8rOdUqMXZLrh17__-yLCe_vhnbmo7VmUnMpdNfVpY7ni6212L2R8eB-96a_o6xPEIW1pHnLj10mVZpUP_p5GuZ7fdWM1lj4zFzJc8_Tq_zlWjFOSGtGX7NOgbW0TlAHWMVbtUiLPCndI5vVa5ELscBkNArwyTlpJABQqhGOvcwTe8pXOOif7sCnq-fB58nv1WOXnt8u4eJQw"/>
+</div>
+<h4 class="text-sm font-bold uppercase tracking-wider mb-1">Vision Pro Lens</h4>
+<p class="text-xs text-on-surface-variant font-bold">$79.00</p>
+</div>
+</div>
+</section>
+</main>
+<script>
+const params = new URLSearchParams(window.location.search);
+
+const nombre = params.get("nombre");
+const precio = params.get("precio");
+const imagen = params.get("imagen");
+
+if(nombre){
+  document.querySelector("#nombreProducto").textContent = nombre;
+}
+
+if(precio){
+  document.querySelector("#precioProducto").textContent = "C$" + precio;
+}
+
+if(imagen){
+  document.querySelector("#imagenProducto").src = imagen;
+}
+</script>
+
+</body>
+</html>
