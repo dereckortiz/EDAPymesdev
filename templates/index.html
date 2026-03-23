@@ -8,24 +8,28 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/css/estilo.css">
-
+    <link rel="stylesheet" href="/static/css/estilo.css">
 <script>
-    // Configuración unificada de Tailwind
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    // Tus colores base del index
                     'primary': '#034AB0',
                     'primary-hover': '#023a8a',
-                    
-                    // Colores necesarios para que la sección Servicios se vea Premium
                     'cobalt': '#034AB0',
                     'navy-dark': '#001a3d',
                     'tech-gray': '#1e293b',
                     'slate-mid': '#e2e8f0',
                     'slate-light': '#f1f5f9',
+                    'secondary': '#5985BD',
+                    'background': '#FFFFFF',
+                    'background-soft': '#F4F7FB',
+                    'surface': '#FFFFFF',
+                    'surface-variant': '#F8FAFC',
+                    'on-primary': '#FFFFFF',
+                    'on-surface': '#0C1F41',
+                    'on-surface-variant': '#6B7280',
+                    'outline': '#E5E7EB'
                 },
                 fontFamily: {
                     'headline': ['Manrope', 'sans-serif'],
@@ -35,183 +39,707 @@
         }
     }
 </script>
+
+<style>
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .carousel-track {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+  }
+  
+  .carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+  }
+  
+  .carousel-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
+  }
+  
+  .carousel-slide img,
+  .carousel-slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .carousel-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+    z-index: 15;
+  }
+  
+  .carousel-content {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  
+  .carousel-content.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .carousel-content-inner {
+    padding-left: 3rem;
+    max-width: 650px;
+  }
+  
+  @media (min-width: 768px) {
+    .carousel-content-inner {
+      padding-left: 6rem;
+    }
+  }
+  
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+  }
+  
+  .carousel-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-50%) scale(1.1);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .carousel-btn.prev {
+    left: 20px;
+  }
+  
+  .carousel-btn.next {
+    right: 20px;
+  }
+  
+  .carousel-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    z-index: 30;
+  }
+  
+  .carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .carousel-dot.active {
+    background: #034AB0;
+    width: 28px;
+    border-radius: 20px;
+    box-shadow: 0 0 8px rgba(7, 105, 210, 0.6);
+  }
+  
+  .carousel-action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .btn-primary-carousel {
+    background: #034AB0;
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .btn-primary-carousel:hover {
+    background: #023a8a;
+    transform: translateY(-2px);
+  }
+  
+  .btn-secondary-carousel {
+    background: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .btn-secondary-carousel:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: white;
+  }
+  
+  .carousel-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  
+  .carousel-subtitle {
+    color: rgba(255,255,255,0.9);
+    margin-top: 1rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+  
+  @media (min-width: 768px) {
+    .carousel-title { font-size: 4.5rem; }
+    .carousel-subtitle { font-size: 1.25rem; }
+  }
+  
+  .service-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .service-card.active {
+    transform: scale(1.05);
+    box-shadow: 0 25px 30px -12px rgba(7, 105, 210, 0.3);
+  }
+  
+  .aurora-gradient { background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%); }
+  .bg-team { background: linear-gradient(115deg, #0f172a 0%, #1e293b 100%); position: relative; }
+  .bg-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(7,105,210,0.15) 0%, transparent 70%); }
+  .bg-contacto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
+  .contacto-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(7,105,210,0.2) 0%, transparent 70%); }
+</style>
 </head>
 
 <body class="bg-white font-['Inter']">
 
 <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
     <div class="flex justify-between items-center px-8 py-5 max-w-7xl mx-auto">
-
         <div class="flex items-center gap-3">
-            <img src="../src/image/TU-LOGO.png" class="h-12" alt="Logo">
+            <img src="../src/image/TU-LOGO.png" class="h-12" alt="Logo" onerror="this.style.display='none'">
             <div class="text-2xl font-black text-gray-900">EDAPymes</div>
         </div>
-
         <div class="hidden md:flex items-center nav-links-container" id="main-nav">
-            <a class="nav-link active" onclick="cargarSeccion('inicio.html', this)">Inicio</a>
+            <a class="nav-link active" onclick="cargarSeccion('inicio', this)">Inicio</a>
             <a class="nav-link" onclick="cargarSeccion('servicios.html', this)">Servicios</a>
             <a class="nav-link" onclick="cargarSeccion('Catalogo.html', this)">Catálogo</a>
             <a class="nav-link" onclick="cargarSeccion('Nosotros.html', this)">Nosotros</a>
             <a class="nav-link" onclick="cargarSeccion('ventanaC.html', this)">Contacto</a>
-            
             <div id="nav-indicator"></div>
         </div>
-
-        <button onclick="cargarSeccion('ventanaC.html', document.querySelector('[onclick*=\'ventanaC\']'))" 
+        <button onclick="cargarSeccion('ventanaC.html', document.querySelector('[onclick*=\\'ventanaC\\']'))" 
                 class="bg-primary text-white px-6 py-2 rounded-full font-bold hover:bg-primary-hover transition-all">
             Contacto
         </button>
     </div>
 </nav>
 
-<main id="contenido" class="pt-20">
-    </main>
+<main id="contenido" class="pt-20"></main>
 
 <footer class="relative bg-slate-50 text-gray-800 pt-20 pb-10 overflow-hidden border-t-4 border-[#034AB0]">
     <div class="max-w-7xl mx-auto px-8 relative z-10">
         <div class="grid md:grid-cols-4 gap-12 mb-12">
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
-                    <img src="../src/image/TU-LOGO.png" class="h-10" alt="Logo">
+                    <img src="../src/image/TU-LOGO.png" class="h-10" alt="Logo" onerror="this.style.display='none'">
                     <span class="text-xl font-bold text-primary">EDAPymes</span>
                 </div>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                    Impulsamos tu negocio con soluciones tecnológicas modernas y eficientes.
-                </p>
+                <p class="text-gray-600 text-sm leading-relaxed">Impulsamos tu negocio con soluciones tecnológicas modernas y eficientes.</p>
             </div>
-
             <div>
                 <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Enlaces</h4>
                 <ul class="space-y-3 text-gray-600 text-sm font-medium">
-                    <li><a href="#" onclick="cargarSeccion('inicio.html', document.querySelectorAll('.nav-link')[0])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span> Inicio</a></li>
+                    <li><a href="#" onclick="cargarSeccion('inicio', document.querySelectorAll('.nav-link')[0])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span> Inicio</a></li>
                     <li><a href="#" onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span> Servicios</a></li>
                 </ul>
             </div>
-
             <div>
                 <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Contacto</h4>
                 <div class="space-y-2">
-                    <p class="text-sm text-gray-600 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-lg">location_on</span> Nicaragua
-                    </p>
-                    <p class="text-sm text-gray-600 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-lg">mail</span> contacto@edapymes.com
-                    </p>
+                    <p class="text-sm text-gray-600 flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">location_on</span> Nicaragua</p>
+                    <p class="text-sm text-gray-600 flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">mail</span> contacto@edapymes.com</p>
                 </div>
             </div>
-
             <div>
                 <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Redes Sociales</h4>
                 <div class="flex gap-5">
-                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all duration-300">
-                        <span class="material-symbols-outlined">public</span>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all duration-300">
-                        <span class="material-symbols-outlined">photo_camera</span>
-                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all"><span class="material-symbols-outlined">public</span></a>
+                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all"><span class="material-symbols-outlined">photo_camera</span></a>
                 </div>
             </div>
         </div>
-
-        <div class="border-t-2 border-[#034AB0] pt-8 mt-8 text-center">
-            <p class="text-gray-500 text-sm font-semibold">
-                © 2026 <span class="text-[#034AB0]">EDAPymes</span>. Todos los derechos reservados.
-            </p>
-        </div>
+        <div class="border-t-2 border-[#034AB0] pt-8 mt-8 text-center"><p class="text-gray-500 text-sm font-semibold">© 2026 <span class="text-[#034AB0]">EDAPymes</span>. Todos los derechos reservados.</p></div>
     </div>
 </footer>
-<script>
+<<script>
+// Variables globales para el carrusel
+let carruselActivo = false;
+let intervaloAutoPlay = null;
+
 /**
- * FUNCIÓN MAESTRA DE ANIMACIONES
- * Se encarga de que las secciones aparezcan suavemente al hacer scroll
+ * Lógica para mover la línea azul del Navbar
  */
-function activarAnimacionesScroll() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Aplicamos las clases de visibilidad de Tailwind
-                entry.target.classList.add('opacity-100', 'translate-y-0');
-                entry.target.classList.remove('opacity-0', 'translate-y-20');
-                // Una vez animado, dejamos de observar para ahorrar recursos
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-
-    // Seleccionamos los elementos recién inyectados
-    const elementosParaAnimar = document.querySelectorAll('#contenido section, #contenido .py-32 > div, #contenido .group');
-    
-    elementosParaAnimar.forEach(el => {
-        // Estado inicial: invisible y abajo
-        el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-20');
-        observer.observe(el);
-    });
-}
-function cargarSeccion(pagina, linkElement) {
-    const contenedor = document.getElementById("contenido");
-    
-    // 1. Efecto de salida
-    contenedor.style.opacity = "0";
-    contenedor.style.transform = "translateY(10px)";
-    contenedor.style.transition = "all 0.3s ease";
-
-    setTimeout(() => {
-        fetch(pagina)
-            .then(response => {
-                if (!response.ok) throw new Error("No se pudo cargar la página");
-                return response.text();
-            })
-            .then(html => {
-
-                // 🔥 2. Insertar HTML
-                contenedor.innerHTML = html;
-
-                // 🔥 3. Reset scroll + animación entrada
-                window.scrollTo(0, 0);
-                contenedor.style.opacity = "1";
-                contenedor.style.transform = "translateY(0)";
-
-                // 🔥 4. Activar animaciones
-                activarAnimacionesScroll();
-
-                // 🔥 5. ACTIVAR TU JS (CLAVE)
-                setTimeout(() => {
-                    if (typeof iniciarTodo === "function") {
-                        iniciarTodo();
-                    }
-                }, 100);
-
-                // 🔥 6. Navbar activo
-                if(linkElement) {
-                    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-                    linkElement.classList.add("active");
-                    if (typeof moverIndicador === 'function') moverIndicador(linkElement);
-                }
-
-            })
-            .catch(error => {
-                console.error("Error en EDAPymes:", error);
-                contenedor.innerHTML = "<div class='py-20 text-center text-red-500'>Error al cargar la sección.</div>";
-                contenedor.style.opacity = "1";
-            });
-
-    }, 300);
-}
-// Inicialización
-window.addEventListener("DOMContentLoaded", () => {
-    const inicioLink = document.querySelector(".nav-link.active");
-    // Cargamos inicio por defecto
-    cargarSeccion('inicio.html', inicioLink);
-});
-
-// Función para el indicador del Navbar (la línea azul)
 function moverIndicador(elemento) {
     const indicador = document.getElementById("nav-indicator");
     if (elemento && indicador) {
         indicador.style.left = elemento.offsetLeft + "px";
         indicador.style.width = elemento.offsetWidth + "px";
+        indicador.style.transition = "all 0.3s ease";
     }
 }
+
+function activarAnimacionesScroll() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-20');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    const elementosParaAnimar = document.querySelectorAll('#contenido section, #contenido .py-32 > div, #contenido .group, #contenido .service-card');
+    elementosParaAnimar.forEach(el => {
+        if (!el.classList.contains('opacity-100')) {
+            el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-20');
+            observer.observe(el);
+        }
+    });
+}
+
+function cargarSeccion(pagina, linkElement) {
+    const contenedor = document.getElementById("contenido");
+    contenedor.style.opacity = "0";
+    contenedor.style.transform = "translateY(10px)";
+    contenedor.style.transition = "all 0.3s ease";
+    
+    // Detener carrusel si estaba activo
+    if (intervaloAutoPlay) {
+        clearInterval(intervaloAutoPlay);
+        intervaloAutoPlay = null;
+    }
+    carruselActivo = false;
+
+    setTimeout(() => {
+        // Si es 'inicio', cargamos el HTML directamente
+        if (pagina === 'inicio') {
+            contenedor.innerHTML = obtenerHTMLInicio();
+            window.scrollTo(0, 0);
+            contenedor.style.opacity = "1";
+            contenedor.style.transform = "translateY(0)";
+            activarAnimacionesScroll();
+            setTimeout(() => {
+                iniciarCarrusel();
+                configurarCardsServicios();
+            }, 150);
+        } else {
+            fetch(pagina)
+                .then(response => {
+                    if (!response.ok) throw new Error("No se pudo cargar la página");
+                    return response.text();
+                })
+                .then(html => {
+                    contenedor.innerHTML = html;
+                    window.scrollTo(0, 0);
+                    contenedor.style.opacity = "1";
+                    contenedor.style.transform = "translateY(0)";
+                    activarAnimacionesScroll();
+                    if (typeof iniciarTodo === "function") iniciarTodo();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    contenedor.innerHTML = "<div class='py-20 text-center text-red-500'>Error al cargar la sección.</div>";
+                    contenedor.style.opacity = "1";
+                });
+        }
+        
+        if(linkElement) {
+            document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+            linkElement.classList.add("active");
+            moverIndicador(linkElement);
+        }
+    }, 300);
+}
+
+function configurarCardsServicios() {
+    const cards = document.querySelectorAll('#contenido .service-card');
+    cards.forEach(card => {
+        card.removeEventListener('click', card.clickHandler);
+        card.clickHandler = () => {
+            cards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            if (typeof cargarSeccion === 'function') {
+                cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]);
+            }
+        };
+        card.addEventListener('click', card.clickHandler);
+    });
+}
+
+function obtenerHTMLInicio() {
+    return `
+<div class="mt-24 px-4">
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack"></div>
+    <button class="carousel-btn prev" id="carouselPrev"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+    <button class="carousel-btn next" id="carouselNext"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</div>
+
+<section class="py-24 bg-background-soft" id="services">
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div class="space-y-4">
+        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface">Servicios de <span class="text-primary">Vanguardia</span></h2>
+        <p class="text-on-surface-variant max-w-xl">Curamos las mejores herramientas y servicios para que tu empresa nunca se detenga.</p>
+      </div>
+      <button onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todos los servicios <span class="material-symbols-outlined">east</span></button>
+    </div>
+    <div class="flex justify-center items-center gap-8 flex-wrap">
+      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined service-icon text-4xl">school</span><h3 class="text-xl font-bold text-white">Capacitaciones</h3><p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p></div>
+      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined text-4xl mb-4">lightbulb</span><h3 class="text-2xl font-bold text-white">Asesorías</h3><p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p></div>
+      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined service-icon text-4xl">videocam</span><h3 class="text-xl font-bold text-white">Seguridad</h3><p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p></div>
+      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined text-4xl mb-4">build</span><h3 class="text-2xl font-bold text-white">Mantenimiento</h3><p class="text-white/80 text-sm mt-2">Soporte técnico preventivo y correctivo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="relative py-32 overflow-hidden" id="vision-mission">
+  <div class="absolute inset-0 aurora-gradient z-0"></div>
+  <div class="absolute inset-0 bg-black/10 z-10"></div>
+  <div class="relative z-20 max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-24 items-center">
+    <div class="relative"><img alt="Team meeting" class="rounded-xl grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl w-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCivFyI9U0ch_lXTv2afdbSJd7yEC6ICDgX2pKEwWpuVX5lNRbN35768GUHdrzUEkq2BqpNn_0CzC9oRLAqy-EiT-Z-tpBYhR9s0e_yIOAsXm_nCfVlFFqRUYn4oMx127GGeOkDe8acXbZfJ4oQak6jy5zGJDCKyXOI884o9BXigCdn28otGU5SVDqbr1xXeC0TAMrQqTPytokSHoNzeaUSodzZH7SVgYKtpfG4j8KhbnZesuwnIwBfx5wPLR3lI8BScbR1A9jKm1oV"></div>
+    <div class="space-y-16">
+      <div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">rocket_launch</span><h3 class="text-3xl font-headline font-bold text-white">Misión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-primary pl-6">"Brindar servicios con calidad y calidez, así como ofertar computadoras, accesorios para computadoras y para móviles con las mejores y más modernas especificaciones que satisfagan las necesidades de nuestros clientes"</p></div>
+      <div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">visibility</span><h3 class="text-3xl font-headline font-bold text-white">Visión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-white/40 pl-6">"Ser una empresa especializada en la atención a las necesidades de la pequeña y mediana empresa nacional."</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="py-28 bg-background relative overflow-hidden">
+  <div class="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+  <div class="absolute -bottom-20 -right-20 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="grid lg:grid-cols-12 gap-20 items-center">
+      <div class="lg:col-span-7 space-y-8"><span class="text-primary font-bold uppercase tracking-widest text-xs">Nuestra Trayectoria</span><h2 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tight leading-tight">Acerca de <span class="text-primary">nosotros</span></h2><p class="text-on-surface-variant text-lg leading-relaxed">Nacimos con la firme convicción de que la tecnología debe ser el motor de crecimiento para las empresas en desarrollo. En EDAPymes, no solo vendemos productos; curamos soluciones integrales que se adaptan a la realidad y desafíos de cada uno de nuestros clientes.</p><p class="text-on-surface-variant text-lg leading-relaxed">Nuestro equipo combina décadas de experiencia técnica con una visión humana, asegurando que cada implementación tecnológica tenga un impacto positivo directo en la productividad y bienestar de tu organización.</p><div class="pt-6"><button onclick="cargarSeccion('Nosotros.html', document.querySelectorAll('.nav-link')[3])" class="relative overflow-hidden border border-primary text-primary px-8 py-3 rounded-full font-bold transition-all duration-300 hover:text-white hover:bg-primary">Conoce nuestra historia</button></div></div>
+      <div class="lg:col-span-5"><div class="relative group"><div class="absolute inset-0 bg-primary/20 blur-2xl opacity-0 group-hover:opacity-100 transition-all"></div><div class="relative aspect-square bg-white rounded-2xl overflow-hidden border border-outline p-3 shadow-xl"><img class="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKdoUxNlx2Zygo0Wo5Ar2mDUJEaacdduxOxKuMI5iX3PmPIbEiT84zI8DiWdKEXwGpiVq04OmuMuT2rn_hhAGEi8p_qoIlBXjopAkIbysicb5JNUhkKaUizrwmluQ_256WiBadLPE1mldB9uXnknJ4PJkMW3j3RQTvOXgxrg7vJCGYKWE8w0ta7YNv-hsr40bb1MXlSvqkuk9qzPaakUc9xT9Fo4S93P-xLjio5_0SPuOR7vU8q9vo_ix1rektw5Uo2RyB1jeJSFDp" alt="Workspace"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="py-28 bg-background relative overflow-hidden">
+  <div class="absolute top-0 left-0 w-72 h-72 bg-primary/10 blur-3xl rounded-full"></div>
+  <div class="absolute bottom-0 right-0 w-72 h-72 bg-secondary/10 blur-3xl rounded-full"></div>
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="flex items-center justify-between mb-16"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface">Catálogo <span class="text-primary">Destacado</span></h2></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C1.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Disponible</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">EliteBook X-Pro 14"</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">$1,299.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
+      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C2.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Disponible</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">ThinkPad X1 Carbon</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">$1,499.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
+      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C3.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Disponible</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">DELL Inspiron i5-11</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">$899.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
+      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C4.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Hot</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">DELL 5430 i5-12</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">C$15,620.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="py-24 relative overflow-hidden bg-team"><div class="bg-efecto"></div><div class="relative z-10 max-w-7xl mx-auto px-8"><div class="text-center mb-16 space-y-4"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">El Equipo <span class="text-primary">Detrás</span></h2><p class="text-white/70 max-w-2xl mx-auto">Expertos comprometidos con el éxito tecnológico de tu empresa.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12"><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcO5UUoxKj86ssBca82Aq6Ec7RYeiA5FwpKG7j0sfeqz2wkxWAMG3I4cqx9hN9Os27Q84dY3msQjZvDQNb63CB9BQm3zJ8HwpUSZwLuK6n7D5DeukOFn8FwuKiHuPebht1xTxljRjTyoUZyDP306_6GPldq2DBHcqzqvFEee4TsEDlfeDA_erzRdnQxxbr0sRV5tPo43pVRF3JiMtem5af_bKOo8KbCm_tCvEqwARon9k7zSrRyERvBQXJ4O73LrENTJWKkn6zTB0z" alt="Roberto Mendoza"></div><h4 class="text-xl font-headline font-bold text-white">Roberto Mendoza</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">CEO & Founder</p><p class="text-white/70 text-sm mt-4">Líder con más de 15 años transformando el panorama IT local.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-eW26GNEgI3xjJNN-Desvabn0ZIghvdv1gOD3yaR6K8cNsIdy1VKc3V20L8tI0CTgDcU6dZz06VWCFj8hecz7wndqMaIkN1ArUMfiT7-W16cdY0yu4zEcELnC4LYOhj2j4O6kPaHrzof0q-QmfpfChwWcHtMf1Gj75rhbjphi4tI_u4pHhqOO9dwbfR1iEFstMw-IMfrFnj5W8rlFvOOhXy0zksjRd6GRLg0gQ5NI15lq8u-c_PHHvcVkUDYdnGTzyiWaM__JT4Pw" alt="Elena Casares"></div><h4 class="text-xl font-headline font-bold text-white">Elena Casares</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">CTO</p><p class="text-white/70 text-sm mt-4">Arquitecta de soluciones y apasionada por la ciberseguridad.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjXrcQkZmljokYZNdKFZZuA_PFyTwPcoWn7WQsnjHg9r-Yi0t1jGS1rla0MkbVwxXA5dDVMcPU4XfVf4HdPOLPXLlg_UgUNV59QjHgeRnp-IkhJ4-3NbXFl67buWmbKOen3i9MASOPH8ZPW333lOrWOzMJKwlih0jr3ktsWsyQMi8LX0I1MFvKvNSCRSw1ZngXfjJ8C1VurXXQ2VDV-Fmn7IS_uZRBLYmxTzQgrXN-KOXqVDw8wow4AyofEji--PBdz5QWRW7yuk11" alt="Marco Valdivia"></div><h4 class="text-xl font-headline font-bold text-white">Marco Valdivia</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Director Comercial</p><p class="text-white/70 text-sm mt-4">Especialista en alianzas estratégicas y expansión de mercado.</p></div></div></div></section>
+
+<section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:contacto@edapymes.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">contacto@edapymes.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8888 8888 / +505 7777 7777</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10"><form action="#" method="POST" class="space-y-6"><div><label for="nombre" class="text-white/70 text-sm">Nombre</label><input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div><div><label for="email" class="text-white/70 text-sm">Correo</label><input type="email" id="email" name="email" required placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div><div><label for="mensaje" class="text-white/70 text-sm">Mensaje</label><textarea id="mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje..." class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></textarea></div><button type="submit" class="w-full py-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover transition-all">Enviar mensaje</button></form></div></div></section>
+    `;
+}
+
+function iniciarCarrusel() {
+    // Limpiar intervalos anteriores
+    if (intervaloAutoPlay) {
+        clearInterval(intervaloAutoPlay);
+        intervaloAutoPlay = null;
+    }
+    
+    const slidesData = [
+      { type: 'video', src: '/src/image/fondo de pantalla.mp4', title: 'Impulsamos tu <span class="text-primary">negocio</span> con tecnología', subtitle: 'Soluciones tecnológicas integrales diseñadas para la era digital.' },
+      { type: 'image', src: '/src/image/foto3.jpg', title: 'Capacitaciones <span class="text-primary">Tecnológicas</span>', subtitle: 'Aprende habilidades digitales con expertos.' },
+      { type: 'image', src: '/src/image/foto1.jpg', title: 'Asesorías <span class="text-primary">Profesionales</span>', subtitle: 'Impulsa tu negocio con tecnología.' },
+      { type: 'image', src: '/src/image/dirty-computer-attractive-young-man-wearing-protection-glasses-while-cleaning-inside-with-compressed-air-hardware-computer.jpg', title: 'Reparación de <span class="text-primary">Computadoras</span>', subtitle: 'Mantenimiento rápido y confiable.' },
+      { type: 'image', src: '/src/image/foto4.jpg', title: 'Venta de <span class="text-primary">Laptops</span>', subtitle: 'Equipos modernos y de alto rendimiento.' },
+      { type: 'image', src: '/src/image/foto5.jpg', title: 'Cámaras de <span class="text-primary">Seguridad</span>', subtitle: 'Protege tu hogar o negocio.' },
+      { type: 'image', src: '/src/image/foto8.jpg', title: 'Accesorios para <span class="text-primary">Celulares</span>', subtitle: 'Todo lo que necesitás para tu smartphone.' },
+      { type: 'image', src: '/src/image/foto9.jpg', title: 'Préstamos <span class="text-primary">Prendatarios</span>', subtitle: 'Soluciones rápidas de financiamiento.' },
+      { type: 'image', src: '/src/image/foto10.jpg', title: 'Servicios de <span class="text-primary">Traducción</span>', subtitle: 'Traducción profesional de inglés a español.' }
+    ];
+    
+    let currentIndex = 0;
+    let videoElement = null;
+    
+    const track = document.getElementById('carouselTrack');
+    const dotsContainer = document.getElementById('carouselDots');
+    let prevBtn = document.getElementById('carouselPrev');
+    let nextBtn = document.getElementById('carouselNext');
+    
+    if (!track) return;
+    
+    // Limpiar y reconstruir
+    track.innerHTML = '';
+    if (dotsContainer) dotsContainer.innerHTML = '';
+    
+    slidesData.forEach((slide, idx) => {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'carousel-slide';
+        slideDiv.setAttribute('data-index', idx);
+        
+        if (slide.type === 'video') {
+            const video = document.createElement('video');
+            video.src = slide.src;
+            video.autoplay = false;
+            video.muted = true;
+            video.playsInline = true;
+            video.loop = false;
+            video.className = 'w-full h-full object-cover';
+            slideDiv.appendChild(video);
+        } else {
+            const img = document.createElement('img');
+            img.src = slide.src;
+            img.className = 'w-full h-full object-cover';
+            img.alt = `Slide ${idx + 1}`;
+            img.onerror = function() { this.src = 'https://placehold.co/1920x600?text=EDAPymes'; };
+            slideDiv.appendChild(img);
+        }
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'carousel-overlay';
+        slideDiv.appendChild(overlay);
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'carousel-content';
+        contentDiv.innerHTML = `<div class="carousel-content-inner"><h1 class="carousel-title">${slide.title}</h1><p class="carousel-subtitle">${slide.subtitle}</p><div class="carousel-action-buttons"><button class="btn-primary-carousel btn-catalogo-action">Explorar Catálogo</button><button class="btn-secondary-carousel btn-servicios-action">Nuestros Servicios</button></div></div>`;
+        slideDiv.appendChild(contentDiv);
+        track.appendChild(slideDiv);
+        
+        if (dotsContainer) {
+            const dot = document.createElement('div');
+            dot.className = 'carousel-dot';
+            dot.setAttribute('data-index', idx);
+            dot.addEventListener('click', () => goToSlide(idx));
+            dotsContainer.appendChild(dot);
+        }
+    });
+    
+    function updateSlidesAndDots() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const contents = document.querySelectorAll('.carousel-content');
+        const dots = document.querySelectorAll('.carousel-dot');
+        
+        slides.forEach((slide, idx) => {
+            if (idx === currentIndex) {
+                slide.classList.add('active');
+                if (contents[idx]) contents[idx].classList.add('active');
+            } else {
+                slide.classList.remove('active');
+                if (contents[idx]) contents[idx].classList.remove('active');
+            }
+        });
+        
+        dots.forEach((dot, idx) => {
+            if (idx === currentIndex) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+        
+        const currentSlide = slides[currentIndex];
+        if (currentSlide) {
+            const video = currentSlide.querySelector('video');
+            if (video) {
+                const allVideos = document.querySelectorAll('.carousel-slide video');
+                allVideos.forEach(v => { if (v !== video) v.pause(); });
+                videoElement = video;
+                video.currentTime = 0;
+                video.play().catch(e => console.log('Autoplay:', e));
+                video.removeEventListener('ended', handleVideoEnd);
+                video.addEventListener('ended', handleVideoEnd);
+            } else if (videoElement && !videoElement.paused) {
+                videoElement.pause();
+            }
+        }
+    }
+    
+    function handleVideoEnd() { nextSlide(); }
+    function nextSlide() { currentIndex = (currentIndex + 1) % slidesData.length; updateSlidesAndDots(); resetAutoPlay(); }
+    function prevSlide() { currentIndex = (currentIndex - 1 + slidesData.length) % slidesData.length; updateSlidesAndDots(); resetAutoPlay(); }
+    function goToSlide(index) { currentIndex = index; updateSlidesAndDots(); resetAutoPlay(); }
+    function startAutoPlay() { if (intervaloAutoPlay) clearInterval(intervaloAutoPlay); intervaloAutoPlay = setInterval(() => { const slides = document.querySelectorAll('.carousel-slide'); const current = slides[currentIndex]; const video = current?.querySelector('video'); if (!video || video.paused || video.ended) { nextSlide(); } }, 6000); }
+    function resetAutoPlay() { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } startAutoPlay(); }
+    
+    // Configurar botones (reemplazar para evitar múltiples listeners)
+    if (prevBtn) {
+        const newPrev = prevBtn.cloneNode(true);
+        prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+        prevBtn = newPrev;
+        prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+    }
+    if (nextBtn) {
+        const newNext = nextBtn.cloneNode(true);
+        nextBtn.parentNode.replaceChild(newNext, nextBtn);
+        nextBtn = newNext;
+        nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+    }
+    
+    // Botones de acción
+    document.querySelectorAll('.btn-catalogo-action').forEach(btn => {
+        btn.removeEventListener('click', btn._handler);
+        btn._handler = () => cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2]);
+        btn.addEventListener('click', btn._handler);
+    });
+    document.querySelectorAll('.btn-servicios-action').forEach(btn => {
+        btn.removeEventListener('click', btn._handler2);
+        btn._handler2 = () => cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]);
+        btn.addEventListener('click', btn._handler2);
+    });
+    
+    updateSlidesAndDots();
+    
+    const container = document.querySelector('.carousel-container');
+    if (container) {
+        container.removeEventListener('mouseenter', container._enterHandler);
+        container.removeEventListener('mouseleave', container._leaveHandler);
+        container._enterHandler = () => { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } };
+        container._leaveHandler = () => { startAutoPlay(); };
+        container.addEventListener('mouseenter', container._enterHandler);
+        container.addEventListener('mouseleave', container._leaveHandler);
+    }
+    
+    startAutoPlay();
+    carruselActivo = true;
+    
+    // Manejar visibilidad de pestaña
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+function handleVisibilityChange() {
+    if (!document.hidden && carruselActivo) {
+        setTimeout(() => {
+            const track = document.getElementById('carouselTrack');
+            if (track && track.children.length > 0) {
+                if (intervaloAutoPlay) {
+                    clearInterval(intervaloAutoPlay);
+                    intervaloAutoPlay = null;
+                }
+                const activeSlide = document.querySelector('.carousel-slide.active');
+                if (activeSlide) {
+                    const video = activeSlide.querySelector('video');
+                    if (video && video.paused) {
+                        video.play().catch(e => console.log('Play reanudado:', e));
+                    }
+                }
+                intervaloAutoPlay = setInterval(() => {
+                    const slides = document.querySelectorAll('.carousel-slide');
+                    const activeIdx = document.querySelector('.carousel-slide.active')?.getAttribute('data-index');
+                    const current = slides[activeIdx || 0];
+                    const video = current?.querySelector('video');
+                    if (!video || video.paused || video.ended) {
+                        const nextBtn = document.getElementById('carouselNext');
+                        if (nextBtn) nextBtn.click();
+                    }
+                }, 6000);
+            }
+        }, 100);
+    } else if (document.hidden && carruselActivo) {
+        const videos = document.querySelectorAll('.carousel-slide video');
+        videos.forEach(v => v.pause());
+    }
+}
+
+function iniciarTodo() {
+    configurarCardsServicios();
+}
+
+// Inicialización al cargar la página
+window.addEventListener("DOMContentLoaded", () => {
+    const inicioLink = document.querySelector(".nav-link.active");
+    const contenedor = document.getElementById("contenido");
+    contenedor.innerHTML = obtenerHTMLInicio();
+    window.scrollTo(0, 0);
+    activarAnimacionesScroll();
+    
+    // Mover indicador al elemento activo
+    if (inicioLink) {
+        moverIndicador(inicioLink);
+    }
+    
+    setTimeout(() => {
+        iniciarCarrusel();
+        configurarCardsServicios();
+    }, 150);
+    
+    if(inicioLink) {
+        document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+        inicioLink.classList.add("active");
+    }
+});
+
+// Evento resize para mantener el indicador en su posición
+window.addEventListener("resize", () => {
+    const activeLink = document.querySelector(".nav-link.active");
+    if (activeLink) {
+        moverIndicador(activeLink);
+    }
+});
+
+// Exponer funciones globalmente
+window.cargarSeccion = cargarSeccion;
+window.configurarCardsServicios = configurarCardsServicios;
+window.activarAnimacionesScroll = activarAnimacionesScroll;
+window.moverIndicador = moverIndicador;
 </script>
+
 </body>
 </html>

@@ -118,8 +118,11 @@
                                     <span class="w-3 h-3 bg-cobalt rounded-full"></span> Workstations configuradas a medida.
                                 </li>
                             </ul>
-                            <button class="px-10 py-5 bg-navy-dark text-white font-black text-lg rounded-full hover:bg-cobalt transition-all transform hover:-translate-y-1">EXPLORAR CATÁLOGO</button>
-                        </div>
+<button 
+  onclick="cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2])" 
+  class="btn-catalogo px-10 py-5 bg-[#0769D2] text-white font-black text-lg rounded-full hover:bg-[#133C6F] transition-all transform hover:-translate-y-1 shadow-lg shadow-blue-500/20">
+  EXPLORAR CATÁLOGO
+</button>                        </div>
                         <div class="lg:w-1/2 relative flex justify-center">
                             <div class="absolute inset-0 bg-cobalt/5 rounded-full blur-3xl transform scale-150"></div>
                             <span class="material-symbols-outlined text-[15rem] text-cobalt/20 group-hover:scale-110 transition-transform duration-1000">laptop_mac</span>
@@ -184,7 +187,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="w-full py-6 border-2 border-cobalt text-white font-bold rounded-2xl hover:bg-cobalt transition-colors">SOLICITAR INFORMACIÓN</button>
+<button 
+  onclick="(() => {
+    // 1. Buscamos el enlace de 'Inicio' en el menú principal
+    const navInicio = document.querySelectorAll('.nav-link')[0];
+    
+    // 2. Cargamos la sección pasando el nav para que mueva la línea azul
+    cargarSeccion('inicio.html', navInicio); 
+    
+    // 3. Esperamos a que el contenido cargue para hacer el scroll
+    setTimeout(() => { 
+      const el = document.getElementById('contacto');
+      if(el) el.scrollIntoView({ behavior: 'smooth' }); 
+    }, 500);
+  })()"
+  class="w-full py-6 border-2 border-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all duration-300 uppercase tracking-widest active:scale-[0.98] shadow-lg hover:shadow-primary/20">
+  SOLICITAR INFORMACIÓN
+</button>
                         </div>
                         <div class="bg-white text-navy-dark rounded-[3rem] p-16 shadow-2xl relative overflow-hidden flex flex-col justify-between">
                             <div class="relative z-10">
@@ -235,9 +254,25 @@
                         INICIAR PROYECTO
                         <span class="material-symbols-outlined">arrow_forward</span>
 </button>
-<button class="px-14 py-7 border-4 border-slate-mid text-slate-mid font-black text-2xl rounded-full hover:bg-slate-mid hover:text-navy-dark transition-all">
-                        CONTÁCTANOS
-                    </button>
+<button 
+  onclick="(() => {
+    // 1. Buscamos el enlace de 'Inicio' en el menú (índice 0)
+    const navInicio = document.querySelectorAll('.nav-link')[0];
+    
+    // 2. Cargamos la sección pasando el nav para activar la línea azul
+    if (typeof cargarSeccion === 'function') {
+      cargarSeccion('inicio.html', navInicio); 
+    }
+    
+    // 3. Scroll suave hacia la sección de contacto en inicio.html
+    setTimeout(() => { 
+      const el = document.getElementById('contacto');
+      if(el) el.scrollIntoView({ behavior: 'smooth' }); 
+    }, 500);
+  })()"
+  class="px-14 py-7 border-4 border-slate-mid text-slate-mid font-black text-2xl rounded-full hover:bg-slate-mid hover:text-navy-dark transition-all active:scale-95 shadow-xl">
+  CONTÁCTANOS
+</button>
                     </div>
                 </div>
             </div>
