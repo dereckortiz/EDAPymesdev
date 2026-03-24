@@ -9,6 +9,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link rel="stylesheet" href="/static/css/estilo.css">
+    
+    <!-- CSS para el catálogo (importante para que funcione) -->
+    <style>
+        body {
+            background-color: #f6f6f6;
+            color: #2d2f2f;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            vertical-align: middle;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0059b6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
 <script>
     tailwind.config = {
         theme: {
@@ -321,7 +347,8 @@
         <div class="border-t-2 border-[#034AB0] pt-8 mt-8 text-center"><p class="text-gray-500 text-sm font-semibold">© 2026 <span class="text-[#034AB0]">EDAPymes</span>. Todos los derechos reservados.</p></div>
     </div>
 </footer>
-<<script>
+
+<script>
 // Variables globales para el carrusel
 let carruselActivo = false;
 let intervaloAutoPlay = null;
@@ -358,13 +385,35 @@ function activarAnimacionesScroll() {
     });
 }
 
+// Función mejorada para ejecutar scripts después de cargar HTML
+function ejecutarScripts(html) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    const scripts = tempDiv.querySelectorAll('script');
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement('script');
+        
+        // Copiar todos los atributos
+        Array.from(oldScript.attributes).forEach(attr => {
+            newScript.setAttribute(attr.name, attr.value);
+        });
+        
+        // Copiar el contenido
+        newScript.textContent = oldScript.textContent;
+        
+        // Reemplazar el script viejo con el nuevo
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+    
+    return tempDiv.innerHTML;
+}
 function cargarSeccion(pagina, linkElement) {
     const contenedor = document.getElementById("contenido");
     contenedor.style.opacity = "0";
     contenedor.style.transform = "translateY(10px)";
     contenedor.style.transition = "all 0.3s ease";
     
-    // Detener carrusel si estaba activo
     if (intervaloAutoPlay) {
         clearInterval(intervaloAutoPlay);
         intervaloAutoPlay = null;
@@ -372,7 +421,6 @@ function cargarSeccion(pagina, linkElement) {
     carruselActivo = false;
 
     setTimeout(() => {
-        // Si es 'inicio', cargamos el HTML directamente
         if (pagina === 'inicio') {
             contenedor.innerHTML = obtenerHTMLInicio();
             window.scrollTo(0, 0);
@@ -386,20 +434,54 @@ function cargarSeccion(pagina, linkElement) {
         } else {
             fetch(pagina)
                 .then(response => {
-                    if (!response.ok) throw new Error("No se pudo cargar la página");
+                    if (!response.ok) throw new Error(`No se pudo cargar ${pagina}`);
                     return response.text();
                 })
                 .then(html => {
-                    contenedor.innerHTML = html;
+                    // Extraer solo el contenido del body
+                    let contenidoHTML = html;
+                    const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+                    if (bodyMatch) {
+                        contenidoHTML = bodyMatch[1];
+                    }
+                    
+                    // Extraer estilos adicionales del head
+                    const styleMatch = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
+                    if (styleMatch) {
+                        // Agregar estilos temporales si no existen
+                        let existingStyles = document.querySelector('#dynamic-styles');
+                        if (!existingStyles) {
+                            const styleTag = document.createElement('style');
+                            styleTag.id = 'dynamic-styles';
+                            document.head.appendChild(styleTag);
+                            existingStyles = styleTag;
+                        }
+                        existingStyles.textContent = styleMatch.join('\n');
+                    }
+                    
+                    contenedor.innerHTML = contenidoHTML;
                     window.scrollTo(0, 0);
                     contenedor.style.opacity = "1";
                     contenedor.style.transform = "translateY(0)";
                     activarAnimacionesScroll();
+                    
+                    // Ejecutar scripts del contenido cargado
+                    const scripts = contenedor.querySelectorAll('script');
+                    scripts.forEach(script => {
+                        if (script.textContent && !script.src) {
+                            try {
+                                eval(script.textContent);
+                            } catch(e) {
+                                console.error("Error ejecutando script:", e);
+                            }
+                        }
+                    });
+                    
                     if (typeof iniciarTodo === "function") iniciarTodo();
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    contenedor.innerHTML = "<div class='py-20 text-center text-red-500'>Error al cargar la sección.</div>";
+                    contenedor.innerHTML = `<div class='py-20 text-center text-red-500'>Error al cargar ${pagina}: ${error.message}</div>`;
                     contenedor.style.opacity = "1";
                 });
         }
