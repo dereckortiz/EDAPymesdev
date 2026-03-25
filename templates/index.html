@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <link rel="stylesheet" href="/static/css/estilo.css">
     
-    <!-- CSS para el catálogo (importante para que funcione) -->
     <style>
         body {
             background-color: #f6f6f6;
@@ -32,6 +31,56 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        /* Estilos para el modal de especificaciones */
+        .specs-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+        .specs-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .image-gallery {
+            position: relative;
+            overflow: hidden;
+        }
+        .gallery-thumbnails {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .thumbnail:hover, .thumbnail.active {
+            border-color: #0059b6;
+            transform: scale(1.05);
         }
     </style>
 
@@ -349,13 +398,53 @@
 </footer>
 
 <script>
-// Variables globales para el carrusel
+// Variables globales
 let carruselActivo = false;
 let intervaloAutoPlay = null;
 
-/**
- * Lógica para mover la línea azul del Navbar
- */
+// Modal de especificaciones
+function mostrarEspecificacionesModal(especificaciones) {
+    const modal = document.getElementById('specsModalGlobal');
+    const specsList = document.getElementById('specsListGlobal');
+    
+    if (!modal) return;
+    
+    specsList.innerHTML = '';
+    if (especificaciones && especificaciones.length > 0) {
+        especificaciones.forEach(spec => {
+            if (spec.label && spec.value) {
+                specsList.innerHTML += `
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                        <span class="material-symbols-outlined text-primary">${spec.icono || 'bolt'}</span>
+                        <div class="flex-1">
+                            <p class="text-xs font-bold text-gray-500">${escapeHtmlGlobal(spec.label)}</p>
+                            <p class="text-sm font-medium text-gray-800">${escapeHtmlGlobal(spec.value)}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
+    
+    if (specsList.innerHTML === '') {
+        specsList.innerHTML = '<p class="text-gray-500 text-center">No hay especificaciones técnicas disponibles</p>';
+    }
+    
+    modal.classList.remove('hidden');
+}
+
+function cerrarSpecsModalGlobal() {
+    const modal = document.getElementById('specsModalGlobal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function escapeHtmlGlobal(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function moverIndicador(elemento) {
     const indicador = document.getElementById("nav-indicator");
     if (elemento && indicador) {
@@ -385,29 +474,6 @@ function activarAnimacionesScroll() {
     });
 }
 
-// Función mejorada para ejecutar scripts después de cargar HTML
-function ejecutarScripts(html) {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    
-    const scripts = tempDiv.querySelectorAll('script');
-    scripts.forEach(oldScript => {
-        const newScript = document.createElement('script');
-        
-        // Copiar todos los atributos
-        Array.from(oldScript.attributes).forEach(attr => {
-            newScript.setAttribute(attr.name, attr.value);
-        });
-        
-        // Copiar el contenido
-        newScript.textContent = oldScript.textContent;
-        
-        // Reemplazar el script viejo con el nuevo
-        oldScript.parentNode.replaceChild(newScript, oldScript);
-    });
-    
-    return tempDiv.innerHTML;
-}
 function cargarSeccion(pagina, linkElement) {
     const contenedor = document.getElementById("contenido");
     contenedor.style.opacity = "0";
@@ -438,25 +504,10 @@ function cargarSeccion(pagina, linkElement) {
                     return response.text();
                 })
                 .then(html => {
-                    // Extraer solo el contenido del body
                     let contenidoHTML = html;
                     const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
                     if (bodyMatch) {
                         contenidoHTML = bodyMatch[1];
-                    }
-                    
-                    // Extraer estilos adicionales del head
-                    const styleMatch = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
-                    if (styleMatch) {
-                        // Agregar estilos temporales si no existen
-                        let existingStyles = document.querySelector('#dynamic-styles');
-                        if (!existingStyles) {
-                            const styleTag = document.createElement('style');
-                            styleTag.id = 'dynamic-styles';
-                            document.head.appendChild(styleTag);
-                            existingStyles = styleTag;
-                        }
-                        existingStyles.textContent = styleMatch.join('\n');
                     }
                     
                     contenedor.innerHTML = contenidoHTML;
@@ -465,17 +516,31 @@ function cargarSeccion(pagina, linkElement) {
                     contenedor.style.transform = "translateY(0)";
                     activarAnimacionesScroll();
                     
-                    // Ejecutar scripts del contenido cargado
-                    const scripts = contenedor.querySelectorAll('script');
-                    scripts.forEach(script => {
-                        if (script.textContent && !script.src) {
-                            try {
-                                eval(script.textContent);
-                            } catch(e) {
-                                console.error("Error ejecutando script:", e);
+                    // Si es catálogo, forzar la ejecución de su script
+                    if (pagina === 'Catalogo.html' || pagina === 'catalogo.html') {
+                        setTimeout(() => {
+                            if (typeof window.iniciarCatalogo === 'function') {
+                                window.iniciarCatalogo();
+                            } else {
+                                // Intentar ejecutar scripts dentro del contenido
+                                const scripts = contenedor.querySelectorAll('script');
+                                scripts.forEach(script => {
+                                    if (script.textContent && !script.src) {
+                                        try {
+                                            eval(script.textContent);
+                                        } catch(e) {
+                                            console.error("Error ejecutando script:", e);
+                                        }
+                                    }
+                                });
+                                // Llamar directamente a las funciones globales del catálogo
+                                if (typeof window.cargarProductos === 'function') {
+                                    window.cargarProductos();
+                                    window.cargarCategorias();
+                                }
                             }
-                        }
-                    });
+                        }, 200);
+                    }
                     
                     if (typeof iniciarTodo === "function") iniciarTodo();
                 })
@@ -511,6 +576,19 @@ function configurarCardsServicios() {
 
 function obtenerHTMLInicio() {
     return `
+<!-- Modal Global de Especificaciones -->
+<div id="specsModalGlobal" class="specs-modal hidden" onclick="cerrarSpecsModalGlobal(event)">
+  <div class="specs-content p-6" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold">Especificaciones Técnicas</h3>
+      <button onclick="cerrarSpecsModalGlobal()" class="text-gray-500 hover:text-gray-700">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div id="specsListGlobal" class="space-y-3"></div>
+  </div>
+</div>
+
 <div class="mt-24 px-4">
   <div class="carousel-container">
     <div class="carousel-track" id="carouselTrack"></div>
@@ -582,7 +660,6 @@ function obtenerHTMLInicio() {
 }
 
 function iniciarCarrusel() {
-    // Limpiar intervalos anteriores
     if (intervaloAutoPlay) {
         clearInterval(intervaloAutoPlay);
         intervaloAutoPlay = null;
@@ -610,7 +687,6 @@ function iniciarCarrusel() {
     
     if (!track) return;
     
-    // Limpiar y reconstruir
     track.innerHTML = '';
     if (dotsContainer) dotsContainer.innerHTML = '';
     
@@ -700,7 +776,6 @@ function iniciarCarrusel() {
     function startAutoPlay() { if (intervaloAutoPlay) clearInterval(intervaloAutoPlay); intervaloAutoPlay = setInterval(() => { const slides = document.querySelectorAll('.carousel-slide'); const current = slides[currentIndex]; const video = current?.querySelector('video'); if (!video || video.paused || video.ended) { nextSlide(); } }, 6000); }
     function resetAutoPlay() { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } startAutoPlay(); }
     
-    // Configurar botones (reemplazar para evitar múltiples listeners)
     if (prevBtn) {
         const newPrev = prevBtn.cloneNode(true);
         prevBtn.parentNode.replaceChild(newPrev, prevBtn);
@@ -714,7 +789,6 @@ function iniciarCarrusel() {
         nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
     }
     
-    // Botones de acción
     document.querySelectorAll('.btn-catalogo-action').forEach(btn => {
         btn.removeEventListener('click', btn._handler);
         btn._handler = () => cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2]);
@@ -741,7 +815,6 @@ function iniciarCarrusel() {
     startAutoPlay();
     carruselActivo = true;
     
-    // Manejar visibilidad de pestaña
     document.removeEventListener('visibilitychange', handleVisibilityChange);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 }
@@ -784,7 +857,6 @@ function iniciarTodo() {
     configurarCardsServicios();
 }
 
-// Inicialización al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
     const inicioLink = document.querySelector(".nav-link.active");
     const contenedor = document.getElementById("contenido");
@@ -792,7 +864,6 @@ window.addEventListener("DOMContentLoaded", () => {
     window.scrollTo(0, 0);
     activarAnimacionesScroll();
     
-    // Mover indicador al elemento activo
     if (inicioLink) {
         moverIndicador(inicioLink);
     }
@@ -808,7 +879,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Evento resize para mantener el indicador en su posición
 window.addEventListener("resize", () => {
     const activeLink = document.querySelector(".nav-link.active");
     if (activeLink) {
@@ -816,11 +886,14 @@ window.addEventListener("resize", () => {
     }
 });
 
-// Exponer funciones globalmente
+// Exponer funciones globales
 window.cargarSeccion = cargarSeccion;
 window.configurarCardsServicios = configurarCardsServicios;
 window.activarAnimacionesScroll = activarAnimacionesScroll;
 window.moverIndicador = moverIndicador;
+window.mostrarEspecificacionesModal = mostrarEspecificacionesModal;
+window.cerrarSpecsModalGlobal = cerrarSpecsModalGlobal;
+window.escapeHtmlGlobal = escapeHtmlGlobal;
 </script>
 
 </body>
