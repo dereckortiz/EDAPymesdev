@@ -36,7 +36,8 @@
                 <h2 class="font-headline text-5xl md:text-7xl font-bold text-white relative z-10 pt-16">Ecosistema Profesional</h2>
             </div>
 
-            <div class="py-32 bg-tech-gray/50">
+            <!-- SECCIÓN DE CAPACITACIONES Y ASESORÍAS - ID: capacitaciones -->
+            <div id="capacitaciones" class="py-32 bg-tech-gray/50 scroll-mt-24">
                 <div class="container mx-auto px-6">
                     <div class="group relative overflow-hidden rounded-[3rem] min-h-[600px] shadow-2xl">
                         <img alt="Formación" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
@@ -60,7 +61,8 @@
                 </div>
             </div>
 
-            <div class="py-32">
+            <!-- SECCIÓN DE MANTENIMIENTO Y REPARACIÓN - ID: mantenimiento -->
+            <div id="mantenimiento" class="py-32 scroll-mt-24">
                 <div class="container mx-auto px-6">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div class="bg-cobalt rounded-[3rem] p-16 md:p-24 shadow-2xl relative overflow-hidden group">
@@ -104,6 +106,7 @@
                 </div>
             </div>
 
+            <!-- SECCIÓN DE VENTA DE TECNOLOGÍA -->
             <div class="py-32 bg-slate-light/5">
                 <div class="container mx-auto px-6">
                     <div class="bg-white rounded-[3rem] p-12 md:p-20 flex flex-col lg:flex-row items-center justify-between gap-12 group overflow-hidden relative shadow-2xl">
@@ -131,10 +134,11 @@
                 </div>
             </div>
 
-            <div class="py-32">
+            <!-- SECCIÓN DE SEGURIDAD - ID: seguridad -->
+            <div id="seguridad" class="py-32 scroll-mt-24">
                 <div class="container mx-auto px-6">
                     <div class="group relative rounded-[3rem] overflow-hidden min-h-[700px] shadow-2xl">
-                    <img alt="CCTV" class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 transition-all duration-1000" 
+                        <img alt="CCTV" class="absolute inset-0 w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 transition-all duration-1000" 
                              src="https://images.unsplash.com/photo-1618482914248-29272d021005?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"/>
                         <div class="absolute inset-0 bg-navy-dark/60 group-hover:bg-navy-dark/30 transition-colors"></div>
                         <div class="relative z-10 p-12 md:p-24 h-full flex flex-col justify-end max-w-4xl">
@@ -166,7 +170,8 @@
                 </div>
             </div>
 
-            <div class="py-32 bg-tech-gray">
+            <!-- SECCIÓN DE PRÉSTAMOS PRENDATARIOS Y TRADUCCIÓN - ID: asesorias -->
+            <div id="asesorias" class="py-32 bg-tech-gray scroll-mt-24">
                 <div class="container mx-auto px-6">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                         <div class="bg-navy-dark border-2 border-cobalt rounded-[3rem] p-16 shadow-2xl flex flex-col justify-between">
@@ -187,23 +192,19 @@
                                     </div>
                                 </div>
                             </div>
-<button 
-  onclick="(() => {
-    // 1. Buscamos el enlace de 'Inicio' en el menú principal
-    const navInicio = document.querySelectorAll('.nav-link')[0];
-    
-    // 2. Cargamos la sección pasando el nav para que mueva la línea azul
-    cargarSeccion('inicio.html', navInicio); 
-    
-    // 3. Esperamos a que el contenido cargue para hacer el scroll
-    setTimeout(() => { 
-      const el = document.getElementById('contacto');
-      if(el) el.scrollIntoView({ behavior: 'smooth' }); 
-    }, 500);
-  })()"
-  class="w-full py-6 border-2 border-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all duration-300 uppercase tracking-widest active:scale-[0.98] shadow-lg hover:shadow-primary/20">
-  SOLICITAR INFORMACIÓN
-</button>
+                            <!-- BOTÓN CORREGIDO - CAMBIADO DE 'inicio.html' A 'inicio' -->
+                            <button 
+                              onclick="(() => {
+                                const navInicio = document.querySelectorAll('.nav-link')[0];
+                                cargarSeccion('inicio', navInicio);
+                                setTimeout(() => { 
+                                  const el = document.getElementById('contacto');
+                                  if(el) el.scrollIntoView({ behavior: 'smooth' }); 
+                                }, 500);
+                              })()"
+                              class="w-full py-6 border-2 border-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all duration-300 uppercase tracking-widest active:scale-[0.98] shadow-lg hover:shadow-primary/20">
+                              SOLICITAR INFORMACIÓN
+                            </button>
                         </div>
                         <div class="bg-white text-navy-dark rounded-[3rem] p-16 shadow-2xl relative overflow-hidden flex flex-col justify-between">
                             <div class="relative z-10">
@@ -250,29 +251,25 @@
                         No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercanía, <span class="text-cobalt font-bold">calidad y calidez</span> que su visión merece.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-8 pt-8">
-<button class="px-14 py-7 bg-cobalt text-white font-black text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-transform flex items-center gap-4">
-                        INICIAR PROYECTO
-                        <span class="material-symbols-outlined">arrow_forward</span>
-</button>
-<button 
-  onclick="(() => {
-    // 1. Buscamos el enlace de 'Inicio' en el menú (índice 0)
-    const navInicio = document.querySelectorAll('.nav-link')[0];
-    
-    // 2. Cargamos la sección pasando el nav para activar la línea azul
-    if (typeof cargarSeccion === 'function') {
-      cargarSeccion('inicio.html', navInicio); 
-    }
-    
-    // 3. Scroll suave hacia la sección de contacto en inicio.html
-    setTimeout(() => { 
-      const el = document.getElementById('contacto');
-      if(el) el.scrollIntoView({ behavior: 'smooth' }); 
-    }, 500);
-  })()"
-  class="px-14 py-7 border-4 border-slate-mid text-slate-mid font-black text-2xl rounded-full hover:bg-slate-mid hover:text-navy-dark transition-all active:scale-95 shadow-xl">
-  CONTÁCTANOS
-</button>
+                        <button class="px-14 py-7 bg-cobalt text-white font-black text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-transform flex items-center gap-4">
+                            INICIAR PROYECTO
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                        <!-- BOTÓN CORREGIDO - CAMBIADO DE 'inicio.html' A 'inicio' -->
+                        <button 
+                          onclick="(() => {
+                            const navInicio = document.querySelectorAll('.nav-link')[0];
+                            if (typeof cargarSeccion === 'function') {
+                              cargarSeccion('inicio', navInicio);
+                            }
+                            setTimeout(() => { 
+                              const el = document.getElementById('contacto');
+                              if(el) el.scrollIntoView({ behavior: 'smooth' }); 
+                            }, 500);
+                          })()"
+                          class="px-14 py-7 border-4 border-slate-mid text-slate-mid font-black text-2xl rounded-full hover:bg-slate-mid hover:text-navy-dark transition-all active:scale-95 shadow-xl">
+                          CONTÁCTANOS
+                        </button>
                     </div>
                 </div>
             </div>
@@ -284,4 +281,5 @@
 <style>
     .text-outline { -webkit-text-stroke: 1px rgba(255,255,255,0.3); color: transparent; }
     .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); }
+    .scroll-mt-24 { scroll-margin-top: 100px; }
 </style>

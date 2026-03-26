@@ -28,14 +28,23 @@ tailwind.config = {
 </script>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #f6f6f6;
   color: #2d2f2f;
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
+
 .material-symbols-outlined {
   vertical-align: middle;
 }
+
 .loading-spinner {
   display: inline-block;
   width: 40px;
@@ -45,42 +54,12 @@ body {
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-/* Estilos para el carrusel de imágenes */
-.image-gallery {
-  position: relative;
-  overflow: hidden;
-}
-.gallery-thumbnails {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-}
-.thumbnail {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.2s;
-}
-.thumbnail:hover, .thumbnail.active {
-  border-color: #0059b6;
-  transform: scale(1.05);
-}
-.main-image {
-  width: 100%;
-  height: 300px;
-  object-fit: contain;
-  background-color: #f5f5f5;
-  border-radius: 12px;
-}
+
 /* Modal para especificaciones */
 .specs-modal {
   position: fixed;
@@ -95,6 +74,7 @@ body {
   z-index: 1000;
   animation: fadeIn 0.3s;
 }
+
 .specs-content {
   background: white;
   border-radius: 24px;
@@ -103,73 +83,79 @@ body {
   max-height: 80vh;
   overflow-y: auto;
 }
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Layout para catálogo dentro del index */
+.catalogo-wrapper {
+  display: flex;
+  min-height: calc(100vh - 80px);
+}
+
+.catalogo-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background-color: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  padding: 20px 0;
+  height: calc(100vh - 80px);
+  position: sticky;
+  top: 80px;
+  overflow-y: auto;
+}
+
+.catalogo-main {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100vh - 80px);
+}
+
+.catalogo-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.catalogo-main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.catalogo-main::-webkit-scrollbar-thumb {
+  background: #0059b6;
+  border-radius: 4px;
+}
+
+.catalogo-main::-webkit-scrollbar-thumb:hover {
+  background: #004090;
 }
 </style>
 </head>
 
 <body>
 
-<div class="flex min-h-screen">
+<!-- CONTENIDO DEL CATÁLOGO -->
+<div class="catalogo-wrapper">
 
-<!-- SIDEBAR DINÁMICO -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 flex flex-col gap-2 z-40">
-  <div class="px-8 py-6">
-    <h2 class="font-bold text-lg text-slate-900">Collections</h2>
-    <p class="text-xs text-slate-500">Precision Curated Tech</p>
-  </div>
-
-  <nav id="navCategorias" class="flex flex-col gap-1"></nav>
-  
-  <!-- Botón para mostrar todos los productos -->
-  <div class="mt-4 px-6">
-    <button onclick="window.mostrarTodosLosProductos()" 
-            class="w-full text-left flex items-center gap-3 text-slate-500 px-6 py-3 hover:bg-slate-100 cursor-pointer rounded-lg">
-      <span class="material-symbols-outlined">apps</span>
-      <span>Todos los productos</span>
-    </button>
-  </div>
+<!-- SIDEBAR -->
+<aside class="catalogo-sidebar">
+  <nav id="navCategorias" class="flex flex-col gap-1 mt-2"></nav>
 </aside>
 
-<!-- CONTENIDO -->
-<main class="ml-64 flex-1">
+<!-- CONTENIDO PRINCIPAL -->
+<main class="catalogo-main">
 
-<!-- CARRUSEL -->
-<section class="relative w-full h-[400px] overflow-hidden">
-  <div id="carousel" class="flex transition-transform duration-700">
-    <div class="min-w-full h-[400px] relative">
-      <img src="/src/image/foto11.jpg" class="w-full h-full object-cover" alt="Tecnología">
-      <div class="absolute inset-0 bg-black/40 flex justify-center items-center text-white">
-        <h2 class="text-4xl font-bold">Tecnología de Última Generación</h2>
-      </div>
-    </div>
-    <div class="min-w-full h-[400px] relative">
-      <img src="/src/image/foto12.jpg" class="w-full h-full object-cover" alt="Equipos">
-      <div class="absolute inset-0 bg-black/40 flex justify-center items-center text-white">
-        <h2 class="text-4xl font-bold">Equipos Profesionales</h2>
-      </div>
-    </div>
-    <div class="min-w-full h-[400px] relative">
-      <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8" class="w-full h-full object-cover" alt="Accesorios">
-      <div class="absolute inset-0 bg-black/40 flex justify-center items-center text-white">
-        <h2 class="text-4xl font-bold">Accesorios Premium</h2>
-      </div>
-    </div>
-  </div>
-
-  <!-- BUSCADOR -->
-  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-md px-4">
-    <input id="buscador"
-           type="text"
-           placeholder="Buscar productos..."
-           class="w-full px-4 py-3 rounded-full shadow-lg outline-none focus:ring-2 focus:ring-blue-500">
+<!-- IMAGEN FIJA (REEMPLAZA EL CARRUSEL) -->
+<section class="relative w-full h-[400px] overflow-hidden rounded-2xl mb-8">
+  <img src="/src/image/image.png" class="w-full h-full object-cover" alt="EDAPymes">
+  <div class="absolute inset-0 bg-black/40 flex justify-center items-center text-white">
+    <h2 class="text-4xl font-bold">Tecnología de Última Generación</h2>
   </div>
 </section>
 
 <!-- CONTENIDO -->
-<div class="p-12">
+<div>
 
 <header class="mb-16 max-w-4xl">
   <h1 class="text-5xl font-bold mb-6">
@@ -182,7 +168,7 @@ body {
 
 <!-- GRID PRODUCTOS -->
 <div id="gridProductos"
-     class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+     class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
   <!-- Loading spinner -->
   <div class="col-span-full flex justify-center items-center py-20">
     <div class="loading-spinner"></div>
@@ -265,25 +251,25 @@ window.cargarProductos = async function() {
   const contenedor = document.getElementById("gridProductos");
 
   try {
-    console.log("Intentando conectar a: http://localhost:3000/api/productos");
+    console.log("📡 Intentando conectar a: http://localhost:3000/api/productos");
     const res = await fetch("http://localhost:3000/api/productos");
     
-    console.log("Respuesta del servidor:", res.status);
+    console.log("📡 Respuesta del servidor:", res.status);
     
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     
     productosGlobal = await res.json();
-    console.log("Productos cargados:", productosGlobal.length);
+    console.log("✅ Productos cargados:", productosGlobal.length);
     
     if (productosGlobal.length === 0) {
-      console.log("No hay productos en la base de datos");
+      console.log("⚠️ No hay productos en la base de datos");
     }
     
     window.renderProductos(productosGlobal);
   } catch (err) {
-    console.error("Error detallado cargando productos:", err);
+    console.error("❌ Error detallado cargando productos:", err);
     contenedor.innerHTML = `<div class='col-span-full text-center py-20'>
       <p class='text-red-500'>Error al cargar productos: ${err.message}</p>
       <p class='text-gray-500 mt-2'>Verifica que el servidor esté corriendo en http://localhost:3000</p>
@@ -320,8 +306,8 @@ window.renderProductos = function(lista) {
     }
     
     const precioFormateado = typeof p.precio === 'number' ? p.precio.toFixed(2) : p.precio;
-    const tieneEspecificaciones = p.especificaciones && p.especificaciones.length > 0 && p.especificaciones.some(s => s.label && s.value);
-    const categoriaIcono = p.categoriaIcono || 'category';
+    // Obtener el icono de la categoría
+    const categoriaIcono = obtenerIconoCategoria(p.categoria);
     
     contenedor.innerHTML += `
     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden cursor-pointer group flex flex-col">
@@ -345,21 +331,35 @@ window.renderProductos = function(lista) {
           <span class="text-blue-600 font-bold text-xl">
             C$${precioFormateado}
           </span>
-          <div class="flex gap-2">
-            ${tieneEspecificaciones ? `<button onclick="event.stopPropagation(); window.mostrarEspecificaciones(${JSON.stringify(p.especificaciones).replace(/"/g, '&quot;')})" 
-                    class="bg-gray-100 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-200 transition-colors flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm">bolt</span> Especs
-            </button>` : ''}
-            <button onclick="event.stopPropagation(); window.verProducto('${escapeHtml(p.nombre)}','${p.precio}','${imagenUrl}')" 
-                    class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
-              Cotizar
-            </button>
-          </div>
+          <button onclick="event.stopPropagation(); window.verProducto('${escapeHtml(p.nombre)}','${p.precio}','${imagenUrl}')" 
+                  class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+            Ver más
+          </button>
         </div>
       </div>
     </div>`;
   });
 };
+
+// Función para obtener el icono de una categoría
+let categoriasIconos = {};
+
+async function cargarIconosCategorias() {
+  try {
+    const res = await fetch("http://localhost:3000/api/categorias");
+    const categorias = await res.json();
+    categorias.forEach(cat => {
+      categoriasIconos[cat.nombre] = cat.icono || 'category';
+    });
+  } catch (err) {
+    console.error("Error cargando iconos de categorías:", err);
+  }
+}
+
+function obtenerIconoCategoria(categoriaNombre) {
+  if (!categoriaNombre) return 'category';
+  return categoriasIconos[categoriaNombre] || 'category';
+}
 
 // Función para escapar HTML (seguridad)
 function escapeHtml(text) {
@@ -381,7 +381,12 @@ window.cargarCategorias = async function() {
     }
     
     const categorias = await res.json();
-    console.log("Categorías cargadas:", categorias.length);
+    console.log("📁 Categorías cargadas:", categorias.length);
+    
+    // Guardar iconos para usar en renderizado
+    categorias.forEach(c => {
+      categoriasIconos[c.nombre] = c.icono || 'category';
+    });
 
     nav.innerHTML = "";
 
@@ -424,32 +429,8 @@ window.filtrarCategoria = function(nombre) {
   });
 };
 
-// Función de búsqueda en tiempo real
-let timeoutId;
-document.addEventListener("input", e => {
-  if (e.target.id === "buscador") {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      const texto = e.target.value.toLowerCase().trim();
-      
-      let filtrados;
-      if (texto === "") {
-        if (categoriaActual) {
-          filtrados = productosGlobal.filter(p => p.categoria === categoriaActual);
-        } else {
-          filtrados = [...productosGlobal];
-        }
-      } else {
-        filtrados = productosGlobal.filter(p => 
-          p.nombre.toLowerCase().includes(texto) ||
-          (p.categoria && p.categoria.toLowerCase().includes(texto)) ||
-          (p.descripcion && p.descripcion.toLowerCase().includes(texto))
-        );
-      }
-      window.renderProductos(filtrados);
-    }, 300);
-  }
-});
+// Función de búsqueda en tiempo real - ELIMINADA porque ya no hay buscador
+// Se mantiene el event listener pero solo para no romper nada
 
 // Función para ver producto (redirigir a ventana de cotización)
 window.verProducto = function(nombre, precio, imagen) {
@@ -457,61 +438,37 @@ window.verProducto = function(nombre, precio, imagen) {
   window.location.href = url;
 };
 
-// Inicializar todo
-function iniciarTodo() {
-  window.cargarProductos();
-  window.cargarCategorias();
-}
+// Inicializar todo - esta es la función principal que se llama desde el index
+window.iniciarCatalogo = async function() {
+  console.log("🚀 Iniciando catálogo...");
+  await cargarIconosCategorias();
+  await window.cargarProductos();
+  await window.cargarCategorias();
+};
 
-// Carrusel automático
-let index = 0;
-let carouselInterval;
-
-function iniciarCarrusel() {
-  if (carouselInterval) clearInterval(carouselInterval);
-  
-  carouselInterval = setInterval(() => {
-    const carousel = document.getElementById("carousel");
-    if (!carousel) return;
-    index = (index + 1) % 3;
-    carousel.style.transform = `translateX(-${index * 100}%)`;
-  }, 5000);
-}
-
-// Pausar carrusel al pasar el mouse
-const carouselSection = document.querySelector('section.relative.w-full');
-if (carouselSection) {
-  carouselSection.addEventListener('mouseenter', () => {
-    if (carouselInterval) clearInterval(carouselInterval);
-  });
-  carouselSection.addEventListener('mouseleave', iniciarCarrusel);
-}
-
-// Iniciar cuando la página cargue directamente
+// Iniciar cuando la página cargue directamente (si se abre sola)
 document.addEventListener("DOMContentLoaded", () => {
-  iniciarTodo();
-  iniciarCarrusel();
+  console.log("📄 DOMContentLoaded - iniciando catálogo directo");
+  window.iniciarCatalogo();
 });
 
 // Manejar errores de red
 window.addEventListener('online', () => {
-  console.log('Conexión restaurada, recargando datos...');
-  iniciarTodo();
+  console.log('🌐 Conexión restaurada, recargando datos...');
+  window.iniciarCatalogo();
 });
 
 window.addEventListener('offline', () => {
-  console.log('Sin conexión a internet');
+  console.log('📡 Sin conexión a internet');
   const contenedor = document.getElementById("gridProductos");
-  contenedor.innerHTML = "<div class='col-span-full text-center py-20'><p class='text-red-500'>Sin conexión a internet. Verifica tu conexión.</p></div>";
+  if (contenedor) {
+    contenedor.innerHTML = "<div class='col-span-full text-center py-20'><p class='text-red-500'>Sin conexión a internet. Verifica tu conexión.</p></div>";
+  }
 });
 
-// Exponer la función iniciarTodo globalmente para que el index pueda llamarla
-window.iniciarCatalogo = iniciarTodo;
-
-// También exponer las funciones individuales
+// Exponer funciones adicionales
 window.escapeHtml = escapeHtml;
-window.productosGlobal = () => productosGlobal;
-window.setProductosGlobal = (data) => { productosGlobal = data; };
+window.obtenerIconoCategoria = obtenerIconoCategoria;
 </script>
 
 </body>

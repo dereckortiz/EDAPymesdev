@@ -46,6 +46,26 @@
         .premium-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(0, 89, 182, 0.1); border-color: rgba(0, 89, 182, 0.08); }
         .btn-smooth { transition: all 0.2s ease-in-out; }
     </style>
+    
+    <script>
+        // Función para navegar a secciones dentro de la misma página
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        // Función para manejar el clic en Ver Catálogo
+        function verCatalogo() {
+            if (typeof cargarSeccion !== 'undefined') {
+                const navCatalogo = document.querySelectorAll('.nav-link')[2];
+                cargarSeccion('Catalogo.html', navCatalogo);
+            } else {
+                window.location.href = 'Catalogo.html';
+            }
+        }
+    </script>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased edapymes-pro">
 
@@ -59,11 +79,11 @@
             </div>
             
             <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-on-surface-variant">
-                <a href="#inicio" class="hover:text-primary btn-smooth">Inicio</a>
-                <a href="#por-que" class="hover:text-primary btn-smooth">Nuestro Por Qué</a>
-                <a href="#fundamentos" class="hover:text-primary btn-smooth">Fundamentos</a>
-                <a href="#servicios" class="hover:text-primary btn-smooth">Servicios</a>
-                <a href="#contacto" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary-dim shadow-md shadow-primary/20">Contacto</a>
+                <a href="#inicio" class="hover:text-primary btn-smooth" onclick="scrollToSection('inicio'); return false;">Inicio</a>
+                <a href="#por-que" class="hover:text-primary btn-smooth" onclick="scrollToSection('por-que'); return false;">Nuestro Por Qué</a>
+                <a href="#fundamentos" class="hover:text-primary btn-smooth" onclick="scrollToSection('fundamentos'); return false;">Fundamentos</a>
+                <a href="#servicios" class="hover:text-primary btn-smooth" onclick="scrollToSection('servicios'); return false;">Servicios</a>
+                <a href="#contacto" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary-dim shadow-md shadow-primary/20" onclick="scrollToSection('contacto'); return false;">Contacto</a>
             </nav>
         </div>
     </header>
@@ -191,42 +211,45 @@
                 <h2 class="font-headline text-4xl md:text-5xl font-black tracking-tighter text-on-surface mb-6">¿Listo para potenciar tu negocio?</h2>
                 <p class="text-on-surface-variant mb-12 text-lg">Descubre cómo nuestra gama de servicios, desde soporte técnico hasta préstamos prendatarios, puede impulsar tu crecimiento hoy mismo.</p>
                 <div class="flex flex-col md:flex-row gap-4 justify-center">
-<button 
-  onclick="(() => {
-    // 1. Buscamos el enlace de 'Inicio' (índice 0) para activar la línea azul
-    const navInicio = document.querySelectorAll('.nav-link')[0];
-    
-    // 2. Cargamos inicio.html pasando el nav para que se vea activo
-    if (typeof cargarSeccion === 'function') {
-      cargarSeccion('inicio.html', navInicio); 
-    }
-    
-    // 3. Bajamos suavemente hasta la sección de contacto
-    setTimeout(() => { 
-      const el = document.getElementById('contacto');
-      if(el) el.scrollIntoView({ behavior: 'smooth' }); 
-    }, 500);
-  })()"
-  class="bg-primary text-white px-10 py-5 rounded-xl font-headline font-bold btn-smooth hover:bg-primary-dim hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95">
-  Solicitar Asesoría
-</button>
+                    <!-- BOTÓN SOLICITAR ASESORÍA CORREGIDO - MISMO PATRÓN QUE EN servicios.html -->
+                    <button 
+                      onclick="(() => {
+                        const navInicio = document.querySelectorAll('.nav-link')[0];
+                        if (typeof cargarSeccion === 'function') {
+                          cargarSeccion('inicio', navInicio);
+                        }
+                        setTimeout(() => { 
+                          const el = document.getElementById('contacto');
+                          if(el) el.scrollIntoView({ behavior: 'smooth' }); 
+                        }, 500);
+                      })()"
+                      class="bg-primary text-white px-10 py-5 rounded-xl font-headline font-bold btn-smooth hover:bg-primary-dim hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95">
+                      Solicitar Asesoría
+                    </button>
 
-<button 
-  onclick="(() => {
-    // 1. Buscamos el enlace de 'Catálogo' en el menú (índice 2)
-    const navCatalogo = document.querySelectorAll('.nav-link')[2];
-    
-    // 2. Cargamos Catalogo.html y movemos la línea azul a esa posición
-    if (typeof cargarSeccion === 'function') {
-      cargarSeccion('Catalogo.html', navCatalogo); 
-    }
-  })()"
-  class="bg-white text-primary px-10 py-5 rounded-xl font-headline font-bold border border-primary/20 hover:bg-primary/5 transition-all active:scale-95">
-  Ver Catálogo de Productos
-</button>
+                    <!-- BOTÓN VER CATÁLOGO (sin cambios) -->
+                    <button 
+                      onclick="verCatalogo()"
+                      class="bg-white text-primary px-10 py-5 rounded-xl font-headline font-bold border border-primary/20 hover:bg-primary/5 transition-all active:scale-95">
+                      Ver Catálogo de Productos
+                    </button>
                 </div>
             </div>
         </section>
     </main>
+    
+    <script>
+        // Asegurar que los enlaces del menú funcionen correctamente
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

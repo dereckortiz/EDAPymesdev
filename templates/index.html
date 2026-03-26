@@ -11,10 +11,17 @@
     <link rel="stylesheet" href="/static/css/estilo.css">
     
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background-color: #f6f6f6;
             color: #2d2f2f;
             font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
         .material-symbols-outlined {
             vertical-align: middle;
@@ -58,29 +65,53 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .image-gallery {
-            position: relative;
-            overflow: hidden;
-        }
-        .gallery-thumbnails {
+        
+        /* Estilos para cuando se carga el catálogo */
+        .catalogo-layout {
             display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            overflow-x: auto;
-            padding-bottom: 8px;
+            min-height: 100vh;
         }
-        .thumbnail {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s;
+        
+        .catalogo-sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 264px;
+            overflow-y: auto;
+            z-index: 40;
+            background-color: #f8fafc;
+            border-right: 1px solid #e2e8f0;
         }
-        .thumbnail:hover, .thumbnail.active {
-            border-color: #0059b6;
-            transform: scale(1.05);
+        
+        .catalogo-main {
+            margin-left: 264px;
+            flex: 1;
+            overflow-y: auto;
+            height: calc(100vh - 80px);
+            padding-top: 0;
+        }
+        
+        .catalogo-main::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .catalogo-main::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .catalogo-main::-webkit-scrollbar-thumb {
+            background: #0059b6;
+            border-radius: 4px;
+        }
+        
+        .catalogo-main::-webkit-scrollbar-thumb:hover {
+            background: #004090;
+        }
+        
+        /* Clase para ocultar el footer */
+        .footer-hidden {
+            display: none !important;
         }
     </style>
 
@@ -361,7 +392,7 @@
 
 <main id="contenido" class="pt-20"></main>
 
-<footer class="relative bg-slate-50 text-gray-800 pt-20 pb-10 overflow-hidden border-t-4 border-[#034AB0]">
+<footer id="mainFooter" class="relative bg-slate-50 text-gray-800 pt-20 pb-10 overflow-hidden border-t-4 border-[#034AB0]">
     <div class="max-w-7xl mx-auto px-8 relative z-10">
         <div class="grid md:grid-cols-4 gap-12 mb-12">
             <div class="space-y-4">
@@ -401,6 +432,39 @@
 // Variables globales
 let carruselActivo = false;
 let intervaloAutoPlay = null;
+
+// Función para ir a un servicio específico en la página de servicios
+function irAServicioEspecifico(servicioId) {
+    // 1. Obtén el enlace de "Servicios" en el menú (índice 1)
+    const navServicios = document.querySelectorAll('.nav-link')[1];
+    
+    // 2. Carga la página de servicios pasando el enlace del menú para activar la línea azul
+    cargarSeccion('servicios.html', navServicios);
+    
+    // 3. Espera un tiempo prudente para que la página se cargue y luego haz scroll al ID
+    setTimeout(() => {
+        // Busca el elemento por su ID (ej. 'capacitaciones', 'asesorias', etc.)
+        const elementoDestino = document.getElementById(servicioId);
+        if (elementoDestino) {
+            // Hace scroll suave hasta el elemento
+            elementoDestino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            console.warn(`Elemento con ID "${servicioId}" no encontrado en la página de servicios.`);
+        }
+    }, 600); // Tiempo para que la página se cargue completamente
+}
+
+// Función para ocultar/mostrar footer según la página
+function toggleFooter(pagina) {
+    const footer = document.getElementById('mainFooter');
+    if (!footer) return;
+    
+    if (pagina === 'Catalogo.html' || pagina === 'catalogo.html') {
+        footer.classList.add('footer-hidden');
+    } else {
+        footer.classList.remove('footer-hidden');
+    }
+}
 
 // Modal de especificaciones
 function mostrarEspecificacionesModal(especificaciones) {
@@ -485,6 +549,9 @@ function cargarSeccion(pagina, linkElement) {
         intervaloAutoPlay = null;
     }
     carruselActivo = false;
+    
+    // Ocultar/mostrar footer según la página
+    toggleFooter(pagina);
 
     setTimeout(() => {
         if (pagina === 'inicio') {
@@ -522,7 +589,6 @@ function cargarSeccion(pagina, linkElement) {
                             if (typeof window.iniciarCatalogo === 'function') {
                                 window.iniciarCatalogo();
                             } else {
-                                // Intentar ejecutar scripts dentro del contenido
                                 const scripts = contenedor.querySelectorAll('script');
                                 scripts.forEach(script => {
                                     if (script.textContent && !script.src) {
@@ -533,7 +599,6 @@ function cargarSeccion(pagina, linkElement) {
                                         }
                                     }
                                 });
-                                // Llamar directamente a las funciones globales del catálogo
                                 if (typeof window.cargarProductos === 'function') {
                                     window.cargarProductos();
                                     window.cargarCategorias();
@@ -608,10 +673,30 @@ function obtenerHTMLInicio() {
       <button onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todos los servicios <span class="material-symbols-outlined">east</span></button>
     </div>
     <div class="flex justify-center items-center gap-8 flex-wrap">
-      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined service-icon text-4xl">school</span><h3 class="text-xl font-bold text-white">Capacitaciones</h3><p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p></div>
-      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined text-4xl mb-4">lightbulb</span><h3 class="text-2xl font-bold text-white">Asesorías</h3><p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p></div>
-      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined service-icon text-4xl">videocam</span><h3 class="text-xl font-bold text-white">Seguridad</h3><p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p></div>
-      <div class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined text-4xl mb-4">build</span><h3 class="text-2xl font-bold text-white">Mantenimiento</h3><p class="text-white/80 text-sm mt-2">Soporte técnico preventivo y correctivo.</p></div>
+      <!-- Card para Capacitaciones - Ahora navega a sección específica -->
+      <div onclick="irAServicioEspecifico('capacitaciones')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined service-icon text-4xl">school</span>
+        <h3 class="text-xl font-bold text-white">Capacitaciones</h3>
+        <p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p>
+      </div>
+      <!-- Card para Asesorías - Ahora navega a sección específica -->
+      <div onclick="irAServicioEspecifico('asesorias')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined text-4xl mb-4">lightbulb</span>
+        <h3 class="text-2xl font-bold text-white">Asesorías</h3>
+        <p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p>
+      </div>
+      <!-- Card para Seguridad - Ahora navega a sección específica -->
+      <div onclick="irAServicioEspecifico('seguridad')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined service-icon text-4xl">videocam</span>
+        <h3 class="text-xl font-bold text-white">Seguridad</h3>
+        <p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p>
+      </div>
+      <!-- Card para Mantenimiento - Ahora navega a sección específica -->
+      <div onclick="irAServicioEspecifico('mantenimiento')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined text-4xl mb-4">build</span>
+        <h3 class="text-2xl font-bold text-white">Mantenimiento</h3>
+        <p class="text-white/80 text-sm mt-2">Soporte técnico preventivo y correctivo.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -888,6 +973,7 @@ window.addEventListener("resize", () => {
 
 // Exponer funciones globales
 window.cargarSeccion = cargarSeccion;
+window.irAServicioEspecifico = irAServicioEspecifico;
 window.configurarCardsServicios = configurarCardsServicios;
 window.activarAnimacionesScroll = activarAnimacionesScroll;
 window.moverIndicador = moverIndicador;
