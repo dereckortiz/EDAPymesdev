@@ -169,6 +169,10 @@
 <!-- TopNavBar -->
 <header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm flex justify-between items-center px-8 h-16">
     <div class="flex items-center gap-4">
+        <div class="relative group">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+            <input id="buscadorProductos" class="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Buscar productos..." type="text"/>
+        </div>
         <h2 id="tituloSeccion" class="text-blue-700 font-bold font-manrope text-base">Gestión de Productos</h2>
     </div>
     <div class="flex items-center gap-6">
@@ -372,7 +376,7 @@
 <script>
 const API = "http://localhost:3000/api";
 let productosGlobal = [];
-let imagenesSeleccionadas = []; // Array de { file, preview, isMain }
+let imagenesSeleccionadas = [];
 
 // Iconos disponibles para especificaciones
 const iconosDisponibles = [
@@ -479,7 +483,6 @@ function actualizarGridImagenes() {
         grid.appendChild(div);
     });
     
-    // Mostrar slots vacíos hasta 6 imágenes
     const slotsRestantes = 6 - imagenesSeleccionadas.length;
     for (let i = 0; i < slotsRestantes; i++) {
         const slot = document.createElement('div');
@@ -495,13 +498,13 @@ function agregarImagenes(files) {
     
     for (const file of files) {
         if (imagenesSeleccionadas.length + nuevasImagenes.length >= 6) {
-            mostrarNotificacion('⚠️ Máximo 6 imágenes por producto', 'warning');
+            mostrarNotificacion('Máximo 6 imágenes por producto', 'warning');
             break;
         }
         
         if (!file.type.startsWith('image/')) continue;
         if (file.size > 5 * 1024 * 1024) {
-            mostrarNotificacion(`⚠️ ${file.name} excede 5MB`, 'warning');
+            mostrarNotificacion(file.name + ' excede 5MB', 'warning');
             continue;
         }
         
@@ -528,7 +531,7 @@ function hacerPrincipal(index) {
     imagenesSeleccionadas.unshift(imagen);
     imagenesSeleccionadas.forEach((img, i) => img.isMain = i === 0);
     actualizarGridImagenes();
-    mostrarNotificacion('✅ Imagen principal actualizada', 'success');
+    mostrarNotificacion('Imagen principal actualizada', 'success');
 }
 
 function eliminarImagen(index) {
@@ -610,7 +613,7 @@ async function cargarProductos() {
             
             tabla.innerHTML += `
                 <tr class="table-row hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4 text-sm text-gray-900">${p.id}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${p.id}${p.id}</td>
                     <td class="px-6 py-4">${imagenesHtml}</td>
                     <td class="px-6 py-4 text-sm font-medium">${escapeHtml(p.nombre)}</td>
                     <td class="px-6 py-4 text-sm">C$${parseFloat(p.precio).toFixed(2)}</td>
@@ -632,7 +635,6 @@ function resetFormProducto() {
     document.getElementById('multiImagenes').value = '';
     imagenesSeleccionadas = [];
     actualizarGridImagenes();
-    // Resetear especificaciones
     especificacionesActuales.forEach((s, i) => {
         s.label = '';
         s.value = '';
@@ -640,7 +642,7 @@ function resetFormProducto() {
     });
 }
 
-// CORREGIDO: Enviar imágenes con el nombre 'imagenes' para que coincida con el servidor
+// CORREGIDO: Enviar imágenes con el nombre 'imagenes' (no imagen_0, imagen_1...)
 document.getElementById('btnGuardarProducto').addEventListener('click', async () => {
     const nombre = document.getElementById('nombreProducto').value.trim();
     const precio = document.getElementById('precioProducto').value;
@@ -648,9 +650,9 @@ document.getElementById('btnGuardarProducto').addEventListener('click', async ()
     const descripcion = document.getElementById('descripcionProducto').value;
     const especificaciones = getEspecificacionesJSON();
     
-    if (!nombre) { mostrarNotificacion('❌ Nombre requerido', 'error'); return; }
-    if (!precio) { mostrarNotificacion('❌ Precio requerido', 'error'); return; }
-    if (imagenesSeleccionadas.length === 0) { mostrarNotificacion('❌ Al menos una imagen es requerida', 'error'); return; }
+    if (!nombre) { mostrarNotificacion('Nombre requerido', 'error'); return; }
+    if (!precio) { mostrarNotificacion('Precio requerido', 'error'); return; }
+    if (imagenesSeleccionadas.length === 0) { mostrarNotificacion('Al menos una imagen es requerida', 'error'); return; }
     
     const formData = new FormData();
     formData.append('nombre', nombre);
@@ -659,7 +661,7 @@ document.getElementById('btnGuardarProducto').addEventListener('click', async ()
     formData.append('descripcion', descripcion);
     formData.append('especificaciones', especificaciones);
     
-    // IMPORTANTE: Enviar todas las imágenes bajo el mismo nombre 'imagenes' (NO imagen_0, imagen_1, etc.)
+    // CORREGIDO: Enviar todas las imágenes bajo el mismo nombre 'imagenes'
     imagenesSeleccionadas.forEach((img) => {
         formData.append('imagenes', img.file);
     });
@@ -671,16 +673,13 @@ document.getElementById('btnGuardarProducto').addEventListener('click', async ()
     
     try {
         const res = await fetch(`${API}/productos`, { method: 'POST', body: formData });
-        if (!res.ok) {
-            const error = await res.json();
-            throw new Error(error.error || 'Error al guardar');
-        }
-        mostrarNotificacion('✅ Producto agregado con ' + imagenesSeleccionadas.length + ' imágenes', 'success');
+        if (!res.ok) throw new Error('Error al guardar');
+        mostrarNotificacion('Producto agregado con ' + imagenesSeleccionadas.length + ' imágenes', 'success');
         resetFormProducto();
         cargarProductos();
         cargarCategoriasSelect();
     } catch (error) {
-        mostrarNotificacion('❌ Error: ' + error.message, 'error');
+        mostrarNotificacion('Error: ' + error.message, 'error');
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
@@ -691,10 +690,10 @@ async function eliminarProducto(id) {
     if (!confirm('¿Eliminar este producto?')) return;
     try {
         await fetch(`${API}/productos/${id}`, { method: 'DELETE' });
-        mostrarNotificacion('✅ Producto eliminado', 'success');
+        mostrarNotificacion('Producto eliminado', 'success');
         cargarProductos();
     } catch (error) {
-        mostrarNotificacion('❌ Error al eliminar', 'error');
+        mostrarNotificacion('Error al eliminar', 'error');
     }
 }
 
@@ -743,7 +742,6 @@ async function cargarCategoriasLista() {
     }
 }
 
-// Selección de icono para categoría
 document.querySelectorAll('.icono-categoria').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.icono-categoria').forEach(b => b.classList.remove('bg-primary/20', 'border-primary'));
@@ -757,7 +755,7 @@ document.getElementById('formCategoria').addEventListener('submit', async (e) =>
     e.preventDefault();
     const nombre = document.getElementById('nombreCategoriaInput').value.trim();
     const icono = document.getElementById('categoriaIcono').value;
-    if (!nombre) { mostrarNotificacion('❌ Nombre requerido', 'error'); return; }
+    if (!nombre) { mostrarNotificacion('Nombre requerido', 'error'); return; }
     
     try {
         const res = await fetch(`${API}/categorias`, {
@@ -766,12 +764,12 @@ document.getElementById('formCategoria').addEventListener('submit', async (e) =>
             body: JSON.stringify({ nombre, icono })
         });
         if (!res.ok) throw new Error('Error');
-        mostrarNotificacion('✅ Categoría agregada', 'success');
+        mostrarNotificacion('Categoría agregada', 'success');
         document.getElementById('nombreCategoriaInput').value = '';
         cargarCategoriasSelect();
         cargarCategoriasLista();
     } catch (error) {
-        mostrarNotificacion('❌ Error: ' + error.message, 'error');
+        mostrarNotificacion('Error: ' + error.message, 'error');
     }
 });
 
@@ -779,15 +777,14 @@ async function eliminarCategoria(id, nombre) {
     if (!confirm(`¿Eliminar categoría "${nombre}"?`)) return;
     try {
         await fetch(`${API}/categorias/${id}`, { method: 'DELETE' });
-        mostrarNotificacion(`✅ Categoría eliminada`, 'success');
+        mostrarNotificacion('Categoría eliminada', 'success');
         cargarCategoriasSelect();
         cargarCategoriasLista();
     } catch (error) {
-        mostrarNotificacion('❌ Error al eliminar', 'error');
+        mostrarNotificacion('Error al eliminar', 'error');
     }
 }
 
-// Modal categoría rápida
 function abrirModalCategoria() {
     document.getElementById('modalCategoria').classList.remove('hidden');
     document.getElementById('nuevaCategoriaInput').value = '';
@@ -795,7 +792,7 @@ function abrirModalCategoria() {
 function cerrarModalCategoria() { document.getElementById('modalCategoria').classList.add('hidden'); }
 async function guardarCategoriaRapida() {
     const nombre = document.getElementById('nuevaCategoriaInput').value.trim();
-    if (!nombre) { mostrarNotificacion('❌ Ingresa un nombre', 'error'); return; }
+    if (!nombre) { mostrarNotificacion('Ingresa un nombre', 'error'); return; }
     try {
         const res = await fetch(`${API}/categorias`, {
             method: 'POST',
@@ -803,12 +800,12 @@ async function guardarCategoriaRapida() {
             body: JSON.stringify({ nombre, icono: 'category' })
         });
         if (!res.ok) throw new Error('Error');
-        mostrarNotificacion('✅ Categoría agregada', 'success');
+        mostrarNotificacion('Categoría agregada', 'success');
         cerrarModalCategoria();
         cargarCategoriasSelect();
         cargarCategoriasLista();
     } catch (error) {
-        mostrarNotificacion('❌ Error: ' + error.message, 'error');
+        mostrarNotificacion('Error: ' + error.message, 'error');
     }
 }
 

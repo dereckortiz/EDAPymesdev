@@ -39,7 +39,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* Estilos para el modal de especificaciones */
         .specs-modal {
             position: fixed;
             top: 0;
@@ -66,7 +65,6 @@
             to { opacity: 1; }
         }
         
-        /* Estilos para cuando se carga el catálogo */
         .catalogo-layout {
             display: flex;
             min-height: 100vh;
@@ -109,9 +107,32 @@
             background: #004090;
         }
         
-        /* Clase para ocultar el footer */
         .footer-hidden {
             display: none !important;
+        }
+        
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
     </style>
 
@@ -435,30 +456,79 @@ let intervaloAutoPlay = null;
 
 // Función para ir a un servicio específico en la página de servicios
 function irAServicioEspecifico(servicioId) {
-    // 1. Obtén el enlace de "Servicios" en el menú (índice 1)
     const navServicios = document.querySelectorAll('.nav-link')[1];
-    
-    // 2. Carga la página de servicios pasando el enlace del menú para activar la línea azul
     cargarSeccion('servicios.html', navServicios);
-    
-    // 3. Espera un tiempo prudente para que la página se cargue y luego haz scroll al ID
     setTimeout(() => {
-        // Busca el elemento por su ID (ej. 'capacitaciones', 'asesorias', etc.)
         const elementoDestino = document.getElementById(servicioId);
         if (elementoDestino) {
-            // Hace scroll suave hasta el elemento
             elementoDestino.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-            console.warn(`Elemento con ID "${servicioId}" no encontrado en la página de servicios.`);
         }
-    }, 600); // Tiempo para que la página se cargue completamente
+    }, 600);
 }
 
-// Función para ocultar/mostrar footer según la página
+// Función para enviar correo
+async function enviarCorreo(e) {
+    e.preventDefault();
+    
+    const nombre = document.getElementById('contacto_nombre').value;
+    const email = document.getElementById('contacto_email').value;
+    const servicio = document.getElementById('contacto_servicio').value;
+    const mensaje = document.getElementById('contacto_mensaje').value;
+    
+    if (!nombre || !email || !mensaje) {
+        mostrarToast('❌ Por favor completa todos los campos', 'error');
+        return;
+    }
+    
+    if (!email.includes('@') || !email.includes('.')) {
+        mostrarToast('❌ Por favor ingresa un correo válido', 'error');
+        return;
+    }
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<div class="loading-spinner w-5 h-5 border-2 border-white border-t-transparent inline-block"></div> Enviando...';
+    submitBtn.disabled = true;
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/enviar-correo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, email, servicio, mensaje })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            mostrarToast('✅ Mensaje enviado exitosamente. Te contactaremos pronto.', 'success');
+            e.target.reset();
+            document.getElementById('contacto_servicio').value = '';
+        } else {
+            throw new Error(data.error || 'Error al enviar');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarToast('❌ Error al enviar el mensaje. Intenta de nuevo.', 'error');
+    } finally {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+}
+
+function mostrarToast(mensaje, tipo) {
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${tipo === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+    toast.textContent = mensaje;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
 function toggleFooter(pagina) {
     const footer = document.getElementById('mainFooter');
     if (!footer) return;
-    
     if (pagina === 'Catalogo.html' || pagina === 'catalogo.html') {
         footer.classList.add('footer-hidden');
     } else {
@@ -466,13 +536,10 @@ function toggleFooter(pagina) {
     }
 }
 
-// Modal de especificaciones
 function mostrarEspecificacionesModal(especificaciones) {
     const modal = document.getElementById('specsModalGlobal');
     const specsList = document.getElementById('specsListGlobal');
-    
     if (!modal) return;
-    
     specsList.innerHTML = '';
     if (especificaciones && especificaciones.length > 0) {
         especificaciones.forEach(spec => {
@@ -489,11 +556,9 @@ function mostrarEspecificacionesModal(especificaciones) {
             }
         });
     }
-    
     if (specsList.innerHTML === '') {
         specsList.innerHTML = '<p class="text-gray-500 text-center">No hay especificaciones técnicas disponibles</p>';
     }
-    
     modal.classList.remove('hidden');
 }
 
@@ -549,8 +614,6 @@ function cargarSeccion(pagina, linkElement) {
         intervaloAutoPlay = null;
     }
     carruselActivo = false;
-    
-    // Ocultar/mostrar footer según la página
     toggleFooter(pagina);
 
     setTimeout(() => {
@@ -576,14 +639,11 @@ function cargarSeccion(pagina, linkElement) {
                     if (bodyMatch) {
                         contenidoHTML = bodyMatch[1];
                     }
-                    
                     contenedor.innerHTML = contenidoHTML;
                     window.scrollTo(0, 0);
                     contenedor.style.opacity = "1";
                     contenedor.style.transform = "translateY(0)";
                     activarAnimacionesScroll();
-                    
-                    // Si es catálogo, forzar la ejecución de su script
                     if (pagina === 'Catalogo.html' || pagina === 'catalogo.html') {
                         setTimeout(() => {
                             if (typeof window.iniciarCatalogo === 'function') {
@@ -592,11 +652,7 @@ function cargarSeccion(pagina, linkElement) {
                                 const scripts = contenedor.querySelectorAll('script');
                                 scripts.forEach(script => {
                                     if (script.textContent && !script.src) {
-                                        try {
-                                            eval(script.textContent);
-                                        } catch(e) {
-                                            console.error("Error ejecutando script:", e);
-                                        }
+                                        try { eval(script.textContent); } catch(e) {}
                                     }
                                 });
                                 if (typeof window.cargarProductos === 'function') {
@@ -606,7 +662,6 @@ function cargarSeccion(pagina, linkElement) {
                             }
                         }, 200);
                     }
-                    
                     if (typeof iniciarTodo === "function") iniciarTodo();
                 })
                 .catch(error => {
@@ -615,7 +670,6 @@ function cargarSeccion(pagina, linkElement) {
                     contenedor.style.opacity = "1";
                 });
         }
-        
         if(linkElement) {
             document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
             linkElement.classList.add("active");
@@ -641,7 +695,6 @@ function configurarCardsServicios() {
 
 function obtenerHTMLInicio() {
     return `
-<!-- Modal Global de Especificaciones -->
 <div id="specsModalGlobal" class="specs-modal hidden" onclick="cerrarSpecsModalGlobal(event)">
   <div class="specs-content p-6" onclick="event.stopPropagation()">
     <div class="flex justify-between items-center mb-4">
@@ -673,25 +726,21 @@ function obtenerHTMLInicio() {
       <button onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todos los servicios <span class="material-symbols-outlined">east</span></button>
     </div>
     <div class="flex justify-center items-center gap-8 flex-wrap">
-      <!-- Card para Capacitaciones - Ahora navega a sección específica -->
       <div onclick="irAServicioEspecifico('capacitaciones')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
         <span class="material-symbols-outlined service-icon text-4xl">school</span>
         <h3 class="text-xl font-bold text-white">Capacitaciones</h3>
         <p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p>
       </div>
-      <!-- Card para Asesorías - Ahora navega a sección específica -->
       <div onclick="irAServicioEspecifico('asesorias')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-4xl mb-4">lightbulb</span>
         <h3 class="text-2xl font-bold text-white">Asesorías</h3>
         <p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p>
       </div>
-      <!-- Card para Seguridad - Ahora navega a sección específica -->
       <div onclick="irAServicioEspecifico('seguridad')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
         <span class="material-symbols-outlined service-icon text-4xl">videocam</span>
         <h3 class="text-xl font-bold text-white">Seguridad</h3>
         <p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p>
       </div>
-      <!-- Card para Mantenimiento - Ahora navega a sección específica -->
       <div onclick="irAServicioEspecifico('mantenimiento')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-4xl mb-4">build</span>
         <h3 class="text-2xl font-bold text-white">Mantenimiento</h3>
@@ -740,16 +789,32 @@ function obtenerHTMLInicio() {
 
 <section class="py-24 relative overflow-hidden bg-team"><div class="bg-efecto"></div><div class="relative z-10 max-w-7xl mx-auto px-8"><div class="text-center mb-16 space-y-4"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">El Equipo <span class="text-primary">Detrás</span></h2><p class="text-white/70 max-w-2xl mx-auto">Expertos comprometidos con el éxito tecnológico de tu empresa.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12"><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcO5UUoxKj86ssBca82Aq6Ec7RYeiA5FwpKG7j0sfeqz2wkxWAMG3I4cqx9hN9Os27Q84dY3msQjZvDQNb63CB9BQm3zJ8HwpUSZwLuK6n7D5DeukOFn8FwuKiHuPebht1xTxljRjTyoUZyDP306_6GPldq2DBHcqzqvFEee4TsEDlfeDA_erzRdnQxxbr0sRV5tPo43pVRF3JiMtem5af_bKOo8KbCm_tCvEqwARon9k7zSrRyERvBQXJ4O73LrENTJWKkn6zTB0z" alt="Roberto Mendoza"></div><h4 class="text-xl font-headline font-bold text-white">Roberto Mendoza</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">CEO & Founder</p><p class="text-white/70 text-sm mt-4">Líder con más de 15 años transformando el panorama IT local.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-eW26GNEgI3xjJNN-Desvabn0ZIghvdv1gOD3yaR6K8cNsIdy1VKc3V20L8tI0CTgDcU6dZz06VWCFj8hecz7wndqMaIkN1ArUMfiT7-W16cdY0yu4zEcELnC4LYOhj2j4O6kPaHrzof0q-QmfpfChwWcHtMf1Gj75rhbjphi4tI_u4pHhqOO9dwbfR1iEFstMw-IMfrFnj5W8rlFvOOhXy0zksjRd6GRLg0gQ5NI15lq8u-c_PHHvcVkUDYdnGTzyiWaM__JT4Pw" alt="Elena Casares"></div><h4 class="text-xl font-headline font-bold text-white">Elena Casares</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">CTO</p><p class="text-white/70 text-sm mt-4">Arquitecta de soluciones y apasionada por la ciberseguridad.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjXrcQkZmljokYZNdKFZZuA_PFyTwPcoWn7WQsnjHg9r-Yi0t1jGS1rla0MkbVwxXA5dDVMcPU4XfVf4HdPOLPXLlg_UgUNV59QjHgeRnp-IkhJ4-3NbXFl67buWmbKOen3i9MASOPH8ZPW333lOrWOzMJKwlih0jr3ktsWsyQMi8LX0I1MFvKvNSCRSw1ZngXfjJ8C1VurXXQ2VDV-Fmn7IS_uZRBLYmxTzQgrXN-KOXqVDw8wow4AyofEji--PBdz5QWRW7yuk11" alt="Marco Valdivia"></div><h4 class="text-xl font-headline font-bold text-white">Marco Valdivia</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Director Comercial</p><p class="text-white/70 text-sm mt-4">Especialista en alianzas estratégicas y expansión de mercado.</p></div></div></div></section>
 
-<section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:contacto@edapymes.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">contacto@edapymes.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8888 8888 / +505 7777 7777</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10"><form action="#" method="POST" class="space-y-6"><div><label for="nombre" class="text-white/70 text-sm">Nombre</label><input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div><div><label for="email" class="text-white/70 text-sm">Correo</label><input type="email" id="email" name="email" required placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div><div><label for="mensaje" class="text-white/70 text-sm">Mensaje</label><textarea id="mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje..." class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></textarea></div><button type="submit" class="w-full py-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover transition-all">Enviar mensaje</button></form></div></div></section>
+<section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:contacto@edapymes.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">contacto@edapymes.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8888 8888 / +505 7777 7777</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
+<form id="contactoForm" onsubmit="enviarCorreo(event)" class="space-y-6">
+  <div><label for="contacto_nombre" class="text-white/70 text-sm">Nombre</label><input type="text" id="contacto_nombre" name="nombre" required placeholder="Tu nombre" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div>
+  <div><label for="contacto_email" class="text-white/70 text-sm">Correo</label><input type="email" id="contacto_email" name="email" required placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div>
+  <div><label for="contacto_servicio" class="text-white/70 text-sm">Servicio de interés</label>
+    <select id="contacto_servicio" name="servicio" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-primary">
+      <option value="" class="text-gray-900">Selecciona un servicio</option>
+      <option value="Capacitaciones" class="text-gray-900">📚 Capacitaciones</option>
+      <option value="Asesorías" class="text-gray-900">💡 Asesorías</option>
+      <option value="Seguridad Electrónica" class="text-gray-900">🎥 Seguridad Electrónica</option>
+      <option value="Mantenimiento y Reparación" class="text-gray-900">🔧 Mantenimiento y Reparación</option>
+      <option value="Venta de Tecnología" class="text-gray-900">💻 Venta de Tecnología</option>
+      <option value="Préstamos Prendatarios" class="text-gray-900">💰 Préstamos Prendatarios</option>
+      <option value="Traducción Profesional" class="text-gray-900">🌐 Traducción Profesional</option>
+      <option value="Otro" class="text-gray-900">📌 Otro</option>
+    </select>
+  </div>
+  <div><label for="contacto_mensaje" class="text-white/70 text-sm">Mensaje</label><textarea id="contacto_mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje..." class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></textarea></div>
+  <button type="submit" class="w-full py-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover transition-all">Enviar mensaje</button>
+</form>
+</div></div></section>
     `;
 }
 
 function iniciarCarrusel() {
-    if (intervaloAutoPlay) {
-        clearInterval(intervaloAutoPlay);
-        intervaloAutoPlay = null;
-    }
-    
+    if (intervaloAutoPlay) clearInterval(intervaloAutoPlay);
     const slidesData = [
       { type: 'video', src: '/src/image/fondo de pantalla.mp4', title: 'Impulsamos tu <span class="text-primary">negocio</span> con tecnología', subtitle: 'Soluciones tecnológicas integrales diseñadas para la era digital.' },
       { type: 'image', src: '/src/image/foto3.jpg', title: 'Capacitaciones <span class="text-primary">Tecnológicas</span>', subtitle: 'Aprende habilidades digitales con expertos.' },
@@ -761,25 +826,16 @@ function iniciarCarrusel() {
       { type: 'image', src: '/src/image/foto9.jpg', title: 'Préstamos <span class="text-primary">Prendatarios</span>', subtitle: 'Soluciones rápidas de financiamiento.' },
       { type: 'image', src: '/src/image/foto10.jpg', title: 'Servicios de <span class="text-primary">Traducción</span>', subtitle: 'Traducción profesional de inglés a español.' }
     ];
-    
-    let currentIndex = 0;
-    let videoElement = null;
-    
-    const track = document.getElementById('carouselTrack');
-    const dotsContainer = document.getElementById('carouselDots');
-    let prevBtn = document.getElementById('carouselPrev');
-    let nextBtn = document.getElementById('carouselNext');
-    
+    let currentIndex = 0, videoElement = null;
+    const track = document.getElementById('carouselTrack'), dotsContainer = document.getElementById('carouselDots');
+    let prevBtn = document.getElementById('carouselPrev'), nextBtn = document.getElementById('carouselNext');
     if (!track) return;
-    
     track.innerHTML = '';
     if (dotsContainer) dotsContainer.innerHTML = '';
-    
     slidesData.forEach((slide, idx) => {
         const slideDiv = document.createElement('div');
         slideDiv.className = 'carousel-slide';
         slideDiv.setAttribute('data-index', idx);
-        
         if (slide.type === 'video') {
             const video = document.createElement('video');
             video.src = slide.src;
@@ -797,17 +853,14 @@ function iniciarCarrusel() {
             img.onerror = function() { this.src = 'https://placehold.co/1920x600?text=EDAPymes'; };
             slideDiv.appendChild(img);
         }
-        
         const overlay = document.createElement('div');
         overlay.className = 'carousel-overlay';
         slideDiv.appendChild(overlay);
-        
         const contentDiv = document.createElement('div');
         contentDiv.className = 'carousel-content';
         contentDiv.innerHTML = `<div class="carousel-content-inner"><h1 class="carousel-title">${slide.title}</h1><p class="carousel-subtitle">${slide.subtitle}</p><div class="carousel-action-buttons"><button class="btn-primary-carousel btn-catalogo-action">Explorar Catálogo</button><button class="btn-secondary-carousel btn-servicios-action">Nuestros Servicios</button></div></div>`;
         slideDiv.appendChild(contentDiv);
         track.appendChild(slideDiv);
-        
         if (dotsContainer) {
             const dot = document.createElement('div');
             dot.className = 'carousel-dot';
@@ -816,27 +869,13 @@ function iniciarCarrusel() {
             dotsContainer.appendChild(dot);
         }
     });
-    
     function updateSlidesAndDots() {
-        const slides = document.querySelectorAll('.carousel-slide');
-        const contents = document.querySelectorAll('.carousel-content');
-        const dots = document.querySelectorAll('.carousel-dot');
-        
+        const slides = document.querySelectorAll('.carousel-slide'), contents = document.querySelectorAll('.carousel-content'), dots = document.querySelectorAll('.carousel-dot');
         slides.forEach((slide, idx) => {
-            if (idx === currentIndex) {
-                slide.classList.add('active');
-                if (contents[idx]) contents[idx].classList.add('active');
-            } else {
-                slide.classList.remove('active');
-                if (contents[idx]) contents[idx].classList.remove('active');
-            }
+            if (idx === currentIndex) { slide.classList.add('active'); if (contents[idx]) contents[idx].classList.add('active'); }
+            else { slide.classList.remove('active'); if (contents[idx]) contents[idx].classList.remove('active'); }
         });
-        
-        dots.forEach((dot, idx) => {
-            if (idx === currentIndex) dot.classList.add('active');
-            else dot.classList.remove('active');
-        });
-        
+        dots.forEach((dot, idx) => { if (idx === currentIndex) dot.classList.add('active'); else dot.classList.remove('active'); });
         const currentSlide = slides[currentIndex];
         if (currentSlide) {
             const video = currentSlide.querySelector('video');
@@ -848,45 +887,20 @@ function iniciarCarrusel() {
                 video.play().catch(e => console.log('Autoplay:', e));
                 video.removeEventListener('ended', handleVideoEnd);
                 video.addEventListener('ended', handleVideoEnd);
-            } else if (videoElement && !videoElement.paused) {
-                videoElement.pause();
-            }
+            } else if (videoElement && !videoElement.paused) { videoElement.pause(); }
         }
     }
-    
     function handleVideoEnd() { nextSlide(); }
     function nextSlide() { currentIndex = (currentIndex + 1) % slidesData.length; updateSlidesAndDots(); resetAutoPlay(); }
     function prevSlide() { currentIndex = (currentIndex - 1 + slidesData.length) % slidesData.length; updateSlidesAndDots(); resetAutoPlay(); }
     function goToSlide(index) { currentIndex = index; updateSlidesAndDots(); resetAutoPlay(); }
     function startAutoPlay() { if (intervaloAutoPlay) clearInterval(intervaloAutoPlay); intervaloAutoPlay = setInterval(() => { const slides = document.querySelectorAll('.carousel-slide'); const current = slides[currentIndex]; const video = current?.querySelector('video'); if (!video || video.paused || video.ended) { nextSlide(); } }, 6000); }
     function resetAutoPlay() { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } startAutoPlay(); }
-    
-    if (prevBtn) {
-        const newPrev = prevBtn.cloneNode(true);
-        prevBtn.parentNode.replaceChild(newPrev, prevBtn);
-        prevBtn = newPrev;
-        prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
-    }
-    if (nextBtn) {
-        const newNext = nextBtn.cloneNode(true);
-        nextBtn.parentNode.replaceChild(newNext, nextBtn);
-        nextBtn = newNext;
-        nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
-    }
-    
-    document.querySelectorAll('.btn-catalogo-action').forEach(btn => {
-        btn.removeEventListener('click', btn._handler);
-        btn._handler = () => cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2]);
-        btn.addEventListener('click', btn._handler);
-    });
-    document.querySelectorAll('.btn-servicios-action').forEach(btn => {
-        btn.removeEventListener('click', btn._handler2);
-        btn._handler2 = () => cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]);
-        btn.addEventListener('click', btn._handler2);
-    });
-    
+    if (prevBtn) { const newPrev = prevBtn.cloneNode(true); prevBtn.parentNode.replaceChild(newPrev, prevBtn); prevBtn = newPrev; prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); }); }
+    if (nextBtn) { const newNext = nextBtn.cloneNode(true); nextBtn.parentNode.replaceChild(newNext, nextBtn); nextBtn = newNext; nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); }); }
+    document.querySelectorAll('.btn-catalogo-action').forEach(btn => { btn.removeEventListener('click', btn._handler); btn._handler = () => cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2]); btn.addEventListener('click', btn._handler); });
+    document.querySelectorAll('.btn-servicios-action').forEach(btn => { btn.removeEventListener('click', btn._handler2); btn._handler2 = () => cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]); btn.addEventListener('click', btn._handler2); });
     updateSlidesAndDots();
-    
     const container = document.querySelector('.carousel-container');
     if (container) {
         container.removeEventListener('mouseenter', container._enterHandler);
@@ -896,10 +910,8 @@ function iniciarCarrusel() {
         container.addEventListener('mouseenter', container._enterHandler);
         container.addEventListener('mouseleave', container._leaveHandler);
     }
-    
     startAutoPlay();
     carruselActivo = true;
-    
     document.removeEventListener('visibilitychange', handleVisibilityChange);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 }
@@ -909,16 +921,11 @@ function handleVisibilityChange() {
         setTimeout(() => {
             const track = document.getElementById('carouselTrack');
             if (track && track.children.length > 0) {
-                if (intervaloAutoPlay) {
-                    clearInterval(intervaloAutoPlay);
-                    intervaloAutoPlay = null;
-                }
+                if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; }
                 const activeSlide = document.querySelector('.carousel-slide.active');
                 if (activeSlide) {
                     const video = activeSlide.querySelector('video');
-                    if (video && video.paused) {
-                        video.play().catch(e => console.log('Play reanudado:', e));
-                    }
+                    if (video && video.paused) { video.play().catch(e => console.log('Play reanudado:', e)); }
                 }
                 intervaloAutoPlay = setInterval(() => {
                     const slides = document.querySelectorAll('.carousel-slide');
@@ -938,9 +945,7 @@ function handleVisibilityChange() {
     }
 }
 
-function iniciarTodo() {
-    configurarCardsServicios();
-}
+function iniciarTodo() { configurarCardsServicios(); }
 
 window.addEventListener("DOMContentLoaded", () => {
     const inicioLink = document.querySelector(".nav-link.active");
@@ -948,32 +953,19 @@ window.addEventListener("DOMContentLoaded", () => {
     contenedor.innerHTML = obtenerHTMLInicio();
     window.scrollTo(0, 0);
     activarAnimacionesScroll();
-    
-    if (inicioLink) {
-        moverIndicador(inicioLink);
-    }
-    
-    setTimeout(() => {
-        iniciarCarrusel();
-        configurarCardsServicios();
-    }, 150);
-    
-    if(inicioLink) {
-        document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-        inicioLink.classList.add("active");
-    }
+    if (inicioLink) moverIndicador(inicioLink);
+    setTimeout(() => { iniciarCarrusel(); configurarCardsServicios(); }, 150);
+    if(inicioLink) { document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active")); inicioLink.classList.add("active"); }
 });
 
 window.addEventListener("resize", () => {
     const activeLink = document.querySelector(".nav-link.active");
-    if (activeLink) {
-        moverIndicador(activeLink);
-    }
+    if (activeLink) moverIndicador(activeLink);
 });
 
-// Exponer funciones globales
 window.cargarSeccion = cargarSeccion;
 window.irAServicioEspecifico = irAServicioEspecifico;
+window.enviarCorreo = enviarCorreo;
 window.configurarCardsServicios = configurarCardsServicios;
 window.activarAnimacionesScroll = activarAnimacionesScroll;
 window.moverIndicador = moverIndicador;
