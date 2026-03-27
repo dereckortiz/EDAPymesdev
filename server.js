@@ -5,9 +5,32 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
 
 const app = express();
-app.use(cors());
+
+// Configuración de sesiones
+app.use(session({
+    secret: 'edapymes_super_secret_key_2024_secure_crypto',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        sameSite: 'lax'
+    }
+}));
+
+// Configuración CORS mejorada
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500', 'http://127.0.0.1:5501', 'http://localhost:5501'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -19,12 +42,14 @@ const dbDir = path.join(__dirname, "db");
 const srcDir = path.join(__dirname, "src");
 const staticDir = path.join(__dirname, "static");
 const templatesDir = path.join(__dirname, "templates");
+const adminDir = path.join(templatesDir, "admin");
 
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
 if (!fs.existsSync(srcDir)) fs.mkdirSync(srcDir, { recursive: true });
 if (!fs.existsSync(staticDir)) fs.mkdirSync(staticDir, { recursive: true });
 if (!fs.existsSync(templatesDir)) fs.mkdirSync(templatesDir, { recursive: true });
+if (!fs.existsSync(adminDir)) fs.mkdirSync(adminDir, { recursive: true });
 
 /* ===============================
    ARCHIVOS ESTÁTICOS
@@ -34,7 +59,21 @@ app.use("/static", express.static(staticDir));
 app.use("/src", express.static(srcDir));
 app.use("/templates", express.static(templatesDir));
 
+// Middleware de autenticación para rutas protegidas
+function requireAuth(req, res, next) {
+    if (req.session && req.session.isAuthenticated) {
+        next();
+    } else {
+        res.redirect('/admin-login.html');
+    }
+}
+
+// Páginas públicas
 app.get("/", (req, res) => {
+    res.sendFile(path.join(templatesDir, "index.html"));
+});
+
+app.get("/index.html", (req, res) => {
     res.sendFile(path.join(templatesDir, "index.html"));
 });
 
@@ -42,8 +81,34 @@ app.get("/Catalogo.html", (req, res) => {
     res.sendFile(path.join(templatesDir, "Catalogo.html"));
 });
 
-app.get("/admin.html", (req, res) => {
-    res.sendFile(path.join(templatesDir, "admin", "products.html"));
+app.get("/Inicio.html", (req, res) => {
+    res.sendFile(path.join(templatesDir, "Inicio.html"));
+});
+
+app.get("/Nosotros.html", (req, res) => {
+    res.sendFile(path.join(templatesDir, "Nosotros.html"));
+});
+
+app.get("/servicios.html", (req, res) => {
+    res.sendFile(path.join(templatesDir, "servicios.html"));
+});
+
+app.get("/ventanaC.html", (req, res) => {
+    res.sendFile(path.join(templatesDir, "ventanaC.html"));
+});
+
+// Página de login (pública)
+app.get("/admin-login.html", (req, res) => {
+    res.sendFile(path.join(adminDir, "login.html"));
+});
+
+// Página de admin (protegida)
+app.get("/admin.html", requireAuth, (req, res) => {
+    res.sendFile(path.join(adminDir, "admin.html"));
+});
+
+app.get("/templates/admin/admin.html", requireAuth, (req, res) => {
+    res.sendFile(path.join(adminDir, "admin.html"));
 });
 
 /* ===============================
@@ -58,12 +123,58 @@ const transporter = nodemailer.createTransport({
 });
 
 /* ===============================
-   SQLITE CON MIGRACIONES
+   SQLITE CON MIGRACIONES Y TABLA DE USUARIOS
 ================================ */
 const dbPath = path.join(dbDir, "edapymes.db");
 const db = new sqlite3.Database(dbPath);
 
-// Función para ejecutar migraciones
+function setupUsersTable() {
+    db.run(`CREATE TABLE IF NOT EXISTS usuarios(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`, (err) => {
+        if (err) {
+            console.error("Error creando tabla usuarios:", err);
+        } else {
+            console.log("Tabla usuarios lista");
+
+            db.get("SELECT * FROM usuarios WHERE username = ?", ["edapymes_devCatalog"], (err, user) => {
+                if (err) {
+                    console.error("Error verificando usuario:", err);
+                    return;
+                }
+
+                if (!user) {
+                    console.log("Creando usuario administrador...");
+                    const password = "EdaPymes$5%12@!7857";
+
+                    bcrypt.hash(password, 12, (err, hash) => {
+                        if (err) {
+                            console.error("Error encriptando contraseña:", err);
+                            return;
+                        }
+
+                        db.run("INSERT INTO usuarios (username, password) VALUES (?, ?)",
+                            ["edapymes_devCatalog", hash],
+                            (err) => {
+                                if (err) {
+                                    console.error("Error insertando usuario:", err);
+                                } else {
+                                    console.log("Usuario administrador creado exitosamente");
+                                }
+                            }
+                        );
+                    });
+                } else {
+                    console.log("Usuario administrador ya existe");
+                }
+            });
+        }
+    });
+}
+
 function runMigrations() {
     db.all("PRAGMA table_info(categorias)", (err, columns) => {
         if (err) {
@@ -139,6 +250,8 @@ function insertarCategoriasEjemplo() {
 }
 
 db.serialize(() => {
+    setupUsersTable();
+
     db.run(`CREATE TABLE IF NOT EXISTS categorias(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT UNIQUE NOT NULL
@@ -200,6 +313,82 @@ const upload = multer({
 const uploadMultiple = upload.array('imagenes', 6);
 
 /* ===============================
+   API DE AUTENTICACIÓN
+================================ */
+app.post("/api/login", (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ error: "Usuario y contraseña requeridos" });
+    }
+
+    db.get("SELECT * FROM usuarios WHERE username = ?", [username], (err, user) => {
+        if (err) {
+            console.error("Error en login:", err);
+            return res.status(500).json({ error: "Error en el servidor" });
+        }
+
+        if (!user) {
+            return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+        }
+
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) {
+                console.error("Error verificando contraseña:", err);
+                return res.status(500).json({ error: "Error en el servidor" });
+            }
+
+            if (result) {
+                req.session.isAuthenticated = true;
+                req.session.username = user.username;
+                req.session.userId = user.id;
+
+                res.json({
+                    success: true,
+                    message: "Login exitoso",
+                    redirect: "/admin.html"
+                });
+            } else {
+                res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+            }
+        });
+    });
+});
+
+app.post("/api/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error en logout:", err);
+            return res.status(500).json({ error: "Error al cerrar sesión" });
+        }
+        res.json({ success: true, message: "Sesión cerrada exitosamente" });
+    });
+});
+
+app.get("/api/verify", (req, res) => {
+    if (req.session && req.session.isAuthenticated) {
+        res.json({
+            authenticated: true,
+            username: req.session.username,
+            userId: req.session.userId
+        });
+    } else {
+        res.json({ authenticated: false });
+    }
+});
+
+app.get("/api/check-session", (req, res) => {
+    if (req.session && req.session.isAuthenticated) {
+        res.json({
+            authenticated: true,
+            username: req.session.username
+        });
+    } else {
+        res.json({ authenticated: false });
+    }
+});
+
+/* ===============================
    API DE PRODUCTOS
 ================================ */
 app.get("/api/productos", (req, res) => {
@@ -243,16 +432,12 @@ app.get("/api/productos", (req, res) => {
     });
 });
 
-app.post("/api/productos", (req, res) => {
+app.post("/api/productos", requireAuth, (req, res) => {
     uploadMultiple(req, res, (err) => {
         if (err) {
             console.error("Error en upload:", err);
             return res.status(400).json({ error: err.message });
         }
-
-        console.log("POST /api/productos");
-        console.log("Files recibidos:", req.files ? req.files.length : 0);
-        console.log("Body:", req.body);
 
         const { nombre, precio, categoria, descripcion, especificaciones } = req.body;
 
@@ -291,7 +476,6 @@ app.post("/api/productos", (req, res) => {
                     console.error("Error insertando producto:", err);
                     return res.status(500).json({ error: err.message });
                 }
-                console.log(`Producto insertado ID: ${this.lastID} con ${req.files ? req.files.length : 0} imágenes`);
                 res.json({
                     id: this.lastID,
                     message: "Producto creado exitosamente",
@@ -302,7 +486,7 @@ app.post("/api/productos", (req, res) => {
     });
 });
 
-app.delete("/api/productos/:id", (req, res) => {
+app.delete("/api/productos/:id", requireAuth, (req, res) => {
     const { id } = req.params;
     db.get("SELECT imagenes FROM productos WHERE id = ?", [id], (err, row) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -334,7 +518,7 @@ app.get("/api/categorias", (req, res) => {
     });
 });
 
-app.post("/api/categorias", (req, res) => {
+app.post("/api/categorias", requireAuth, (req, res) => {
     const { nombre, icono } = req.body;
     if (!nombre || nombre.trim() === "") {
         return res.status(400).json({ error: "Nombre de categoría requerido" });
@@ -351,7 +535,7 @@ app.post("/api/categorias", (req, res) => {
     });
 });
 
-app.delete("/api/categorias/:id", (req, res) => {
+app.delete("/api/categorias/:id", requireAuth, (req, res) => {
     db.run("DELETE FROM categorias WHERE id = ?", [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: "Categoría eliminada", changes: this.changes });
@@ -359,7 +543,7 @@ app.delete("/api/categorias/:id", (req, res) => {
 });
 
 /* ===============================
-   API DE ENVÍO DE CORREOS CON LOGO CORREGIDO
+   API DE ENVÍO DE CORREOS CON IMAGEN ADJUNTA
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -374,27 +558,58 @@ app.post("/api/enviar-correo", async (req, res) => {
         timeStyle: 'short'
     });
 
-    // CORREGIDO: la ruta correcta es src/image/TU-LOGO.png (sin "s" al final)
-    const logoUrl = `http://localhost:3000/src/image/TU-LOGO.png`;
+    // Buscar el logo en diferentes posibles ubicaciones
+    const posiblesLogos = [
+        path.join(__dirname, "src", "image", "TU-LOGO.png"),
+        path.join(__dirname, "src", "image", "redimension.png"),
+        path.join(__dirname, "src", "image", "logo.png"),
+        path.join(__dirname, "static", "image", "logo.png"),
+        path.join(__dirname, "public", "image", "logo.png")
+    ];
 
-    // Función para crear el encabezado con logo
+    let logoPath = null;
+    for (const ruta of posiblesLogos) {
+        if (fs.existsSync(ruta)) {
+            logoPath = ruta;
+            console.log("Logo encontrado en:", ruta);
+            break;
+        }
+    }
+
+    if (!logoPath) {
+        console.log("⚠️ No se encontró ningún logo en las rutas verificadas");
+    }
+
+    const logoCid = 'edapymes-logo';
+
+    // Función para crear el encabezado con logo adjunto (usando CID)
     const crearHeaderConLogo = () => `
-        <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 20px; border-radius: 12px 12px 0 0;">
+        <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                    <td style="width: 80px; vertical-align: middle;">
-                        <img src="${logoUrl}" alt="EDAPymes" style="display: block; width: 60px; height: 60px; border-radius: 12px; object-fit: cover;">
+                    <td style="width: 90px; vertical-align: middle;">
+                        <img src="cid:${logoCid}" alt="EDAPymes" style="display: block; width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                     </td>
-                    <td style="vertical-align: middle; padding-left: 15px;">
-                        <h1 style="margin: 0; color: white; font-size: 24px; font-weight: bold;">EDAPymes</h1>
-                        <p style="margin: 5px 0 0; color: rgba(255,255,255,0.9); font-size: 12px;">Tecnología con Calidad y Calidez</p>
+                    <td style="vertical-align: middle; padding-left: 18px;">
+                        <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold;">EDAPymes</h1>
+                        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnología con Calidad y Calidez</p>
                     </td>
                 </tr>
             </table>
         </div>
     `;
 
-    // Correo que se envía al administrador
+    // Preparar los attachments (solo si existe el logo)
+    const attachments = [];
+    if (logoPath) {
+        attachments.push({
+            filename: 'edapymes-logo.png',
+            path: logoPath,
+            cid: logoCid
+        });
+    }
+
+    // Correo para el administrador
     const adminMailOptions = {
         from: `"${nombre}" <${email}>`,
         to: 'derecksevi@gmail.com',
@@ -406,90 +621,104 @@ app.post("/api/enviar-correo", async (req, res) => {
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body { margin: 0; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4; }
+                    .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                    .content { padding: 30px; }
+                    .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #034AB0; }
+                    .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
+                </style>
             </head>
-            <body style="margin: 0; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4;">
-                <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <body>
+                <div class="container">
                     ${crearHeaderConLogo()}
-                    <div style="padding: 30px;">
-                        <h2 style="color: #034AB0; margin-top: 0; font-size: 22px;">Nuevo mensaje de contacto</h2>
+                    <div class="content">
+                        <h2 style="color: #034AB0; margin-top: 0;">📬 Nuevo mensaje de contacto</h2>
                         
                         <div style="margin: 20px 0;">
-                            <p style="margin: 8px 0;"><strong style="color: #034AB0;">Fecha:</strong> ${fecha}</p>
-                            <p style="margin: 8px 0;"><strong style="color: #034AB0;">Nombre:</strong> ${nombre}</p>
-                            <p style="margin: 8px 0;"><strong style="color: #034AB0;">Correo:</strong> ${email}</p>
-                            <p style="margin: 8px 0;"><strong style="color: #034AB0;">Servicio:</strong> ${servicio || 'No especificado'}</p>
+                            <p><strong>📅 Fecha:</strong> ${fecha}</p>
+                            <p><strong>👤 Nombre:</strong> ${nombre}</p>
+                            <p><strong>📧 Correo:</strong> ${email}</p>
+                            <p><strong>🔧 Servicio:</strong> ${servicio || 'No especificado'}</p>
                         </div>
                         
-                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #034AB0;">
-                            <p style="margin: 0 0 10px;"><strong style="color: #034AB0;">Mensaje:</strong></p>
-                            <p style="margin: 0; line-height: 1.6; color: #333;">${mensaje.replace(/\n/g, '<br>')}</p>
+                        <div class="info-box">
+                            <p style="margin: 0 0 10px;"><strong>📝 Mensaje:</strong></p>
+                            <p style="margin: 0; line-height: 1.6;">${mensaje.replace(/\n/g, '<br>')}</p>
                         </div>
-                        
-                        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 25px 0;">
-                        <p style="color: #666; font-size: 11px; text-align: center; margin: 0;">
-                            Este mensaje fue enviado desde el formulario de contacto de EDAPymes.
-                        </p>
+                    </div>
+                    <div class="footer">
+                        Este mensaje fue enviado desde el formulario de contacto de EDAPymes.
                     </div>
                 </div>
             </body>
             </html>
-        `
+        `,
+        attachments: attachments
     };
 
-    // Correo de respuesta automática para el usuario
+    // Correo de respuesta para el usuario
     const userMailOptions = {
         from: `"EDAPymes" <derecksevi@gmail.com>`,
         to: email,
-        subject: `Gracias por contactarnos ${nombre} - EDAPymes`,
+        subject: `¡Gracias por contactarnos ${nombre}! - EDAPymes`,
         html: `
             <!DOCTYPE html>
             <html>
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body { margin: 0; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4; }
+                    .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                    .content { padding: 30px; }
+                    .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0; }
+                    .contact-box { background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%); padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center; }
+                    .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
+                </style>
             </head>
-            <body style="margin: 0; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4;">
-                <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <body>
+                <div class="container">
                     ${crearHeaderConLogo()}
-                    <div style="padding: 30px;">
-                        <h2 style="color: #034AB0; margin-top: 0;">Hola ${nombre}!</h2>
-                        <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarnos. Hemos recibido tu mensaje y uno de nuestros asesores te responderá a la brevedad.</p>
+                    <div class="content">
+                        <h2 style="color: #034AB0;">✨ ¡Hola ${nombre}!</h2>
+                        <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje y uno de nuestros asesores te responderá a la brevedad.</p>
                         
-                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0;">
-                            <p style="margin: 0 0 10px;"><strong style="color: #034AB0;">Detalle de tu consulta:</strong></p>
-                            <p style="margin: 8px 0;"><strong>Servicio de interés:</strong> ${servicio || 'Consulta general'}</p>
-                            <p style="margin: 8px 0;"><strong>Mensaje:</strong></p>
-                            <p style="margin: 8px 0 0; color: #555; line-height: 1.6;">${mensaje.replace(/\n/g, '<br>')}</p>
+                        <div class="info-box">
+                            <p style="margin: 0 0 10px;"><strong>📋 Detalle de tu consulta:</strong></p>
+                            <p><strong>🔧 Servicio de interés:</strong> ${servicio || 'Consulta general'}</p>
+                            <p><strong>📝 Mensaje:</strong></p>
+                            <p style="margin: 8px 0 0; color: #555;">${mensaje.replace(/\n/g, '<br>')}</p>
                         </div>
                         
-                        <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las próximas 24 horas hábiles para brindarte la atención que mereces.</p>
+                        <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las próximas <strong>24 horas hábiles</strong> para brindarte la atención que mereces.</p>
                         
-                        <div style="background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%); padding: 20px; border-radius: 8px; margin: 25px 0;">
-                            <p style="margin: 0; color: #034AB0; font-weight: bold; font-size: 14px;">Necesitas ayuda inmediata?</p>
-                            <p style="margin: 10px 0 0; font-size: 14px;">Puedes contactarnos al <strong style="color: #034AB0;">+505 8888 8888</strong><br>
-                            o escribirnos a <strong style="color: #034AB0;">contacto@edapymes.com</strong></p>
+                        <div class="contact-box">
+                            <p style="margin: 0; color: #034AB0; font-weight: bold;">📞 ¿Necesitas ayuda inmediata?</p>
+                            <p style="margin: 10px 0 0;">Contáctanos al <strong>+505 8888 8888</strong><br>
+                            o escríbenos a <strong>contacto@edapymes.com</strong></p>
                         </div>
-                        
-                        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 25px 0;">
-                        <p style="color: #666; font-size: 11px; text-align: center; margin: 0;">
-                            Este es un mensaje automático, por favor no responder a este correo.<br>
-                            <strong>EDAPymes</strong> - Tecnología con Calidad y Calidez<br>
-                            Nicaragua
-                        </p>
+                    </div>
+                    <div class="footer">
+                        Este es un mensaje automático, por favor no responder a este correo.<br>
+                        <strong>EDAPymes</strong> - Tecnología con Calidad y Calidez<br>
+                        Nicaragua
                     </div>
                 </div>
             </body>
             </html>
-        `
+        `,
+        attachments: attachments
     };
 
     try {
         await transporter.sendMail(adminMailOptions);
         await transporter.sendMail(userMailOptions);
+        console.log("✅ Correo enviado exitosamente a:", email);
         res.json({ message: "Correo enviado exitosamente" });
     } catch (error) {
         console.error("Error enviando correo:", error);
-        res.status(500).json({ error: "Error al enviar el correo" });
+        res.status(500).json({ error: "Error al enviar el correo: " + error.message });
     }
 });
 
@@ -513,11 +742,21 @@ app.use((err, req, res, next) => {
 ================================ */
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`\nServidor iniciado en http://localhost:${PORT}`);
-    console.log(`Uploads: ${uploadsDir}`);
-    console.log(`Base de datos: ${dbPath}`);
-    console.log(`Catálogo: http://localhost:${PORT}/templates/Catalogo.html`);
-    console.log(`Admin: http://localhost:${PORT}/templates/admin/products.html`);
-    console.log(`Logo disponible en: http://localhost:${PORT}/src/image/TU-LOGO.png`);
-    console.log(`\nAsegurate que el archivo "TU-LOGO.png" exista en la carpeta "src/image/"\n`);
-}); 
+    console.log(`\n========================================`);
+    console.log(`🚀 Servidor iniciado en http://localhost:${PORT}`);
+    console.log(`========================================`);
+    console.log(`📁 Uploads: ${uploadsDir}`);
+    console.log(`🗄️ Base de datos: ${dbPath}`);
+    console.log(`\n📄 Páginas disponibles:`);
+    console.log(`   - Inicio: http://localhost:${PORT}/`);
+    console.log(`   - Catálogo: http://localhost:${PORT}/Catalogo.html`);
+    console.log(`   - Admin Login: http://localhost:${PORT}/admin-login.html`);
+    console.log(`   - Admin Panel: http://localhost:${PORT}/admin.html (protegido)`);
+    console.log(`\n🔐 Credenciales de acceso:`);
+    console.log(`   - Usuario: edapymes_devCatalog`);
+    console.log(`   - Contraseña: EdaPymes$5%12@!7857`);
+    console.log(`\n📧 Correo:`);
+    console.log(`   - La imagen se envía como adjunta usando CID`);
+    console.log(`   - Busca el logo en: src/image/TU-LOGO.png o src/image/redimension.png`);
+    console.log(`\n✨ Sistema de autenticación activo con bcrypt\n`);
+});
