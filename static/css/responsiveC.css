@@ -1,0 +1,194 @@
+/* ========== MENÚ HAMBURGUESA RESPONSIVE ========== */
+/* Ocultar el sidebar por defecto en móvil */
+@media (max-width: 1023px) {
+  .catalogo-sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+    background-color: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+    transition: left 0.3s ease;
+    padding-top: 80px;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .catalogo-sidebar.active {
+    left: 0;
+  }
+  
+  .catalogo-main {
+    width: 100%;
+    padding: 20px 16px;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  /* Overlay para cerrar el menú */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .menu-overlay.active {
+    display: block;
+  }
+  
+  /* Botón de menú hamburguesa */
+  .menu-toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 16px;
+    z-index: 1001;
+    background-color: #0059b6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+  }
+  
+  .menu-toggle-btn:hover {
+    background-color: #004090;
+  }
+  
+  /* Ajustar el hero para que no quede tapado por el botón */
+  section.relative.w-full {
+    margin-top: 50px;
+  }
+  
+  /* Ajustar el header para móvil */
+  header.mb-16.max-w-4xl {
+    margin-top: 10px;
+  }
+  
+  /* Navegación vertical dentro del sidebar en móvil */
+  #navCategorias {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+    width: 100%;
+  }
+  
+  #navCategorias a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 0;
+    background-color: transparent;
+    white-space: normal;
+    border-left: 3px solid transparent;
+  }
+  
+  #navCategorias a:hover {
+    background-color: #f1f5f9;
+  }
+  
+  #navCategorias a.bg-slate-200 {
+    background-color: #e2e8f0;
+    border-left-color: #0059b6;
+  }
+  
+  /* Grid productos en móvil */
+  #gridProductos {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  /* Hero image responsive */
+  section.relative.w-full.h-\[400px\] {
+    height: 200px;
+    margin-bottom: 24px;
+  }
+  
+  .absolute.inset-0 h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 0 16px;
+  }
+  
+  /* Header texto responsive */
+  header.mb-16.max-w-4xl h1 {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+  
+  header.mb-16.max-w-4xl p {
+    font-size: 0.9rem;
+  }
+  
+  /* Cards responsive */
+  .relative.overflow-hidden.h-56 {
+    height: 180px;
+  }
+  
+  .bg-white .p-5 {
+    padding: 14px;
+  }
+  
+  .bg-white h3 {
+    font-size: 1rem;
+  }
+  
+  .text-blue-600.font-bold.text-xl {
+    font-size: 1.1rem;
+  }
+  
+  button.bg-blue-600 {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet landscape */
+@media (min-width: 640px) and (max-width: 1023px) {
+  #gridProductos {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  section.relative.w-full.h-\[400px\] {
+    height: 280px;
+  }
+  
+  .relative.overflow-hidden.h-56 {
+    height: 200px;
+  }
+}
+
+/* Desktop (mantener layout original) */
+@media (min-width: 1024px) {
+  .menu-toggle-btn,
+  .menu-overlay {
+    display: none;
+  }
+  
+  .catalogo-sidebar {
+    position: sticky;
+    left: 0;
+    width: 280px;
+  }
+  
+  #gridProductos {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+}
