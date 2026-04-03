@@ -2,7 +2,7 @@
 <html class="light" lang="es">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
@@ -117,6 +117,15 @@
         animation: slideIn 0.3s ease-out;
       }
       
+      @media (max-width: 640px) {
+        .notification {
+          top: 10px;
+          right: 10px;
+          left: 10px;
+          text-align: center;
+        }
+      }
+      
       .icon-btn {
         transition: all 0.2s ease;
       }
@@ -178,13 +187,75 @@
       #mainApp {
         display: none;
       }
+
+      /* Botón hamburguesa para móvil */
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        z-index: 60;
+        position: relative;
+      }
+
+      .mobile-menu-btn span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #0059b6;
+        margin: 5px 0;
+        transition: 0.3s;
+        border-radius: 3px;
+      }
+
+      @media (max-width: 768px) {
+        .mobile-menu-btn {
+          display: block;
+        }
+        
+        .sidebar-desktop {
+          position: fixed;
+          left: -280px;
+          transition: left 0.3s ease;
+          z-index: 55;
+        }
+        
+        .sidebar-desktop.open {
+          left: 0;
+        }
+        
+        .sidebar-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0,0,0,0.5);
+          z-index: 54;
+          display: none;
+        }
+        
+        .sidebar-overlay.open {
+          display: block;
+        }
+        
+        .main-content-shifted {
+          margin-left: 0 !important;
+        }
+        
+        header {
+          width: 100% !important;
+          left: 0 !important;
+        }
+      }
     </style>
 </head>
 <body class="bg-surface text-on-surface selection:bg-primary/20">
 
 <!-- PROTECCIÓN DE RUTA: Overlay que verifica autenticación antes de mostrar contenido -->
 <div id="authGuardOverlay">
-    <div class="text-center">
+    <div class="text-center px-4">
         <span class="material-symbols-outlined shield-icon text-white">verified_user</span>
         <div class="spinner-protect"></div>
         <p class="mt-4 text-white font-medium">Verificando acceso seguro...</p>
@@ -192,10 +263,20 @@
     </div>
 </div>
 
+<!-- Overlay para móvil -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
 <!-- Contenido principal (oculto hasta verificar autenticación) -->
 <div id="mainApp">
+    <!-- Botón menú hamburguesa para móvil -->
+    <button class="mobile-menu-btn fixed top-4 left-4 z-50 md:hidden" id="mobileMenuBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
     <!-- SideNavBar -->
-    <aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 flex flex-col py-6 z-50 overflow-y-auto">
+    <aside class="sidebar-desktop h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 flex flex-col py-6 z-50 overflow-y-auto transition-all duration-300" id="sidebarNav">
         <div class="px-6 mb-10">
             <h1 class="text-xl font-bold text-blue-800 tracking-tighter">EDAPymes</h1>
             <p class="text-xs font-manrope font-medium tracking-tight text-slate-500 uppercase">Consola de administrador v2</p>
@@ -226,53 +307,53 @@
     </aside>
 
     <!-- TopNavBar -->
-    <header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm flex justify-between items-center px-8 h-16">
-        <div class="flex items-center gap-4">
-            <div class="relative group">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
-                <input id="buscadorProductos" class="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Buscar productos..." type="text"/>
+    <header class="fixed top-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm flex justify-between items-center px-4 md:px-8 h-16 transition-all duration-300" id="mainHeader">
+        <div class="flex items-center gap-3 md:gap-4 flex-1 md:flex-initial">
+            <div class="relative group flex-1 md:flex-initial">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-lg md:text-base">search</span>
+                <input id="buscadorProductos" class="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-full text-sm w-full md:w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Buscar productos..." type="text"/>
             </div>
-            <h2 id="tituloSeccion" class="text-blue-700 font-bold font-manrope text-base">Gestión de Productos</h2>
+            <h2 id="tituloSeccion" class="text-blue-700 font-bold font-manrope text-sm md:text-base hidden md:block">Gestión de Productos</h2>
         </div>
-        <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4 md:gap-6">
             <button class="text-slate-500 hover:text-blue-600 transition-colors relative">
-                <span class="material-symbols-outlined">notifications</span>
+                <span class="material-symbols-outlined text-xl md:text-2xl">notifications</span>
             </button>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="ml-64 pt-16 min-h-screen" id="mainContent">
-        <div class="p-10 max-w-7xl mx-auto">
+    <main class="main-content-shifted ml-0 md:ml-64 pt-16 min-h-screen transition-all duration-300" id="mainContent">
+        <div class="p-4 md:p-6 lg:p-10 max-w-7xl mx-auto">
             
             <!-- Panel de Productos -->
             <div id="panelProductos" class="animate-fadeIn">
-                <div class="mb-10 flex justify-between items-end">
+                <div class="mb-6 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                     <div>
                         <span class="text-primary font-bold text-xs tracking-widest uppercase mb-2 block">Inventario Digital</span>
-                        <h1 class="text-4xl font-extrabold text-on-surface tracking-tight leading-none">Añadir Nuevo Producto</h1>
+                        <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight leading-none">Añadir Nuevo Producto</h1>
                     </div>
-                    <div class="flex gap-3">
-                        <button onclick="resetFormProducto()" class="px-6 py-2.5 text-sm font-bold text-slate-500 hover:text-on-surface transition-all">Cancelar</button>
-                        <button id="btnGuardarProducto" class="px-8 py-2.5 bg-primary text-white rounded-md font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary-dim active:scale-95 transition-all">Guardar Producto</button>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <button onclick="resetFormProducto()" class="px-4 md:px-6 py-2 text-sm font-bold text-slate-500 hover:text-on-surface transition-all">Cancelar</button>
+                        <button id="btnGuardarProducto" class="px-6 md:px-8 py-2 bg-primary text-white rounded-md font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary-dim active:scale-95 transition-all">Guardar Producto</button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-12 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
                     <!-- Left Column -->
-                    <div class="col-span-7 space-y-8">
+                    <div class="lg:col-span-7 space-y-6 md:space-y-8">
                         <!-- Información General -->
-                        <section class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-                            <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                        <section class="bg-white p-4 md:p-6 lg:p-8 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="text-base md:text-lg font-bold mb-4 md:mb-6 flex items-center gap-2">
                                 <span class="material-symbols-outlined text-primary">info</span>
                                 Información General
                             </h3>
-                            <div class="space-y-6">
+                            <div class="space-y-4 md:space-y-6">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Nombre del Producto</label>
                                     <input id="nombreProducto" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Ej: Cámara Pro 4K Ultra"/>
                                 </div>
-                                <div class="grid grid-cols-2 gap-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                                     <div>
                                         <div class="flex justify-between items-center mb-2">
                                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Categoría</label>
@@ -297,9 +378,9 @@
                         </section>
                         
                         <!-- Galería de Imágenes - Múltiples -->
-                        <section class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="text-lg font-bold flex items-center gap-2">
+                        <section class="bg-white p-4 md:p-6 lg:p-8 rounded-xl shadow-sm border border-slate-200">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-6">
+                                <h3 class="text-base md:text-lg font-bold flex items-center gap-2">
                                     <span class="material-symbols-outlined text-primary">collections</span>
                                     Galería de Imágenes
                                 </h3>
@@ -307,60 +388,60 @@
                             </div>
                             
                             <!-- Dropzone para múltiples imágenes -->
-                            <div id="dropzone" class="relative group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-primary hover:bg-primary/5 transition-all mb-6">
+                            <div id="dropzone" class="relative group cursor-pointer border-2 border-dashed border-slate-300 rounded-2xl p-6 md:p-8 text-center hover:border-primary hover:bg-primary/5 transition-all mb-6">
                                 <div class="flex flex-col items-center">
-                                    <span class="material-symbols-outlined text-4xl text-slate-400 group-hover:text-primary transition-colors mb-3">cloud_upload</span>
-                                    <p class="text-sm font-bold text-on-surface mb-1">Arrastra y suelta tus imágenes aquí</p>
-                                    <p class="text-[10px] text-slate-500 mb-4">Soporta JPG, PNG, WebP (Máx. 5MB cada una)</p>
-                                    <button type="button" onclick="document.getElementById('multiImagenes').click()" class="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-xs font-bold transition-all">Seleccionar Archivos</button>
+                                    <span class="material-symbols-outlined text-3xl md:text-4xl text-slate-400 group-hover:text-primary transition-colors mb-2 md:mb-3">cloud_upload</span>
+                                    <p class="text-xs md:text-sm font-bold text-on-surface mb-1">Arrastra y suelta tus imágenes aquí</p>
+                                    <p class="text-[8px] md:text-[10px] text-slate-500 mb-3 md:mb-4">Soporta JPG, PNG, WebP (Máx. 5MB cada una)</p>
+                                    <button type="button" onclick="document.getElementById('multiImagenes').click()" class="px-4 md:px-5 py-1.5 md:py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[10px] md:text-xs font-bold transition-all">Seleccionar Archivos</button>
                                     <input type="file" id="multiImagenes" accept="image/*" multiple class="hidden"/>
                                 </div>
                             </div>
                             
                             <!-- Grid de imágenes seleccionadas -->
-                            <div id="imagenesGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-                            <p class="text-xs text-slate-400 mt-4 text-center">* La primera imagen se usará como principal en el catálogo</p>
+                            <div id="imagenesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
+                            <p class="text-[10px] md:text-xs text-slate-400 mt-4 text-center">* La primera imagen se usará como principal en el catálogo</p>
                         </section>
                     </div>
 
                     <!-- Right Column: Technical Specs -->
-                    <div class="col-span-5">
-                        <section class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 sticky top-24">
-                            <div class="mb-8">
-                                <h3 class="text-lg font-bold flex items-center gap-2">
+                    <div class="lg:col-span-5">
+                        <section class="bg-white p-4 md:p-6 lg:p-8 rounded-xl shadow-sm border border-slate-200 lg:sticky lg:top-24">
+                            <div class="mb-6 md:mb-8">
+                                <h3 class="text-base md:text-lg font-bold flex items-center gap-2">
                                     <span class="material-symbols-outlined text-primary">bolt</span>
                                     Especificaciones Técnicas
                                 </h3>
-                                <p class="text-xs text-slate-500 mt-1">Define hasta 4 características destacadas con sus iconos.</p>
+                                <p class="text-[10px] md:text-xs text-slate-500 mt-1">Define hasta 4 características destacadas con sus iconos.</p>
                             </div>
-                            <div class="space-y-6" id="especificacionesContainer"></div>
-                            <div class="mt-8 pt-6 border-t border-slate-100">
-                                <p class="text-[10px] text-slate-400 font-medium italic">Los iconos seleccionados se guardan como metadatos del producto.</p>
+                            <div class="space-y-4 md:space-y-6" id="especificacionesContainer"></div>
+                            <div class="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-slate-100">
+                                <p class="text-[8px] md:text-[10px] text-slate-400 font-medium italic">Los iconos seleccionados se guardan como metadatos del producto.</p>
                             </div>
                         </section>
                     </div>
                 </div>
 
                 <!-- Tabla de Productos -->
-                <div class="mt-16 bg-white rounded-2xl shadow-xl overflow-hidden">
-                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
-                        <h2 class="text-xl font-bold text-gray-800">Lista de Productos</h2>
-                        <p class="text-sm text-gray-600 mt-1">Total: <span id="totalProductos">0</span> productos</p>
+                <div class="mt-8 md:mt-12 lg:mt-16 bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-4 md:px-6 py-3 md:py-4 border-b">
+                        <h2 class="text-lg md:text-xl font-bold text-gray-800">Lista de Productos</h2>
+                        <p class="text-xs md:text-sm text-gray-600 mt-1">Total: <span id="totalProductos">0</span> productos</p>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full">
+                        <table class="w-full min-w-[600px]">
                             <thead class="bg-gray-50">
                                 <tr class="border-b">
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                    <th class="px-3 md:px-6 py-2 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="px-3 md:px-6 py-2 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
+                                    <th class="px-3 md:px-6 py-2 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                    <th class="px-3 md:px-6 py-2 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                                    <th class="px-3 md:px-6 py-2 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
+                                    <th class="px-3 md:px-6 py-2 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaProductos" class="divide-y divide-gray-200">
-                                <tr><td colspan="6" class="px-6 py-8 text-center"><div class="loading-spinner mx-auto"></div><p class="mt-2 text-gray-500">Cargando productos...</p></td></tr>
+                                <tr><td colspan="6" class="px-3 md:px-6 py-6 md:py-8 text-center"><div class="loading-spinner mx-auto"></div><p class="mt-2 text-gray-500 text-sm md:text-base">Cargando productos...</p></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -369,13 +450,13 @@
 
             <!-- Panel de Categorías -->
             <div id="panelCategorias" class="hidden animate-fadeIn">
-                <div class="mb-10">
+                <div class="mb-6 md:mb-10">
                     <span class="text-primary font-bold text-xs tracking-widest uppercase mb-2 block">Organización</span>
-                    <h1 class="text-4xl font-extrabold text-on-surface tracking-tight leading-none">Gestión de Categorías</h1>
+                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight leading-none">Gestión de Categorías</h1>
                 </div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-2xl shadow-xl p-6">
-                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Agregar Nueva Categoría</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+                    <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6">
+                        <h2 class="text-xl md:text-2xl font-bold mb-4 text-gray-800">Agregar Nueva Categoría</h2>
                         <form id="formCategoria" class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Categoría</label>
@@ -383,34 +464,40 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Icono para la categoría</label>
-                                <div class="grid grid-cols-6 gap-2 p-3 bg-gray-50 rounded-lg" id="iconosCategoriaContainer">
-                                    <button type="button" data-icon="laptop" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">laptop</span></button>
-                                    <button type="button" data-icon="smartphone" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">smartphone</span></button>
-                                    <button type="button" data-icon="security" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">security</span></button>
-                                    <button type="button" data-icon="mouse" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">mouse</span></button>
-                                    <button type="button" data-icon="headphones" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">headphones</span></button>
-                                    <button type="button" data-icon="router" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">router</span></button>
-                                    <button type="button" data-icon="memory" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">memory</span></button>
-                                    <button type="button" data-icon="storage" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">storage</span></button>
-                                    <button type="button" data-icon="print" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">print</span></button>
-                                    <button type="button" data-icon="camera" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">camera</span></button>
-                                    <button type="button" data-icon="videocam" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">videocam</span></button>
-                                    <button type="button" data-icon="watch" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined">watch</span></button>
+                                <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 p-3 bg-gray-50 rounded-lg max-h-64 overflow-y-auto" id="iconosCategoriaContainer">
+                                    <button type="button" data-icon="laptop" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">laptop</span></button>
+                                    <button type="button" data-icon="smartphone" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">smartphone</span></button>
+                                    <button type="button" data-icon="security" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">security</span></button>
+                                    <button type="button" data-icon="mouse" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">mouse</span></button>
+                                    <button type="button" data-icon="headphones" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">headphones</span></button>
+                                    <button type="button" data-icon="router" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">router</span></button>
+                                    <button type="button" data-icon="memory" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">memory</span></button>
+                                    <button type="button" data-icon="storage" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">storage</span></button>
+                                    <button type="button" data-icon="print" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">print</span></button>
+                                    <button type="button" data-icon="camera" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">camera</span></button>
+                                    <button type="button" data-icon="videocam" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">videocam</span></button>
+                                    <button type="button" data-icon="watch" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">watch</span></button>
+                                    <button type="button" data-icon="backpack" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">backpack</span></button>
+                                    <button type="button" data-icon="fingerprint" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">fingerprint</span></button>
+                                    <button type="button" data-icon="mic" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">mic</span></button>
+                                    <button type="button" data-icon="360" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">360</span></button>
+                                    <button type="button" data-icon="person_alert" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">person_alert</span></button>
+                                    <button type="button" data-icon="solar_power" class="icono-categoria p-2 rounded-lg hover:bg-primary/10 transition-all"><span class="material-symbols-outlined text-sm md:text-base">solar_power</span></button>
                                 </div>
                                 <input type="hidden" id="categoriaIcono" value="laptop"/>
                             </div>
-                            <button type="submit" class="w-full bg-gradient-to-r from-primary to-primary-dim text-white font-semibold py-3 rounded-lg hover:from-primary-dim transition-all btn-animation">
-                                <span class="material-symbols-outlined align-middle">add</span> Agregar Categoría
+                            <button type="submit" class="w-full bg-gradient-to-r from-primary to-primary-dim text-white font-semibold py-3 rounded-lg hover:from-primary-dim transition-all btn-animation text-sm md:text-base">
+                                <span class="material-symbols-outlined align-middle text-base md:text-lg">add</span> Agregar Categoría
                             </button>
                         </form>
                     </div>
                     <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                        <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
-                            <h2 class="text-xl font-bold text-gray-800">Categorías Existentes</h2>
-                            <p class="text-sm text-gray-600 mt-1">Total: <span id="totalCategorias">0</span> categorías</p>
+                        <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-4 md:px-6 py-3 md:py-4 border-b">
+                            <h2 class="text-lg md:text-xl font-bold text-gray-800">Categorías Existentes</h2>
+                            <p class="text-xs md:text-sm text-gray-600 mt-1">Total: <span id="totalCategorias">0</span> categorías</p>
                         </div>
                         <div id="listaCategorias" class="divide-y divide-gray-200 max-h-96 overflow-y-auto custom-scrollbar">
-                            <div class="p-8 text-center text-gray-500">Cargando categorías...</div>
+                            <div class="p-6 md:p-8 text-center text-gray-500 text-sm md:text-base">Cargando categorías...</div>
                         </div>
                     </div>
                 </div>
@@ -419,13 +506,13 @@
     </main>
 
     <!-- Modal para categoría rápida -->
-    <div id="modalCategoria" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl p-6 w-96 max-w-md animate-fadeIn">
-            <h3 class="text-xl font-bold mb-4">Nueva Categoría</h3>
-            <input type="text" id="nuevaCategoriaInput" class="w-full border border-gray-300 rounded-lg p-3 mb-4" placeholder="Nombre de la categoría"/>
+    <div id="modalCategoria" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-2xl p-4 md:p-6 w-full max-w-md animate-fadeIn mx-4">
+            <h3 class="text-lg md:text-xl font-bold mb-4">Nueva Categoría</h3>
+            <input type="text" id="nuevaCategoriaInput" class="w-full border border-gray-300 rounded-lg p-3 mb-4 text-sm md:text-base" placeholder="Nombre de la categoría"/>
             <div class="flex gap-3 justify-end">
-                <button onclick="cerrarModalCategoria()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancelar</button>
-                <button onclick="guardarCategoriaRapida()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dim">Guardar</button>
+                <button onclick="cerrarModalCategoria()" class="px-3 md:px-4 py-2 text-gray-600 hover:text-gray-800 text-sm md:text-base">Cancelar</button>
+                <button onclick="guardarCategoriaRapida()" class="px-3 md:px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dim text-sm md:text-base">Guardar</button>
             </div>
         </div>
     </div>
@@ -436,21 +523,57 @@ const API = "http://localhost:3000/api";
 let productosGlobal = [];
 let imagenesSeleccionadas = [];
 
+// MÓVIL: Menú hamburguesa
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const sidebar = document.getElementById('sidebarNav');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const mainHeader = document.getElementById('mainHeader');
+const mainContent = document.getElementById('mainContent');
+
+function toggleMobileSidebar() {
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+        if (sidebarOverlay) sidebarOverlay.classList.toggle('open');
+    }
+}
+
+function closeMobileSidebar() {
+    if (sidebar) {
+        sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('open');
+    }
+}
+
+if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
+}
+
+// Ajustar header y main cuando sidebar cambia
+function adjustLayout() {
+    if (window.innerWidth <= 768) {
+        if (mainHeader) mainHeader.style.width = '100%';
+        if (mainContent) mainContent.style.marginLeft = '0';
+    } else {
+        if (mainHeader) mainHeader.style.width = 'calc(100% - 16rem)';
+        if (mainContent) mainContent.style.marginLeft = '16rem';
+        closeMobileSidebar();
+    }
+}
+
+window.addEventListener('resize', adjustLayout);
+adjustLayout();
+
 // Prevenir que el usuario use la flecha de regreso después de cerrar sesión
 window.addEventListener('popstate', function(event) {
-    // Al detectar que se usa la flecha de regreso, verificar sesión nuevamente
     verificarAutenticacion();
 });
 
-// Prevenir que se use el botón de regreso del mouse o la navegación por historial
 window.addEventListener('pageshow', function(event) {
     if (event.persisted) {
-        // La página se cargó desde la caché del bfache (back/forward cache)
         verificarAutenticacion();
     }
 });
 
-// Prevenir que el usuario haga clic en el botón "Atrás" del navegador
 history.pushState(null, null, location.href);
 window.onpopstate = function () {
     history.go(1);
@@ -463,7 +586,7 @@ const iconosDisponibles = [
     'camera', 'motion_sensor_active', 'wifi', 'sd_card', 'nightlight',
     'bolt', 'bluetooth', 'stay_current_portrait', 'usb',
     'local_shipping', 'verified_user', 'sell', 'support_agent',
-    'speed', 'security', 'storage', 'router', 'print', 'headphones'
+    'speed', 'security', 'storage', 'router', 'print', 'headphones','backpack','fingerprint','mic','360','videocam','person_alert','solar_power'
 ];
 
 let especificacionesActuales = [];
@@ -480,7 +603,6 @@ async function verificarAutenticacion() {
         if (response.ok) {
             const data = await response.json();
             if (data.authenticated) {
-                // Sesión válida, mostrar contenido
                 const overlay = document.getElementById('authGuardOverlay');
                 const mainApp = document.getElementById('mainApp');
                 
@@ -494,7 +616,6 @@ async function verificarAutenticacion() {
                 return true;
             }
         }
-        // No autenticado, redirigir al login
         window.location.replace('/admin-login.html');
         return false;
     } catch (error) {
@@ -515,7 +636,6 @@ async function cerrarSesion() {
         console.error('Error al cerrar sesión:', error);
     }
     
-    // Limpiar la caché del navegador para esta página
     if ('caches' in window) {
         caches.keys().then(names => {
             names.forEach(name => {
@@ -524,17 +644,14 @@ async function cerrarSesion() {
         });
     }
     
-    // Usar replace para evitar que la página quede en el historial
     window.location.replace('/admin-login.html');
 }
 
 // ==================== INICIALIZACIÓN CON PROTECCIÓN ====================
 document.addEventListener('DOMContentLoaded', async () => {
-    // Primero verificar autenticación
     const autenticado = await verificarAutenticacion();
     
     if (autenticado) {
-        // Solo inicializar el dashboard si está autenticado
         initEspecificaciones();
         cargarProductos();
         cargarCategoriasSelect();
@@ -545,11 +662,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const navCategorias = document.getElementById('navCategorias');
         const btnLogout = document.getElementById('btnLogout');
         
-        if (navProductos) navProductos.addEventListener('click', () => switchTab('productos'));
-        if (navCategorias) navCategorias.addEventListener('click', () => switchTab('categorias'));
+        if (navProductos) navProductos.addEventListener('click', () => { switchTab('productos'); closeMobileSidebar(); });
+        if (navCategorias) navCategorias.addEventListener('click', () => { switchTab('categorias'); closeMobileSidebar(); });
         if (btnLogout) btnLogout.addEventListener('click', cerrarSesion);
         
-        // Agregar evento para cuando la página se muestre (por si viene de caché)
         window.addEventListener('pageshow', (event) => {
             if (event.persisted) {
                 verificarAutenticacion();
@@ -582,28 +698,28 @@ function renderEspecificacion(index) {
     const spec = especificacionesActuales[index];
     
     const specDiv = document.createElement('div');
-    specDiv.className = 'p-4 bg-gray-50 rounded-xl border-l-4 border-primary shadow-sm hover:shadow-md transition-all';
+    specDiv.className = 'p-3 md:p-4 bg-gray-50 rounded-xl border-l-4 border-primary shadow-sm hover:shadow-md transition-all';
     specDiv.id = `spec-${index}`;
     specDiv.innerHTML = `
-        <div class="flex items-center gap-3 mb-3">
-            <div class="p-2 bg-white rounded-lg shadow-sm border border-slate-200">
-                <span class="material-symbols-outlined text-primary">${spec.icono}</span>
+        <div class="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+            <div class="p-1.5 md:p-2 bg-white rounded-lg shadow-sm border border-slate-200">
+                <span class="material-symbols-outlined text-primary text-base md:text-xl">${spec.icono}</span>
             </div>
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Especificación ${index + 1}</span>
+            <span class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Especificación ${index + 1}</span>
         </div>
-        <div class="space-y-3">
-            <div class="grid grid-cols-2 gap-3">
-                <input class="text-xs font-bold bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-primary" placeholder="Ej: Procesador" type="text" value="${(spec.label || '').replace(/"/g, '&quot;')}" onchange="actualizarEspecificacion(${index}, 'label', this.value)"/>
-                <input class="text-xs text-slate-600 bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-primary" placeholder="Ej: Intel i7" type="text" value="${(spec.value || '').replace(/"/g, '&quot;')}" onchange="actualizarEspecificacion(${index}, 'value', this.value)"/>
+        <div class="space-y-2 md:space-y-3">
+            <div class="grid grid-cols-2 gap-2 md:gap-3">
+                <input class="text-xs md:text-sm bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-primary" placeholder="Ej: Procesador" type="text" value="${(spec.label || '').replace(/"/g, '&quot;')}" onchange="actualizarEspecificacion(${index}, 'label', this.value)"/>
+                <input class="text-xs md:text-sm text-slate-600 bg-white border border-slate-200 rounded px-2 py-1.5 focus:ring-1 focus:ring-primary" placeholder="Ej: Intel i7" type="text" value="${(spec.value || '').replace(/"/g, '&quot;')}" onchange="actualizarEspecificacion(${index}, 'value', this.value)"/>
             </div>
             <div class="flex flex-col gap-1.5">
-                <label class="text-[10px] font-bold text-slate-400 uppercase px-1">Seleccionar Icono</label>
-                <div class="flex gap-2 overflow-x-auto pb-1 custom-scrollbar" id="iconos-spec-${index}">
+                <label class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase px-1">Seleccionar Icono</label>
+                <div class="flex gap-1.5 md:gap-2 overflow-x-auto pb-1 custom-scrollbar" id="iconos-spec-${index}">
                     ${iconosDisponibles.map(icon => `
                         <button type="button" onclick="seleccionarIconoSpec(${index}, '${icon}')" 
-                            class="p-1.5 rounded border ${spec.icono === icon ? 'bg-primary text-white border-primary' : 'bg-white border-slate-200 text-slate-400 hover:border-primary'} transition-all shrink-0"
+                            class="p-1 md:p-1.5 rounded border ${spec.icono === icon ? 'bg-primary text-white border-primary' : 'bg-white border-slate-200 text-slate-400 hover:border-primary'} transition-all shrink-0"
                             title="${icon}">
-                            <span class="material-symbols-outlined text-sm">${icon}</span>
+                            <span class="material-symbols-outlined text-xs md:text-sm">${icon}</span>
                         </button>
                     `).join('')}
                 </div>
@@ -647,13 +763,13 @@ function actualizarGridImagenes() {
         div.className = `relative aspect-square rounded-lg overflow-hidden border-2 ${img.isMain ? 'border-primary' : 'border-slate-200'} group image-item`;
         div.innerHTML = `
             <img src="${img.preview}" class="w-full h-full object-cover" alt="Imagen ${index + 1}">
-            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                ${!img.isMain ? `<button onclick="hacerPrincipal(${index})" class="px-2 py-1 bg-white text-primary text-[10px] font-bold rounded hover:bg-primary hover:text-white transition-all">Hacer Principal</button>` : '<span class="text-white text-[10px] font-bold bg-primary px-2 py-1 rounded">Principal</span>'}
-                <button onclick="eliminarImagen(${index})" class="p-1.5 bg-red-500 hover:bg-red-600 rounded-full text-white transition-all">
-                    <span class="material-symbols-outlined text-sm">delete</span>
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 md:gap-2">
+                ${!img.isMain ? `<button onclick="hacerPrincipal(${index})" class="px-1.5 md:px-2 py-0.5 md:py-1 bg-white text-primary text-[8px] md:text-[10px] font-bold rounded hover:bg-primary hover:text-white transition-all">Hacer Principal</button>` : '<span class="text-white text-[8px] md:text-[10px] font-bold bg-primary px-1.5 md:px-2 py-0.5 md:py-1 rounded">Principal</span>'}
+                <button onclick="eliminarImagen(${index})" class="p-1 md:p-1.5 bg-red-500 hover:bg-red-600 rounded-full text-white transition-all">
+                    <span class="material-symbols-outlined text-xs md:text-sm">delete</span>
                 </button>
             </div>
-            ${img.isMain ? '<div class="absolute top-1 left-1 bg-primary text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase">Principal</div>' : ''}
+            ${img.isMain ? '<div class="absolute top-1 left-1 bg-primary text-white text-[6px] md:text-[8px] font-bold px-1 py-0.5 rounded uppercase">Principal</div>' : ''}
         `;
         grid.appendChild(div);
     });
@@ -662,7 +778,7 @@ function actualizarGridImagenes() {
     for (let i = 0; i < slotsRestantes; i++) {
         const slot = document.createElement('div');
         slot.className = 'aspect-square rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center';
-        slot.innerHTML = '<span class="material-symbols-outlined text-slate-300">add</span>';
+        slot.innerHTML = '<span class="material-symbols-outlined text-slate-300 text-xl md:text-2xl">add</span>';
         grid.appendChild(slot);
     }
 }
@@ -722,8 +838,8 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
     const icons = { success: 'check_circle', error: 'error', warning: 'warning', info: 'info' };
     
     const notification = document.createElement('div');
-    notification.className = `notification ${colors[tipo]} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2`;
-    notification.innerHTML = `<span class="material-symbols-outlined">${icons[tipo]}</span><span>${mensaje}</span>`;
+    notification.className = `notification ${colors[tipo]} text-white px-4 md:px-6 py-2 md:py-3 rounded-lg shadow-lg flex items-center gap-2 text-sm md:text-base`;
+    notification.innerHTML = `<span class="material-symbols-outlined text-base md:text-xl">${icons[tipo]}</span><span>${mensaje}</span>`;
     document.body.appendChild(notification);
     setTimeout(() => {
         notification.style.opacity = '0';
@@ -776,26 +892,26 @@ async function cargarProductos() {
             let imagenesHtml = '';
             if (p.imagenes && p.imagenes.length > 0) {
                 const primeraImagen = p.imagenes[0];
-                imagenesHtml = `<img src="${primeraImagen}" class="w-12 h-12 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'">`;
+                imagenesHtml = `<img src="${primeraImagen}" class="w-8 h-8 md:w-12 md:h-12 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'">`;
             } else if (p.imagen) {
-                imagenesHtml = `<img src="${p.imagen}" class="w-12 h-12 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'">`;
+                imagenesHtml = `<img src="${p.imagen}" class="w-8 h-8 md:w-12 md:h-12 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'">`;
             } else {
-                imagenesHtml = `<img src="https://via.placeholder.com/50x50?text=No+Image" class="w-12 h-12 object-cover rounded-lg">`;
+                imagenesHtml = `<img src="https://via.placeholder.com/50x50?text=No+Image" class="w-8 h-8 md:w-12 md:h-12 object-cover rounded-lg">`;
             }
             
             tabla.innerHTML += `
                 <tr class="table-row hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4 text-sm text-gray-900">${p.id}</td>
-                    <td class="px-6 py-4">${imagenesHtml}</td>
-                    <td class="px-6 py-4 text-sm font-medium">${escapeHtml(p.nombre)}</td>
-                    <td class="px-6 py-4 text-sm">C$${parseFloat(p.precio).toFixed(2)}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">${escapeHtml(p.categoria || 'Sin categoría')}</span></td>
-                    <td class="px-6 py-4"><button onclick="eliminarProducto(${p.id})" class="text-red-600 hover:text-red-800 transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-sm">delete</span> Eliminar</button></td>
-                </tr>
+                    <td class="px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm text-gray-900">${p.id}</td>
+                    <td class="px-3 md:px-6 py-2 md:py-4">${imagenesHtml}</td>
+                    <td class="px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm font-medium">${escapeHtml(p.nombre)}</td>
+                    <td class="px-3 md:px-6 py-2 md:py-4 text-xs md:text-sm">C$${parseFloat(p.precio).toFixed(2)}</td>
+                    <td class="px-3 md:px-6 py-2 md:py-4"><span class="px-1.5 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs rounded-full bg-blue-100 text-blue-800">${escapeHtml(p.categoria || 'Sin categoría')}</span></td>
+                    <td class="px-3 md:px-6 py-2 md:py-4"><button onclick="eliminarProducto(${p.id})" class="text-red-600 hover:text-red-800 transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-xs md:text-sm">delete</span><span class="hidden sm:inline text-xs md:text-sm">Eliminar</span></button></td>
+                 </tr>
             `;
         });
     } catch (error) {
-        tabla.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-red-500">Error: ${error.message}</td></tr>`;
+        tabla.innerHTML = `<tr><td colspan="6" class="px-3 md:px-6 py-6 md:py-8 text-center text-red-500 text-sm md:text-base">Error: ${error.message}</td></tr>`;
     }
 }
 
@@ -850,7 +966,7 @@ if (btnGuardar) {
         
         const btn = document.getElementById('btnGuardarProducto');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<div class="loading-spinner w-5 h-5 border-2 border-white border-t-transparent inline-block"></div> Guardando...';
+        btn.innerHTML = '<div class="loading-spinner w-4 h-4 md:w-5 md:h-5 border-2 border-white border-t-transparent inline-block"></div> Guardando...';
         btn.disabled = true;
         
         try {
@@ -913,19 +1029,19 @@ async function cargarCategoriasLista() {
         categorias.forEach(cat => {
             const icono = cat.icono || 'category';
             container.innerHTML += `
-                <div class="p-4 hover:bg-gray-50 transition-all flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary">${icono}</span>
-                        <span class="font-medium text-gray-800">${escapeHtml(cat.nombre)}</span>
+                <div class="p-3 md:p-4 hover:bg-gray-50 transition-all flex justify-between items-center">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <span class="material-symbols-outlined text-primary text-base md:text-xl">${icono}</span>
+                        <span class="font-medium text-gray-800 text-sm md:text-base">${escapeHtml(cat.nombre)}</span>
                     </div>
-                    <button onclick="eliminarCategoria(${cat.id}, '${escapeHtml(cat.nombre)}')" class="text-red-600 hover:text-red-800 px-3 py-1 rounded hover:bg-red-50">
-                        <span class="material-symbols-outlined text-sm">delete</span>
+                    <button onclick="eliminarCategoria(${cat.id}, '${escapeHtml(cat.nombre)}')" class="text-red-600 hover:text-red-800 px-2 md:px-3 py-1 rounded hover:bg-red-50">
+                        <span class="material-symbols-outlined text-xs md:text-sm">delete</span>
                     </button>
                 </div>
             `;
         });
     } catch (error) {
-        container.innerHTML = `<div class="p-8 text-center text-red-500">Error: ${error.message}</div>`;
+        container.innerHTML = `<div class="p-6 md:p-8 text-center text-red-500 text-sm md:text-base">Error: ${error.message}</div>`;
     }
 }
 
@@ -1071,6 +1187,7 @@ window.actualizarEspecificacion = actualizarEspecificacion;
 window.seleccionarIconoSpec = seleccionarIconoSpec;
 window.hacerPrincipal = hacerPrincipal;
 window.eliminarImagen = eliminarImagen;
+window.closeMobileSidebar = closeMobileSidebar;
 </script>
 </body>
 </html>

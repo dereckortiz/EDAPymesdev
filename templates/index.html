@@ -2,13 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
     <title>EDAPymes - Tecnología con Calidad y Calidez</title>
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    <link rel="stylesheet" href="/static/css/estilo.css">
     
     <style>
         * {
@@ -132,6 +131,100 @@
             to {
                 opacity: 1;
                 transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Botón de WhatsApp flotante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            background-color: #25D366;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #20b859;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .whatsapp-float svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #034AB0;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .mobile-nav.open {
+                display: flex !important;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 20px;
+                gap: 15px;
+                border-bottom: 1px solid #e2e8f0;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+            .whatsapp-float svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .whatsapp-float {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+            }
+            .whatsapp-float svg {
+                width: 24px;
+                height: 24px;
             }
         }
     </style>
@@ -396,18 +489,34 @@
             <img src="../src/image/TU-LOGO.png" class="h-12" alt="Logo" onerror="this.style.display='none'">
             <div class="text-2xl font-black text-gray-900">EDAPymes</div>
         </div>
-        <div class="hidden md:flex items-center nav-links-container" id="main-nav">
-            <a class="nav-link active" onclick="cargarSeccion('inicio', this)">Inicio</a>
-            <a class="nav-link" onclick="cargarSeccion('servicios.html', this)">Servicios</a>
-            <a class="nav-link" onclick="cargarSeccion('Catalogo.html', this)">Catálogo</a>
-            <a class="nav-link" onclick="cargarSeccion('Nosotros.html', this)">Nosotros</a>
-            <a class="nav-link" onclick="cargarSeccion('ventanaC.html', this)">Contacto</a>
-            <div id="nav-indicator"></div>
+        
+        <!-- Desktop Navigation - Centrado -->
+        <div class="hidden md:flex items-center justify-center flex-1 mx-8" id="main-nav">
+            <div class="flex items-center gap-8 relative">
+                <a class="nav-link active text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('inicio', this)">Inicio</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('servicios.html', this)">Servicios</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Catalogo.html', this)">Catálogo</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Nosotros.html', this)">Nosotros</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="(() => { const navInicio = document.querySelectorAll('.nav-link')[0]; cargarSeccion('inicio', navInicio); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500); })()">Contacto</a>
+                <div id="nav-indicator" class="absolute -bottom-5 left-0 h-0.5 bg-primary transition-all duration-300"></div>
+            </div>
         </div>
-        <button onclick="cargarSeccion('ventanaC.html', document.querySelector('[onclick*=\\'ventanaC\\']'))" 
-                class="bg-primary text-white px-6 py-2 rounded-full font-bold hover:bg-primary-hover transition-all">
-            Contacto
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn md:hidden" id="mobileMenuBtn">
+            <span></span>
+            <span></span>
+            <span></span>
         </button>
+
+        <!-- Mobile Navigation -->
+        <div class="hidden mobile-nav md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg" id="mobileNav">
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('inicio', this); document.getElementById('mobileNav').classList.remove('open')">Inicio</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('servicios.html', this); document.getElementById('mobileNav').classList.remove('open')">Servicios</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Catalogo.html', this); document.getElementById('mobileNav').classList.remove('open')">Catálogo</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Nosotros.html', this); document.getElementById('mobileNav').classList.remove('open')">Nosotros</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="(() => { const navInicio = document.querySelectorAll('.nav-link')[0]; cargarSeccion('inicio', navInicio); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500); document.getElementById('mobileNav').classList.remove('open'); })()">Contacto</a>
+        </div>
     </div>
 </nav>
 
@@ -449,7 +558,37 @@
     </div>
 </footer>
 
+<!-- Botón de WhatsApp Flotante -->
+<a href="https://wa.me/50588888888?text=Hola%2C%20me%20interesa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20servicios%20y%20productos%20de%20EDAPymes" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   class="whatsapp-float"
+   aria-label="Contactar por WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.1 13.9 10.9-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+    </svg>
+</a>
+
 <script>
+// Mobile menu toggle
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileNav = document.getElementById('mobileNav');
+
+mobileMenuBtn.addEventListener('click', () => {
+    mobileNav.classList.toggle('open');
+    // Animate hamburger to X
+    const spans = mobileMenuBtn.querySelectorAll('span');
+    if (mobileNav.classList.contains('open')) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+    } else {
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+});
+
 // Variables globales
 let carruselActivo = false;
 let intervaloAutoPlay = null;
@@ -576,7 +715,7 @@ function escapeHtmlGlobal(text) {
 
 function moverIndicador(elemento) {
     const indicador = document.getElementById("nav-indicator");
-    if (elemento && indicador) {
+    if (elemento && indicador && window.innerWidth >= 768) {
         indicador.style.left = elemento.offsetLeft + "px";
         indicador.style.width = elemento.offsetWidth + "px";
         indicador.style.transition = "all 0.3s ease";

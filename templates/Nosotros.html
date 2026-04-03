@@ -2,7 +2,7 @@
 <html class="light" lang="es">
 <head>
     <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
     <title>EDAPymes - Impulsando el Crecimiento de tu Pyme</title>
     
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -35,16 +35,332 @@
     </script>
     
     <style>
-        .edapymes-pro { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; line-height: 1; }
+        /* === ESTILOS RESPONSIVOS ADICIONALES (sin eliminar nada original) === */
+        * {
+            max-width: 100%;
+        }
+        
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+        
+        .edapymes-pro { 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        
+        .material-symbols-outlined { 
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; 
+            display: inline-block; 
+            line-height: 1; 
+        }
+        
         .bg-mesh {
             background-color: #f8fafc;
             background-image: radial-gradient(at 0% 0%, rgba(0, 89, 182, 0.03) 0px, transparent 50%),
                               radial-gradient(at 100% 100%, rgba(104, 160, 255, 0.03) 0px, transparent 50%);
         }
-        .premium-card { transition: all 0.3s ease; border: 1px solid rgba(0, 0, 0, 0.03); }
-        .premium-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(0, 89, 182, 0.1); border-color: rgba(0, 89, 182, 0.08); }
-        .btn-smooth { transition: all 0.2s ease-in-out; }
+        
+        .premium-card { 
+            transition: all 0.3s ease; 
+            border: 1px solid rgba(0, 0, 0, 0.03); 
+        }
+        
+        .premium-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 40px -10px rgba(0, 89, 182, 0.1); 
+            border-color: rgba(0, 89, 182, 0.08); 
+        }
+        
+        .btn-smooth { 
+            transition: all 0.2s ease-in-out; 
+        }
+        
+        /* Estilos para la sección de historia - fondo suave y texto oscuro */
+        .history-bg {
+            background: linear-gradient(135deg, #eef2ff 0%, #e6f0fa 50%, #f0f4ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .history-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 89, 182, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(104, 160, 255, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .timeline-card {
+            background: white;
+            border: 1px solid rgba(0, 89, 182, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+        
+        .timeline-card:hover {
+            transform: translateX(10px);
+            border-color: rgba(0, 89, 182, 0.25);
+            box-shadow: 0 20px 40px -15px rgba(0, 89, 182, 0.15);
+        }
+        
+        /* Ajuste responsive para el hover en móviles */
+        @media (max-width: 768px) {
+            .timeline-card:hover {
+                transform: translateX(5px);
+            }
+        }
+        
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s ease forwards;
+        }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: staggerFade 0.6s ease forwards;
+        }
+        
+        @keyframes staggerFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .pulse-slow {
+            animation: pulseSlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+        
+        .stat-card {
+            background: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 89, 182, 0.1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 89, 182, 0.25);
+            box-shadow: 0 10px 25px -10px rgba(0, 89, 182, 0.15);
+        }
+        
+        /* === MEJORAS RESPONSIVAS === */
+        @media (max-width: 768px) {
+            section {
+                padding-left: 1.25rem !important;
+                padding-right: 1.25rem !important;
+            }
+            
+            .container-custom {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            h1, .font-headline.text-5xl, .font-headline.text-7xl {
+                font-size: 2.5rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .text-xl, .text-2xl {
+                font-size: 1.125rem !important;
+            }
+            
+            .grid.md\:grid-cols-2, .grid.md\:grid-cols-12 {
+                gap: 2rem;
+            }
+            
+            .premium-card, .timeline-card, .stat-card {
+                padding: 1.5rem !important;
+            }
+            
+            .rounded-3xl, .rounded-2xl {
+                border-radius: 1rem !important;
+            }
+            
+            .md\:sticky {
+                position: relative !important;
+                top: 0 !important;
+                margin-bottom: 2rem;
+            }
+            
+            header .max-w-7xl {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem;
+            }
+            
+            .grid-cols-2.md\:grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .bg-white.p-12.rounded-3xl,
+            .bg-\[#00224c\].p-12.rounded-3xl {
+                padding: 1.75rem !important;
+            }
+            
+            .bg-white.rounded-\[3rem\] {
+                border-radius: 1.5rem !important;
+                padding: 2rem !important;
+            }
+            
+            blockquote.text-3xl.md\:text-5xl {
+                font-size: 1.75rem !important;
+            }
+            
+            .flex.flex-col.md\:flex-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            button.px-10.py-5 {
+                padding: 0.875rem 1.5rem;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .grid.md\:grid-cols-4.gap-6 {
+                grid-template-columns: 1fr !important;
+                gap: 1rem;
+            }
+            
+            .grid.md\:grid-cols-2.gap-5 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .stat-card .text-3xl {
+                font-size: 1.875rem;
+            }
+            
+            .absolute.top-0.right-0.p-12 {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1, .font-headline.text-5xl, .font-headline.text-7xl {
+                font-size: 2rem !important;
+            }
+            
+            .text-3xl {
+                font-size: 1.5rem !important;
+            }
+            
+            .p-8, .p-10, .p-12 {
+                padding: 1.25rem !important;
+            }
+            
+            .gap-8 {
+                gap: 1rem;
+            }
+            
+            .grid-cols-3 {
+                gap: 0.5rem;
+            }
+            
+            .stat-card .text-3xl {
+                font-size: 1.5rem;
+            }
+            
+            .text-xs {
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Asegurar que las imágenes sean responsivas */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Ajuste para el header en móviles */
+        @media (max-width: 640px) {
+            header .max-w-7xl {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            header .w-10.h-10 {
+                width: 2rem;
+                height: 2rem;
+            }
+            
+            header span.font-headline.font-extrabold.text-xl {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Ajuste para los valores en sección Quiénes Somos en móviles */
+        @media (max-width: 768px) {
+            #quienes-somos .grid.md\:grid-cols-12 {
+                gap: 2rem;
+            }
+            
+            #quienes-somos .bg-white\/10.backdrop-blur-md {
+                padding: 1.5rem;
+            }
+            
+            #quienes-somos .grid.md\:grid-cols-2.gap-5 {
+                grid-template-columns: 1fr;
+            }
+            
+            #quienes-somos .grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            #quienes-somos .text-5xl.md\:text-6xl {
+                font-size: 2.5rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #quienes-somos .grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+            
+            #quienes-somos .grid-cols-3 .text-3xl {
+                font-size: 1.25rem;
+            }
+            
+            #quienes-somos .grid-cols-3 .text-sm {
+                font-size: 0.65rem;
+            }
+        }
     </style>
     
     <script>
@@ -65,64 +381,105 @@
                 window.location.href = 'Catalogo.html';
             }
         }
+        
+        // Animación al hacer scroll para los elementos de la historia
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeUp 0.8s ease forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Ajuste para el menú móvil (si se requiere en el futuro)
+            const setupMobileMenu = () => {
+                const nav = document.querySelector('nav');
+                if (nav && window.innerWidth < 768) {
+                    // Aquí se podría añadir lógica de menú hamburguesa, pero se mantiene igual
+                    // solo aseguramos que los enlaces funcionen
+                    const links = nav.querySelectorAll('a');
+                    links.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            // No es necesario cerrar menú porque no hay menú hamburguesa
+                            // Solo aseguramos que los enlaces funcionen correctamente
+                        });
+                    });
+                }
+            };
+            
+            setupMobileMenu();
+            window.addEventListener('resize', setupMobileMenu);
+        });
     </script>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased edapymes-pro">
 
     <header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-lg border-b border-black/5">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-on-surface rounded-full flex items-center justify-center overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-on-surface rounded-full flex items-center justify-center overflow-hidden">
                     <span class="text-white text-xs font-bold uppercase">EDA</span>
                 </div>
-                <span class="font-headline font-extrabold text-xl tracking-tight text-on-surface">EDAPymes</span>
+                <span class="font-headline font-extrabold text-base sm:text-xl tracking-tight text-on-surface">EDAPymes</span>
             </div>
             
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-on-surface-variant">
-                <a href="#inicio" class="hover:text-primary btn-smooth" onclick="scrollToSection('inicio'); return false;">Inicio</a>
-                <a href="#por-que" class="hover:text-primary btn-smooth" onclick="scrollToSection('por-que'); return false;">Nuestro Por Qué</a>
-                <a href="#fundamentos" class="hover:text-primary btn-smooth" onclick="scrollToSection('fundamentos'); return false;">Fundamentos</a>
-                <a href="#servicios" class="hover:text-primary btn-smooth" onclick="scrollToSection('servicios'); return false;">Servicios</a>
-                <a href="#contacto" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary-dim shadow-md shadow-primary/20" onclick="scrollToSection('contacto'); return false;">Contacto</a>
+            <nav class="hidden md:flex items-center gap-4 lg:gap-8 text-sm font-semibold text-on-surface-variant">
+                <a href="#inicio" class="hover:text-primary btn-smooth whitespace-nowrap" onclick="scrollToSection('inicio'); return false;">Inicio</a>
+                <a href="#por-que" class="hover:text-primary btn-smooth whitespace-nowrap" onclick="scrollToSection('por-que'); return false;">Nuestro Por Qué</a>
+                <a href="#quienes-somos" class="hover:text-primary btn-smooth whitespace-nowrap" onclick="scrollToSection('quienes-somos'); return false;">Quiénes Somos</a>
+                <a href="#nuestra-historia" class="hover:text-primary btn-smooth whitespace-nowrap" onclick="scrollToSection('nuestra-historia'); return false;">Nuestra Historia</a>
+                <a href="#fundamentos" class="hover:text-primary btn-smooth whitespace-nowrap" onclick="scrollToSection('fundamentos'); return false;">Fundamentos</a>
+                <a href="#servicios" class="hover:text-primary btn-smooth whitespace-nowrap" onclick="scrollToSection('servicios'); return false;">Servicios</a>
+                <a href="#contacto" class="bg-primary text-white px-4 py-2 rounded-full hover:bg-primary-dim shadow-md shadow-primary/20 whitespace-nowrap" onclick="scrollToSection('contacto'); return false;">Contacto</a>
             </nav>
         </div>
     </header>
 
-    <main class="pt-24 bg-mesh">
+    <main class="pt-20 sm:pt-24 bg-mesh">
         
-        <section id="inicio" class="relative min-h-[85vh] flex items-center px-8">
-            <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
-                <div class="py-12">
-                    <span class="inline-block px-3 py-1 bg-primary/10 text-primary font-headline font-bold text-xs tracking-widest uppercase mb-6 rounded-sm border border-primary/20">Desde 2026</span>
-                    <h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface mb-8 leading-[1.1]">
+        <section id="inicio" class="relative min-h-[85vh] flex items-center px-4 sm:px-8 py-12 sm:py-0">
+            <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <div class="py-8 md:py-12">
+                    <span class="inline-block px-3 py-1 bg-primary/10 text-primary font-headline font-bold text-xs tracking-widest uppercase mb-6 rounded-sm border border-primary/20">Desde 2001</span>
+                    <h1 class="font-headline text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface mb-6 md:mb-8 leading-[1.2] md:leading-[1.1]">
                         Impulsando el <span class="text-primary italic">Crecimiento</span> de tu Pyme
                     </h1>
-                    <p class="text-xl md:text-2xl text-on-surface-variant font-light max-w-lg leading-relaxed mb-10">
+                    <p class="text-lg sm:text-xl md:text-2xl text-on-surface-variant font-light max-w-lg leading-relaxed mb-8 md:mb-10">
                         Soluciones integrales en tecnología y asesoría empresarial diseñadas específicamente para la pequeña y mediana empresa nacional.
                     </p>
-
                 </div>
 
-                <div class="relative flex justify-center py-12">
-                    <div class="aspect-[4/5] w-full max-w-[450px] bg-white p-4 rounded-3xl shadow-2xl overflow-hidden border border-black/5">
-                        <img alt="Equipo profesional" class="w-full h-full object-cover rounded-2xl grayscale hover:grayscale-0 transition-all duration-700" src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80&w=1000"/>
+                <div class="relative flex justify-center py-8 md:py-12">
+                    <div class="aspect-[4/5] w-full max-w-[350px] sm:max-w-[450px] bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-black/5">
+                        <img alt="Equipo profesional" class="w-full h-full object-cover rounded-xl sm:rounded-2xl grayscale hover:grayscale-0 transition-all duration-700" src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80&w=1000"/>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="por-que" class="py-32 px-8 bg-white border-y border-black/5">
+        <section id="por-que" class="py-16 sm:py-32 px-4 sm:px-8 bg-white border-y border-black/5">
             <div class="max-w-7xl mx-auto">
-                <div class="grid md:grid-cols-12 gap-12 items-start">
+                <div class="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
                     <div class="md:col-span-4 md:sticky md:top-32">
-                        <h2 class="font-headline text-4xl font-black uppercase tracking-tighter text-on-surface">NUESTRO POR QUÉ</h2>
+                        <h2 class="font-headline text-3xl sm:text-4xl font-black uppercase tracking-tighter text-on-surface">NUESTRO POR QUÉ</h2>
                         <div class="h-1.5 w-20 bg-primary mt-4 rounded-full"></div>
                     </div>
-                    <div class="md:col-span-8 space-y-10">
-                        <p class="font-headline text-3xl font-medium leading-tight text-on-surface">
+                    <div class="md:col-span-8 space-y-8 md:space-y-10">
+                        <p class="font-headline text-2xl sm:text-3xl font-medium leading-tight text-on-surface">
                             EDAPymes nace de la convicción de que las pequeñas y medianas empresas son el motor de nuestra economía y merecen acceso a tecnología de punta y servicios profesionales de clase mundial.
                         </p>
-                        <div class="grid md:grid-cols-2 gap-10 text-on-surface-variant leading-relaxed text-lg">
+                        <div class="grid sm:grid-cols-2 gap-8 md:gap-10 text-on-surface-variant leading-relaxed text-base sm:text-lg">
                             <p>
                                 Observamos que muchas pymes enfrentaban barreras tecnológicas y operativas que limitaban su potencial. Nuestra inspiración fue crear un centro de soluciones 360° que combine mantenimiento técnico, venta de equipo especializado y asesoría estratégica en un solo lugar.
                             </p>
@@ -135,25 +492,302 @@
             </div>
         </section>
 
-        <section id="fundamentos" class="py-32 px-8">
-            <div class="max-w-7xl mx-auto">
-                <div class="mb-16">
-                    <h2 class="font-headline text-sm font-bold tracking-[0.2em] uppercase text-primary mb-2">Fundamentos</h2>
-                    <p class="font-headline text-4xl font-extrabold text-on-surface">Misión y Visión</p>
+    <!-- SECCIÓN QUIÉNES SOMOS - CON COLORES CORREGIDOS -->
+<section id="quienes-somos" class="py-16 sm:py-32 px-4 sm:px-8 relative overflow-hidden" style="background: linear-gradient(135deg, #0a2540 0%, #0f2c3a 50%, #0a2540 100%);">
+    <!-- Elementos decorativos animados -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl"></div>
+        
+        <!-- Líneas decorativas -->
+        <svg class="absolute bottom-0 left-0 w-full h-32 opacity-10" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="white"></path>
+        </svg>
+    </div>
+    
+    <div class="max-w-7xl mx-auto relative z-10">
+        <div class="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+            <!-- Columna izquierda -->
+            <div class="md:col-span-4 md:sticky md:top-32">
+                <div class="relative">
+                    <!-- Indicador animado -->
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-2 h-2 bg-primary rounded-full animate-ping"></div>
+                        <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                        <span class="text-xs font-bold tracking-[0.2em] text-primary uppercase">Conócenos</span>
+                    </div>
+                    
+                    <h2 class="font-headline text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter text-white leading-tight">
+                        QUIÉNES<br>
+                        <span class="text-primary">SOMOS</span>
+                    </h2>
+                    <div class="h-1 w-24 bg-primary mt-6 rounded-full mb-8"></div>
+                    
+                    <p class="text-white text-base sm:text-lg font-medium leading-relaxed">
+                        Somos el aliado estratégico que tu pyme necesita para crecer con confianza y tecnología de vanguardia.
+                    </p>
+                    
+                    <!-- Cita pequeña -->
+                    <div class="mt-8 p-4 sm:p-5 border-l-2 border-primary bg-white/10 backdrop-blur-sm rounded-r-xl">
+                        <span class="material-symbols-outlined text-primary text-2xl mb-2">format_quote</span>
+                        <p class="text-white/90 text-xs sm:text-sm italic">"Más que un proveedor, un socio de confianza"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Columna derecha -->
+            <div class="md:col-span-8 space-y-8 md:space-y-10">
+                <!-- Tarjeta de descripción del equipo -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl sm:rounded-3xl p-6 sm:p-10 border border-white/20 hover:border-white/40 transition-all duration-500 group">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:bg-white/30 transition-all">
+                            <span class="material-symbols-outlined text-2xl sm:text-3xl text-white">groups</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] sm:text-xs font-bold tracking-wider text-white uppercase bg-white/20 px-2 sm:px-3 py-1 rounded-full">+25 años de experiencia</span>
+                            <h3 class="font-headline text-xl sm:text-2xl font-bold text-white mt-2">Un equipo apasionado</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 sm:space-y-5 text-white/90 leading-relaxed text-base sm:text-lg">
+                        <p>
+                            En EDAPymes somos un equipo multidisciplinario conformado por expertos en <span class="text-white font-semibold underline decoration-primary underline-offset-4">tecnología, asesoría empresarial, formación profesional y servicios de traducción</span>. Nuestra fortaleza radica en la combinación de experiencia técnica con un profundo entendimiento de las necesidades particulares de las pequeñas y medianas empresas.
+                        </p>
+                        <p>
+                            Cada miembro de nuestro equipo comparte un propósito común: <span class="text-white font-semibold underline decoration-primary underline-offset-4">derribar las barreras que limitan el crecimiento de las pymes</span>, ofreciendo soluciones accesibles, personalizadas y de alto impacto.
+                        </p>
+                        <p>
+                            Creemos firmemente que el éxito se construye con relaciones sólidas. Nos convertimos en <span class="text-white font-semibold underline decoration-primary underline-offset-4">aliados estratégicos</span>, celebrando cada logro y afrontando juntos cada desafío con pasión y dedicación.
+                        </p>
+                    </div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="md:col-span-2 premium-card bg-white p-12 rounded-3xl">
-                        <span class="material-symbols-outlined text-4xl text-primary mb-6">rocket_launch</span>
-                        <h3 class="font-headline text-2xl font-bold mb-4 text-on-surface">Misión</h3>
-                        <p class="text-xl text-on-surface-variant leading-relaxed font-light">
+                <!-- Título de valores -->
+                <div class="flex items-center justify-center gap-4 my-4">
+                    <div class="h-px flex-1 bg-gradient-to-r from-transparent to-white/30"></div>
+                    <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/20 rounded-full backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-white text-sm">stars</span>
+                        <span class="text-[10px] sm:text-xs font-bold tracking-wider text-white uppercase">Nuestros Valores</span>
+                    </div>
+                    <div class="h-px flex-1 bg-gradient-to-l from-transparent to-white/30"></div>
+                </div>
+                
+                <!-- VALORES CON ICONOS EN BLANCO -->
+                <div class="grid sm:grid-cols-2 gap-4 sm:gap-5">
+                    <!-- Integridad -->
+                    <div class="group bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 cursor-pointer">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-xl sm:text-2xl text-white">verified</span>
+                        </div>
+                        <h4 class="font-headline font-bold text-lg sm:text-xl mb-1 sm:mb-2 text-white">Integridad</h4>
+                        <p class="text-white/80 text-xs sm:text-sm leading-relaxed group-hover:text-white/90 transition-colors">Actuamos con honestidad y transparencia, siendo coherentes entre lo que decimos y hacemos.</p>
+                    </div>
+                    
+                    <!-- Responsabilidad -->
+                    <div class="group bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 cursor-pointer">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-xl sm:text-2xl text-white">assignment_turned_in</span>
+                        </div>
+                        <h4 class="font-headline font-bold text-lg sm:text-xl mb-1 sm:mb-2 text-white">Responsabilidad</h4>
+                        <p class="text-white/80 text-xs sm:text-sm leading-relaxed group-hover:text-white/90 transition-colors">Asumimos con compromiso cada proyecto, cumpliendo nuestras promesas con profesionalismo.</p>
+                    </div>
+                    
+                    <!-- Amabilidad -->
+                    <div class="group bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 cursor-pointer">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-xl sm:text-2xl text-white">sentiment_satisfied</span>
+                        </div>
+                        <h4 class="font-headline font-bold text-lg sm:text-xl mb-1 sm:mb-2 text-white">Amabilidad</h4>
+                        <p class="text-white/80 text-xs sm:text-sm leading-relaxed group-hover:text-white/90 transition-colors">Tratamos a cada persona con respeto, cordialidad y calidez humana.</p>
+                    </div>
+                    
+                    <!-- Confiables -->
+                    <div class="group bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 cursor-pointer">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-xl sm:text-2xl text-white">security</span>
+                        </div>
+                        <h4 class="font-headline font-bold text-lg sm:text-xl mb-1 sm:mb-2 text-white">Confiables</h4>
+                        <p class="text-white/80 text-xs sm:text-sm leading-relaxed group-hover:text-white/90 transition-colors">Generamos certeza mediante la consistencia, calidad y cumplimiento.</p>
+                    </div>
+                    
+                    <!-- Empáticos -->
+                    <div class="group bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 cursor-pointer">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-xl sm:text-2xl text-white">favorite</span>
+                        </div>
+                        <h4 class="font-headline font-bold text-lg sm:text-xl mb-1 sm:mb-2 text-white">Empáticos</h4>
+                        <p class="text-white/80 text-xs sm:text-sm leading-relaxed group-hover:text-white/90 transition-colors">Escuchamos y comprendemos las necesidades reales de nuestros clientes.</p>
+                    </div>
+                    
+                    <!-- Compromiso con Calidad -->
+                    <div class="group bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 cursor-pointer">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-xl sm:text-2xl text-white">stars</span>
+                        </div>
+                        <h4 class="font-headline font-bold text-lg sm:text-xl mb-1 sm:mb-2 text-white">Compromiso con la Calidad</h4>
+                        <p class="text-white/80 text-xs sm:text-sm leading-relaxed group-hover:text-white/90 transition-colors">Brindamos servicios de calidad, eficiencia y seguridad garantizada.</p>
+                    </div>
+                </div>
+                
+                <!-- Cifras destacadas -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-4 sm:pt-6">
+                    <div class="text-center p-2 sm:p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all">
+                        <div class="text-xl sm:text-3xl font-black text-white">+25</div>
+                        <div class="text-[10px] sm:text-sm text-white/80 font-medium mt-1">Años de experiencia</div>
+                    </div>
+                    <div class="text-center p-2 sm:p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all">
+                        <div class="text-xl sm:text-3xl font-black text-white">+300</div>
+                        <div class="text-[10px] sm:text-sm text-white/80 font-medium mt-1">Empresas atendidas</div>
+                    </div>
+                    <div class="text-center p-2 sm:p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all">
+                        <div class="text-xl sm:text-3xl font-black text-white">100%</div>
+                        <div class="text-[10px] sm:text-sm text-white/80 font-medium mt-1">Compromiso</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- SECCIÓN NUESTRA HISTORIA - MODIFICADA CON TEXTO OSCURIO Y LEGIBLE -->
+        <section id="nuestra-historia" class="py-16 sm:py-32 px-4 sm:px-8 history-bg relative">
+            <div class="max-w-7xl mx-auto relative z-10">
+                <div class="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+                    <div class="md:col-span-4 md:sticky md:top-32 animate-on-scroll">
+                        <div class="floating">
+                            <span class="material-symbols-outlined text-5xl sm:text-6xl text-primary mb-4">history</span>
+                        </div>
+                        <h2 class="font-headline text-3xl sm:text-4xl font-black uppercase tracking-tighter text-on-surface">NUESTRA HISTORIA</h2>
+                        <div class="h-1.5 w-20 bg-primary mt-4 rounded-full mb-6"></div>
+                        <p class="text-on-surface-variant text-base sm:text-lg font-light leading-relaxed">
+                            Más de 25 años transformando sueños en realidades tecnológicas.
+                        </p>
+                        <div class="mt-8 flex gap-2">
+                            <div class="w-2 h-2 rounded-full bg-primary pulse-slow"></div>
+                            <div class="w-2 h-2 rounded-full bg-primary pulse-slow" style="animation-delay: 0.5s"></div>
+                            <div class="w-2 h-2 rounded-full bg-primary pulse-slow" style="animation-delay: 1s"></div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-8 space-y-4 sm:space-y-6">
+                        <!-- Tarjeta principal de historia -->
+                        <div class="timeline-card rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 animate-on-scroll" style="animation-delay: 0.1s">
+                            <div class="flex items-center gap-4 mb-5">
+                                <span class="material-symbols-outlined text-2xl sm:text-3xl text-primary">psychology</span>
+                                <span class="text-[10px] sm:text-xs font-bold tracking-wider text-primary uppercase bg-primary/10 px-2 sm:px-3 py-1 rounded-full">El inicio de todo · 2001</span>
+                            </div>
+                            <p class="text-on-surface leading-relaxed text-base sm:text-lg mb-4">
+                                En el año 2001, cuando el acceso a la tecnología apenas comenzaba a expandirse y las computadoras eran vistas como herramientas exclusivas de grandes empresas, una mujer emprendedora decidió apostar por una idea que parecía arriesgada pero llena de esperanza: crear soluciones tecnológicas que ayudaran a las organizaciones a crecer y modernizar sus procesos.
+                            </p>
+                            <p class="text-on-surface-variant leading-relaxed text-sm sm:text-base">
+                                Todo comenzó en una pequeña oficina improvisada en una casa familiar, donde de manera apasionada por la informática compartía un sueño: desarrollar sistemas de información a la medida que facilitaran la vida de las personas y optimizaran el trabajo de las empresas. Con apenas una computadora, una conexión a internet inestable y muchas ganas de aprender, inicio su primer proyecto: un sistema de control de inventarios para una marisquería.
+                            </p>
+                        </div>
+                        
+                        <div class="timeline-card rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 animate-on-scroll" style="animation-delay: 0.2s">
+                            <div class="flex items-center gap-4 mb-5">
+                                <span class="material-symbols-outlined text-2xl sm:text-3xl text-primary">trending_up</span>
+                                <span class="text-[10px] sm:text-xs font-bold tracking-wider text-primary uppercase bg-primary/10 px-2 sm:px-3 py-1 rounded-full">Superando desafíos</span>
+                            </div>
+                            <p class="text-on-surface leading-relaxed text-base sm:text-lg">
+                                Los primeros años no fueron fáciles. Los recursos eran limitados, los clientes dudaban de la tecnología y la competencia comenzaba a crecer. Sin embargo, la perseverancia, la disciplina y el compromiso con la calidad hicieron que poco a poco la empresa ganara reconocimiento. Cada sistema desarrollado no solo resolvía un problema, sino que también construía confianza en los clientes.
+                            </p>
+                        </div>
+                        
+                        <div class="timeline-card rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 animate-on-scroll" style="animation-delay: 0.3s">
+                            <div class="flex items-center gap-4 mb-5">
+                                <span class="material-symbols-outlined text-2xl sm:text-3xl text-primary">diversity_3</span>
+                                <span class="text-[10px] sm:text-xs font-bold tracking-wider text-primary uppercase bg-primary/10 px-2 sm:px-3 py-1 rounded-full">Expansión · 2011</span>
+                            </div>
+                            <p class="text-on-surface leading-relaxed text-base sm:text-lg mb-4">
+                                Con el paso del tiempo, la empresa fue creciendo y ampliando sus servicios. A inicios de los años 2011, ya no solo desarrollaban sistemas de inventario, sino también sistemas de facturación, control de ventas, gestión administrativa y plataformas empresariales personalizadas. Su principal fortaleza era escuchar a los clientes y diseñar soluciones tecnológicas adaptadas a sus necesidades reales. De igual manera en ese periodo también comenzó junto a dos amigos a ampliar sus sueños e incorporo capacitaciones, asesorías y servicios.
+                            </p>
+                            <p class="text-on-surface-variant leading-relaxed text-sm sm:text-base">
+                                Durante la década de 2011, la empresa dio un gran salto hacia la innovación, incorporando tecnologías web, aplicaciones móviles, bases de datos avanzadas y sistemas en la nube. Este cambio permitió ofrecer servicios más modernos, seguros y eficientes, consolidándose como una empresa confiable en el desarrollo de sistemas de información a la medida.
+                            </p>
+                        </div>
+                        
+                        <div class="timeline-card rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 animate-on-scroll" style="animation-delay: 0.4s">
+                            <div class="flex items-center gap-4 mb-5">
+                                <span class="material-symbols-outlined text-2xl sm:text-3xl text-primary">business_center</span>
+                                <span class="text-[10px] sm:text-xs font-bold tracking-wider text-primary uppercase bg-primary/10 px-2 sm:px-3 py-1 rounded-full">25+ años de experiencia</span>
+                            </div>
+                            <p class="text-on-surface leading-relaxed text-base sm:text-lg mb-4">
+                                A lo largo de sus más de 25 años de experiencia, la empresa ha trabajado con diferentes sectores: pequeñas y medianas empresas, instituciones educativas, comercios, organizaciones sociales y empresas privadas, ayudándoles a mejorar su gestión administrativa, automatizar procesos y tomar decisiones basadas en información confiable.
+                            </p>
+                            <p class="text-on-surface-variant leading-relaxed text-sm sm:text-base">
+                                Lo que comenzó como un pequeño emprendimiento se convirtió en una organización sólida, con un equipo multidisciplinario de desarrolladores, analistas de sistemas, ingenieros de software y especialistas en soporte técnico, comprometidos con la innovación, la calidad y el servicio al cliente.
+                            </p>
+                        </div>
+                        
+                        <div class="timeline-card rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 animate-on-scroll" style="animation-delay: 0.5s">
+                            <div class="flex items-center gap-4 mb-5">
+                                <span class="material-symbols-outlined text-2xl sm:text-3xl text-primary">rocket_launch</span>
+                                <span class="text-[10px] sm:text-xs font-bold tracking-wider text-primary uppercase bg-primary/10 px-2 sm:px-3 py-1 rounded-full">Presente y futuro</span>
+                            </div>
+                            <p class="text-on-surface leading-relaxed text-base sm:text-lg mb-4">
+                                Hoy en día, la empresa continúa creciendo, adaptándose a las nuevas tendencias tecnológicas como la inteligencia artificial, el desarrollo seguro de software, los sistemas en la nube y la transformación digital. Su misión sigue siendo la misma desde el primer día: brindar soluciones tecnológicas eficientes, confiables y personalizadas que impulsen el crecimiento de sus clientes.
+                            </p>
+                            <p class="text-on-surface-variant leading-relaxed text-sm sm:text-base">
+                                Más que una empresa de tecnología, se ha convertido en un aliado estratégico para las organizaciones, demostrando que la constancia, la innovación y la pasión por la tecnología pueden transformar un pequeño sueño en una historia de éxito que ha perdurado por más de 25 años.
+                            </p>
+                        </div>
+                        
+                        <!-- Cita final -->
+                        <div class="bg-primary/5 rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-primary/15 animate-on-scroll" style="animation-delay: 0.6s">
+                            <span class="material-symbols-outlined text-2xl sm:text-3xl text-primary mb-4">format_quote</span>
+                            <p class="text-on-surface text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+                                "El verdadero éxito de una empresa emprendedora no se mide solo en años de experiencia, sino en la capacidad de adaptarse, innovar y ayudar a otros a crecer a través de la tecnología."
+                            </p>
+                            <div class="mt-6 flex items-center gap-3">
+                                <div class="w-10 h-0.5 bg-primary"></div>
+                                <span class="text-primary text-xs uppercase tracking-wider font-medium">EDAPymes · Desde 2001</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Cifras destacadas -->
+                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 pt-4 animate-on-scroll" style="animation-delay: 0.7s">
+                            <div class="stat-card text-center p-3 sm:p-5 rounded-xl">
+                                <div class="text-2xl sm:text-3xl font-black text-primary">+25</div>
+                                <div class="text-xs sm:text-sm text-on-surface-variant font-medium">Años de experiencia</div>
+                            </div>
+                            <div class="stat-card text-center p-3 sm:p-5 rounded-xl">
+                                <div class="text-2xl sm:text-3xl font-black text-primary">+300</div>
+                                <div class="text-xs sm:text-sm text-on-surface-variant font-medium">Empresas atendidas</div>
+                            </div>
+                            <div class="stat-card text-center p-3 sm:p-5 rounded-xl">
+                                <div class="text-2xl sm:text-3xl font-black text-primary">+1500</div>
+                                <div class="text-xs sm:text-sm text-on-surface-variant font-medium">Proyectos realizados</div>
+                            </div>
+                            <div class="stat-card text-center p-3 sm:p-5 rounded-xl">
+                                <div class="text-2xl sm:text-3xl font-black text-primary">100%</div>
+                                <div class="text-xs sm:text-sm text-on-surface-variant font-medium">Compromiso con la calidad</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fundamentos" class="py-16 sm:py-32 px-4 sm:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-12 sm:mb-16">
+                    <h2 class="font-headline text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-primary mb-2">Fundamentos</h2>
+                    <p class="font-headline text-3xl sm:text-4xl font-extrabold text-on-surface">Misión y Visión</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                    <div class="md:col-span-2 premium-card bg-white p-6 sm:p-12 rounded-2xl sm:rounded-3xl">
+                        <span class="material-symbols-outlined text-3xl sm:text-4xl text-primary mb-6">rocket_launch</span>
+                        <h3 class="font-headline text-xl sm:text-2xl font-bold mb-4 text-on-surface">Misión</h3>
+                        <p class="text-base sm:text-xl text-on-surface-variant leading-relaxed font-light">
                             Brindar servicios con calidad y calidez, así como ofertar computadoras, accesorios para computadoras y para móviles con las mejores y más modernas especificaciones que satisfagan las necesidades de nuestros clientes.
                         </p>
                     </div>
-                    <div class="bg-[#00224c] p-12 rounded-3xl text-white relative overflow-hidden shadow-xl">
-                        <span class="material-symbols-outlined text-4xl text-primary-container mb-6">visibility</span>
-                        <h3 class="font-headline text-2xl font-bold mb-4">Visión</h3>
-                        <p class="text-lg opacity-80 leading-relaxed font-light">
+                    <div class="bg-[#00224c] p-6 sm:p-12 rounded-2xl sm:rounded-3xl text-white relative overflow-hidden shadow-xl">
+                        <span class="material-symbols-outlined text-3xl sm:text-4xl text-primary-container mb-6">visibility</span>
+                        <h3 class="font-headline text-xl sm:text-2xl font-bold mb-4">Visión</h3>
+                        <p class="text-base sm:text-lg opacity-80 leading-relaxed font-light">
                             Ser una empresa especializada en la atención a las necesidades de la pequeña y mediana empresa nacional.
                         </p>
                     </div>
@@ -161,57 +795,56 @@
             </div>
         </section>
 
-        <section id="servicios" class="py-20 px-8">
+        <section id="servicios" class="py-12 sm:py-20 px-4 sm:px-8">
             <div class="max-w-7xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                    <div class="premium-card bg-white p-6 sm:p-8 rounded-xl sm:rounded-2xl border-l-4 border-primary">
                         <span class="material-symbols-outlined text-2xl text-on-surface mb-4">laptop_mac</span>
-                        <h4 class="font-headline font-bold text-lg mb-2">Tecnología</h4>
-                        <p class="text-sm text-on-surface-variant">Mantenimiento, reparación y venta de laptops y accesorios.</p>
+                        <h4 class="font-headline font-bold text-base sm:text-lg mb-2">Tecnología</h4>
+                        <p class="text-xs sm:text-sm text-on-surface-variant">Mantenimiento, reparación y venta de laptops y accesorios.</p>
                     </div>
-                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary">
+                    <div class="premium-card bg-white p-6 sm:p-8 rounded-xl sm:rounded-2xl border-l-4 border-primary">
                         <span class="material-symbols-outlined text-2xl text-primary mb-4">group</span>
-                        <h4 class="font-headline font-bold text-lg mb-2">Capacitación</h4>
-                        <p class="text-sm text-on-surface-variant">Programas de formación y asesorías empresariales.</p>
+                        <h4 class="font-headline font-bold text-base sm:text-lg mb-2">Capacitación</h4>
+                        <p class="text-xs sm:text-sm text-on-surface-variant">Programas de formación y asesorías empresariales.</p>
                     </div>
-                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary-container">
+                    <div class="premium-card bg-white p-6 sm:p-8 rounded-xl sm:rounded-2xl border-l-4 border-primary-container">
                         <span class="material-symbols-outlined text-2xl text-primary-container mb-4">security</span>
-                        <h4 class="font-headline font-bold text-lg mb-2">Seguridad</h4>
-                        <p class="text-sm text-on-surface-variant">Instalación de cámaras y sistemas de vigilancia.</p>
+                        <h4 class="font-headline font-bold text-base sm:text-lg mb-2">Seguridad</h4>
+                        <p class="text-xs sm:text-sm text-on-surface-variant">Instalación de cámaras y sistemas de vigilancia.</p>
                     </div>
-                    <div class="premium-card bg-white p-8 rounded-2xl border-l-4 border-primary-container">
+                    <div class="premium-card bg-white p-6 sm:p-8 rounded-xl sm:rounded-2xl border-l-4 border-primary-container">
                         <span class="material-symbols-outlined text-2xl text-on-surface mb-4">translate</span>
-                        <h4 class="font-headline font-bold text-lg mb-2">Globalización</h4>
-                        <p class="text-sm text-on-surface-variant">Servicios de traducción profesional Inglés - Español.</p>
+                        <h4 class="font-headline font-bold text-base sm:text-lg mb-2">Globalización</h4>
+                        <p class="text-xs sm:text-sm text-on-surface-variant">Servicios de traducción profesional Inglés - Español.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="py-32 px-8 overflow-hidden">
-            <div class="max-w-7xl mx-auto bg-white rounded-[3rem] p-12 md:p-24 relative border border-black/5 shadow-sm">
-                <div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-                    <span class="material-symbols-outlined text-[15rem]">format_quote</span>
+        <section class="py-16 sm:py-32 px-4 sm:px-8 overflow-hidden">
+            <div class="max-w-7xl mx-auto bg-white rounded-2xl sm:rounded-[3rem] p-6 sm:p-12 md:p-24 relative border border-black/5 shadow-sm">
+                <div class="absolute top-0 right-0 p-6 sm:p-12 opacity-5 pointer-events-none hidden sm:block">
+                    <span class="material-symbols-outlined text-[8rem] sm:text-[15rem]">format_quote</span>
                 </div>
                 <div class="max-w-3xl relative z-10">
-                    <h2 class="font-headline text-sm font-bold tracking-[0.2em] uppercase text-primary mb-8">Nuestra Promesa</h2>
-                    <blockquote class="font-headline text-3xl md:text-5xl font-extralight italic text-on-surface leading-tight mb-12">
+                    <h2 class="font-headline text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-primary mb-6 sm:mb-8">Nuestra Promesa</h2>
+                    <blockquote class="font-headline text-xl sm:text-3xl md:text-5xl font-extralight italic text-on-surface leading-tight mb-8 sm:mb-12">
                         "En EDAPymes, entendemos que el éxito de una pequeña empresa no solo depende de una buena idea, sino de las herramientas y el respaldo que tiene detrás. Estamos aquí para asegurar que ese respaldo sea sólido, moderno y confiable."
                     </blockquote>
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-1 bg-primary rounded-full"></div>
-                        <p class="font-headline font-bold tracking-tight text-on-surface uppercase">Dirección General, EDAPymes</p>
+                        <p class="font-headline font-bold tracking-tight text-on-surface uppercase text-xs sm:text-sm">Dirección General, EDAPymes</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="contacto" class="py-32 px-8 text-center bg-mesh">
+        <section id="contacto" class="py-16 sm:py-32 px-4 sm:px-8 text-center bg-mesh">
             <div class="max-w-2xl mx-auto">
-                <h2 class="font-headline text-4xl md:text-5xl font-black tracking-tighter text-on-surface mb-6">¿Listo para potenciar tu negocio?</h2>
-                <p class="text-on-surface-variant mb-12 text-lg">Descubre cómo nuestra gama de servicios, desde soporte técnico hasta préstamos prendatarios, puede impulsar tu crecimiento hoy mismo.</p>
-                <div class="flex flex-col md:flex-row gap-4 justify-center">
-                    <!-- BOTÓN SOLICITAR ASESORÍA CORREGIDO - MISMO PATRÓN QUE EN servicios.html -->
+                <h2 class="font-headline text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-on-surface mb-6">¿Listo para potenciar tu negocio?</h2>
+                <p class="text-on-surface-variant mb-8 sm:mb-12 text-base sm:text-lg">Descubre cómo nuestra gama de servicios, desde soporte técnico hasta préstamos prendatarios, puede impulsar tu crecimiento hoy mismo.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button 
                       onclick="(() => {
                         const navInicio = document.querySelectorAll('.nav-link')[0];
@@ -223,14 +856,13 @@
                           if(el) el.scrollIntoView({ behavior: 'smooth' }); 
                         }, 500);
                       })()"
-                      class="bg-primary text-white px-10 py-5 rounded-xl font-headline font-bold btn-smooth hover:bg-primary-dim hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95">
+                      class="bg-primary text-white px-6 sm:px-10 py-3 sm:py-5 rounded-xl font-headline font-bold btn-smooth hover:bg-primary-dim hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95">
                       Solicitar Asesoría
                     </button>
 
-                    <!-- BOTÓN VER CATÁLOGO (sin cambios) -->
                     <button 
                       onclick="verCatalogo()"
-                      class="bg-white text-primary px-10 py-5 rounded-xl font-headline font-bold border border-primary/20 hover:bg-primary/5 transition-all active:scale-95">
+                      class="bg-white text-primary px-6 sm:px-10 py-3 sm:py-5 rounded-xl font-headline font-bold border border-primary/20 hover:bg-primary/5 transition-all active:scale-95">
                       Ver Catálogo de Productos
                     </button>
                 </div>
