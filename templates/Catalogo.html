@@ -61,37 +61,6 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* Modal de especificaciones */
-.specs-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.25s ease-out;
-}
-
-.specs-content {
-  background: white;
-  border-radius: 32px;
-  max-width: 520px;
-  width: 90%;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 /* Filtros scroll horizontal */
 .filtros-scroll {
   scrollbar-width: thin;
@@ -112,6 +81,7 @@ body {
 /* Animación cards */
 .producto-card {
   transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  cursor: pointer;
 }
 .producto-card:hover {
   transform: translateY(-5px);
@@ -140,9 +110,99 @@ body {
   overflow: hidden;
 }
 
-/* Ocultar footer cuando el catálogo se carga dentro del index */
 .footer-hidden {
   display: none !important;
+}
+
+/* Miniaturas dentro del modal */
+.thumbnail-detail {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+.thumbnail-detail:hover {
+  transform: scale(1.05);
+  border-color: #0059b6;
+}
+.thumbnail-detail.active {
+  border-color: #0059b6;
+  transform: scale(1.02);
+}
+
+/* Contenedor de imagen con lupa estilo Amazon */
+.image-zoom-container {
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.image-zoom-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.lupa-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.05);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.image-zoom-container:hover .lupa-overlay {
+  opacity: 1;
+}
+
+.lupa-lens {
+  position: absolute;
+  border: 2px solid #0059b6;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  background: rgba(0,89,182,0.1);
+  pointer-events: none;
+  z-index: 20;
+  display: none;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.lupa-zoom {
+  position: fixed;
+  border: 3px solid #0059b6;
+  border-radius: 12px;
+  background-repeat: no-repeat;
+  background-color: white;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  pointer-events: none;
+  z-index: 1000000;
+  display: none;
+  width: 400px;
+  height: 400px;
+  background-size: auto;
+}
+
+@media (max-width: 768px) {
+  .lupa-zoom {
+    width: 250px;
+    height: 250px;
+  }
+  .lupa-lens {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lupa-zoom {
+    display: none !important;
+  }
 }
 </style>
 </head>
@@ -152,15 +212,15 @@ body {
 <div class="catalogo-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-8">
   
   <!-- BANNER HERO -->
-  <section class="relative w-full h-[280px] sm:h-[380px] md:h-[460px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl mb-9 md:mb-12">
+  <section class="relative w-full h-[200px] sm:h-[300px] md:h-[400px] lg:h-[460px] overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl mb-9 md:mb-12">
     <img src="/src/image/image.png" 
          class="w-full h-full object-cover object-center" 
          alt="EDAPymes tecnología empresarial"
          onerror="this.src='https://placehold.co/1600x900/0059b6/white?text=EDAPymes'">
-    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent flex flex-col justify-center items-start p-6 md:p-12">
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent flex flex-col justify-center items-start p-4 sm:p-6 md:p-12">
       <div class="max-w-2xl">
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-xl">Tecnología de <br><span class="text-primary">Última Generación</span></h2>
-        <p class="text-white/90 text-base md:text-lg mt-3">Soluciones empresariales para potenciar tu negocio</p>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-xl">Tecnología de <br><span class="text-primary">Última Generación</span></h2>
+        <p class="text-white/90 text-sm sm:text-base md:text-lg mt-2 sm:mt-3">Soluciones empresariales para potenciar tu negocio</p>
       </div>
     </div>
   </section>
@@ -168,7 +228,7 @@ body {
   <!-- FILTROS DINÁMICOS -->
   <div class="mb-9 md:mb-12">
     <div class="overflow-x-auto pb-3 filtros-scroll">
-      <div class="flex gap-2.5 md:gap-4 min-w-max md:justify-center" id="filtrosContainer">
+      <div class="flex gap-2 md:gap-4 min-w-max md:justify-center" id="filtrosContainer">
         <div class="loading-spinner w-6 h-6 border-2"></div>
       </div>
     </div>
@@ -177,38 +237,22 @@ body {
   <!-- ENCABEZADO + CONTADOR -->
   <div class="flex flex-wrap justify-between items-end border-b border-gray-200/80 pb-4 mb-7">
     <div>
-      <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800">
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800">
         Catálogo <span class="text-primary">Profesional</span>
       </h1>
-      <p class="text-gray-500 text-sm mt-1 flex items-center gap-1" id="contadorProductos">
-        <span class="material-symbols-outlined text-base">inventory</span> Cargando productos...
+      <p class="text-gray-500 text-xs sm:text-sm mt-1 flex items-center gap-1" id="contadorProductos">
+        <span class="material-symbols-outlined text-sm sm:text-base">inventory</span> Cargando productos...
       </p>
     </div>
   </div>
 
   <!-- GRID DE PRODUCTOS -->
-  <div id="gridProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 md:gap-8">
+  <div id="gridProductos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7 lg:gap-8">
     <div class="col-span-full flex flex-col justify-center items-center py-20 gap-3">
       <div class="loading-spinner"></div>
       <span class="text-gray-500 font-medium">Conectando con el servidor...</span>
       <span class="text-gray-400 text-sm">http://localhost:3000</span>
     </div>
-  </div>
-</div>
-
-<!-- MODAL ESPECIFICACIONES -->
-<div id="specsModal" class="specs-modal hidden" onclick="cerrarSpecsModal(event)">
-  <div class="specs-content p-5 md:p-7" onclick="event.stopPropagation()">
-    <div class="flex justify-between items-center mb-5">
-      <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2" id="specsTitle">
-        <span class="material-symbols-outlined text-primary">settings_suggest</span>
-        Ficha técnica
-      </h3>
-      <button onclick="cerrarSpecsModal()" class="text-gray-400 hover:text-gray-700">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-    <div id="specsList" class="space-y-3 max-h-[60vh] overflow-y-auto"></div>
   </div>
 </div>
 
@@ -218,341 +262,567 @@ let productosGlobal = [];
 let categoriasGlobal = [];
 let categoriaActiva = "todos";
 let iconosCategoriaMap = {};
+let productoSeleccionado = null;
+let imagenesDetalleActuales = [];
 
 const API_BASE = "http://localhost:3000";
 
-// Detectar si estamos dentro del index (para ocultar el footer)
-function ocultarFooterSiEsNecesario() {
-  // Verificar si existe el footer del index
-  const footerIndex = document.getElementById('mainFooter');
-  if (footerIndex) {
-    footerIndex.classList.add('footer-hidden');
-  }
+// ======================== FUNCIONES DE LUPA ========================
+function initLupa() {
+    const container = document.querySelector('.image-zoom-container');
+    if (!container) return;
+    
+    const img = container.querySelector('img');
+    const lens = document.getElementById('lupaLens');
+    const zoom = document.getElementById('lupaZoom');
+    
+    if (!img || !lens || !zoom) return;
+    
+    function getCursorPos(e) {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        return { x, y };
+    }
+    
+    function moveLens(e) {
+        const pos = getCursorPos(e);
+        let x = pos.x - (lens.offsetWidth / 2);
+        let y = pos.y - (lens.offsetHeight / 2);
+        
+        if (x > img.width - lens.offsetWidth) x = img.width - lens.offsetWidth;
+        if (x < 0) x = 0;
+        if (y > img.height - lens.offsetHeight) y = img.height - lens.offsetHeight;
+        if (y < 0) y = 0;
+        
+        lens.style.left = x + 'px';
+        lens.style.top = y + 'px';
+        
+        const zoomX = img.naturalWidth / img.width;
+        const zoomY = img.naturalHeight / img.height;
+        
+        zoom.style.backgroundImage = `url('${img.src}')`;
+        zoom.style.backgroundSize = `${img.width * zoomX}px ${img.height * zoomY}px`;
+        zoom.style.backgroundPosition = `-${x * zoomX}px -${y * zoomY}px`;
+        
+        zoom.style.display = 'block';
+    }
+    
+    function showLens(e) {
+        lens.style.display = 'block';
+        moveLens(e);
+    }
+    
+    function hideLens() {
+        lens.style.display = 'none';
+        zoom.style.display = 'none';
+    }
+    
+    container.addEventListener('mousemove', moveLens);
+    container.addEventListener('mouseenter', showLens);
+    container.addEventListener('mouseleave', hideLens);
+    
+    img.addEventListener('mousemove', moveLens);
+    img.addEventListener('mouseenter', showLens);
+    img.addEventListener('mouseleave', hideLens);
 }
 
-// ======================== FUNCIONES UTILITARIAS ========================
+// ======================== FUNCIONES PARA MODALES AL BODY ========================
+function crearModalEnBody() {
+    let modalExistente = document.getElementById('productDetailModalGlobal');
+    if (modalExistente) {
+        modalExistente.remove();
+    }
+    
+    // También crear elementos de lupa
+    let lensExistente = document.getElementById('lupaLens');
+    if (!lensExistente) {
+        const lens = document.createElement('div');
+        lens.id = 'lupaLens';
+        lens.className = 'lupa-lens';
+        document.body.appendChild(lens);
+    }
+    
+    let zoomExistente = document.getElementById('lupaZoom');
+    if (!zoomExistente) {
+        const zoom = document.createElement('div');
+        zoom.id = 'lupaZoom';
+        zoom.className = 'lupa-zoom';
+        document.body.appendChild(zoom);
+    }
+    
+    const modal = document.createElement('div');
+    modal.id = 'productDetailModalGlobal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+        padding: 16px;
+    `;
+    
+    modal.innerHTML = `
+        <div class="product-detail-content-global" style="
+            background: #f6f6f6;
+            border-radius: 32px;
+            max-width: 1400px;
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            position: relative;
+        ">
+            <div style="display: flex; justify-content: flex-end; padding: 20px; position: sticky; top: 0; background: transparent; z-index: 10;">
+                <button onclick="cerrarModalGlobal()" style="background: white; border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.2s;">
+                    <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
+                </button>
+            </div>
+            <div id="detalleProductoGlobal" style="padding: 0 32px 32px 32px;">
+                <div style="text-align: center; padding: 60px 20px;">
+                    <div class="loading-spinner" style="margin: 0 auto;"></div>
+                    <p style="margin-top: 20px; color: #666; font-size: 1rem;">Cargando detalles del producto...</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function abrirModalGlobal(producto) {
+    let modal = document.getElementById('productDetailModalGlobal');
+    if (!modal) {
+        crearModalEnBody();
+        modal = document.getElementById('productDetailModalGlobal');
+    }
+    
+    productoSeleccionado = producto;
+    
+    imagenesDetalleActuales = [];
+    if (producto.imagenes && producto.imagenes.length > 0) {
+        imagenesDetalleActuales = producto.imagenes;
+    } else if (producto.imagen) {
+        imagenesDetalleActuales = [producto.imagen];
+    } else {
+        imagenesDetalleActuales = ['https://placehold.co/800x1000/e2e8f0/475569?text=Sin+Imagen'];
+    }
+    
+    const precioFormateado = typeof producto.precio === 'number' ? producto.precio.toFixed(2) : producto.precio;
+    const disponible = producto.disponible === true || producto.disponible === 1;
+    
+    const container = document.getElementById('detalleProductoGlobal');
+    
+    container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <!-- Columna izquierda: Imágenes -->
+            <div class="space-y-4">
+                <div class="image-zoom-container relative bg-white rounded-2xl overflow-hidden shadow-lg" style="min-height: 400px;">
+                    <img id="detalleImagenGlobal" src="${imagenesDetalleActuales[0]}" class="w-full aspect-[4/5] object-cover" alt="${escapeHtml(producto.nombre)}" onerror="this.src='https://placehold.co/800x1000/e2e8f0/475569?text=Error'">
+
+                </div>
+                <div id="detalleMiniaturasGlobal" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                    ${imagenesDetalleActuales.map((img, idx) => `
+                        <div class="thumbnail-detail rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer ${idx === 0 ? 'active' : ''} transition-all hover:shadow-md" onclick="cambiarImagenGlobal(${idx})">
+                            <img src="${img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/e2e8f0/475569?text=Error'">
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <!-- Columna derecha: Información -->
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">${escapeHtml(producto.nombre)}</h2>
+                    <div class="flex flex-wrap items-center justify-between gap-3 mt-4">
+                        <span class="text-3xl sm:text-4xl font-bold text-primary">C$${precioFormateado}</span>
+                        <span class="${disponible ? 'bg-green-500' : 'bg-red-500'} text-white text-xs px-4 py-2 rounded-full font-semibold">
+                            ${disponible ? '✓ Disponible' : '✗ Agotado'}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="text-sm font-bold uppercase text-gray-500 mb-3 tracking-wider">Descripción</h3>
+                    <p class="text-gray-600 leading-relaxed">${escapeHtml(producto.descripcion || 'Producto tecnológico de alta calidad. Consulta con nuestros asesores para obtener más información.')}</p>
+                </div>
+                
+                ${producto.categoria ? `
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="text-sm font-bold uppercase text-gray-500 mb-3 tracking-wider">Categoría</h3>
+                    <span class="inline-block bg-gray-100 px-4 py-2 rounded-full text-sm font-medium">${escapeHtml(producto.categoria)}</span>
+                </div>
+                ` : ''}
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="text-sm font-bold uppercase text-gray-500 mb-4 tracking-wider">Especificaciones Técnicas</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        ${renderizarEspecificaciones(producto.especificaciones)}
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-6">
+                    <button onclick="whatsappContactoGlobal()" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-green-700 transition-all shadow-md hover:shadow-lg text-base sm:text-lg">
+                        <span class="material-symbols-outlined">chat</span>
+                        Contactar por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Productos relacionados -->
+        <div class="mt-12 pt-8 border-t border-gray-200">
+            <h3 class="text-xl sm:text-2xl font-bold mb-6">Productos Relacionados</h3>
+            <div id="detalleRelacionadosGlobal" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="col-span-full text-center text-gray-500 py-8">Cargando productos relacionados...</div>
+            </div>
+        </div>
+    `;
+    
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    setTimeout(() => {
+        initLupa();
+    }, 100);
+    
+    cargarRelacionadosGlobal(producto.categoria, producto.id);
+}
+
+function cerrarModalGlobal() {
+    const modal = document.getElementById('productDetailModalGlobal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        productoSeleccionado = null;
+    }
+    const lens = document.getElementById('lupaLens');
+    const zoom = document.getElementById('lupaZoom');
+    if (lens) lens.style.display = 'none';
+    if (zoom) zoom.style.display = 'none';
+}
+
+function cambiarImagenGlobal(index) {
+    const imgPrincipal = document.getElementById('detalleImagenGlobal');
+    if (imgPrincipal && imagenesDetalleActuales[index]) {
+        imgPrincipal.src = imagenesDetalleActuales[index];
+        
+        const miniaturas = document.querySelectorAll('#detalleMiniaturasGlobal .thumbnail-detail');
+        miniaturas.forEach((thumb, i) => {
+            if (i === index) {
+                thumb.classList.add('active');
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+        
+        setTimeout(() => {
+            initLupa();
+        }, 50);
+    }
+}
+
+function whatsappContactoGlobal() {
+    if (!productoSeleccionado) return;
+    const mensaje = `Hola, me gustaría recibir información sobre EDAPymes y el producto: ${productoSeleccionado.nombre}\nPrecio: C$${productoSeleccionado.precio}`;
+    window.open(`https://wa.me/50583295424?text=${encodeURIComponent(mensaje)}`, '_blank');
+}
+
+async function cargarRelacionadosGlobal(categoria, idActual) {
+    const container = document.getElementById('detalleRelacionadosGlobal');
+    if (!container) return;
+    
+    try {
+        const res = await fetch(`${API_BASE}/api/productos`);
+        const productos = await res.json();
+        
+        let relacionados = [];
+        if (categoria) {
+            relacionados = productos.filter(p => p.categoria === categoria && p.id !== idActual);
+        }
+        
+        if (relacionados.length === 0) {
+            relacionados = productos.filter(p => p.id !== idActual).slice(0, 4);
+        } else {
+            relacionados = relacionados.slice(0, 4);
+        }
+        
+        if (relacionados.length === 0) {
+            container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">No hay productos relacionados</div>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        relacionados.forEach(p => {
+            let imagenUrl = 'https://placehold.co/300x300/e2e8f0/475569?text=EDAPymes';
+            if (p.imagenes && p.imagenes.length > 0) imagenUrl = p.imagenes[0];
+            else if (p.imagen) imagenUrl = p.imagen;
+            
+            container.innerHTML += `
+                <div class="group cursor-pointer bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300" onclick="abrirProductoRelacionado(${p.id})">
+                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                        <img src="${imagenUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/300x300/e2e8f0/475569?text=Error'">
+                    </div>
+                    <div class="p-3">
+                        <h4 class="font-bold text-gray-800 text-sm line-clamp-1">${escapeHtml(p.nombre)}</h4>
+                        <p class="text-primary font-bold text-sm mt-1">C$${typeof p.precio === 'number' ? p.precio.toFixed(2) : p.precio}</p>
+                    </div>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error("Error cargando relacionados:", error);
+        container.innerHTML = '<div class="col-span-full text-center text-red-500 py-8">Error al cargar productos relacionados</div>';
+    }
+}
+
+function abrirProductoRelacionado(id) {
+    const producto = productosGlobal.find(p => p.id === id);
+    if (producto) {
+        abrirModalGlobal(producto);
+    }
+}
+
+function renderizarEspecificaciones(especificaciones) {
+    if (!especificaciones || especificaciones.length === 0) {
+        return '<div class="text-center text-gray-500 py-6 bg-gray-50 rounded-xl">No hay especificaciones técnicas disponibles</div>';
+    }
+    
+    let html = '';
+    especificaciones.forEach(spec => {
+        if (spec.label && spec.value) {
+            html += `
+                <div class="bg-gray-50 p-4 rounded-xl flex items-start gap-3 hover:bg-gray-100 transition-colors">
+                    <span class="material-symbols-outlined text-primary text-2xl">${spec.icono || 'bolt'}</span>
+                    <div class="flex-1">
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">${escapeHtml(spec.label)}</p>
+                        <p class="text-sm font-medium text-gray-800 mt-1">${escapeHtml(spec.value)}</p>
+                    </div>
+                </div>
+            `;
+        }
+    });
+    return html || '<div class="text-center text-gray-500 py-6 bg-gray-50 rounded-xl">No hay especificaciones disponibles</div>';
+}
+
 function escapeHtml(text) {
-  if (!text) return '';
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 function obtenerIconoCategoria(categoriaNombre) {
-  if (!categoriaNombre) return 'devices';
-  if (iconosCategoriaMap[categoriaNombre]) return iconosCategoriaMap[categoriaNombre];
-  
-  const nombreLower = categoriaNombre.toLowerCase();
-  if (nombreLower.includes('laptop')) return 'laptop';
-  if (nombreLower.includes('computadora') || nombreLower.includes('pc')) return 'desktop_windows';
-  if (nombreLower.includes('servidor')) return 'dns';
-  if (nombreLower.includes('monitor')) return 'monitor';
-  if (nombreLower.includes('red')) return 'router';
-  if (nombreLower.includes('accesorio')) return 'mouse';
-  if (nombreLower.includes('celular') || nombreLower.includes('telefono')) return 'smartphone';
-  if (nombreLower.includes('seguridad')) return 'security';
-  if (nombreLower.includes('camara')) return 'camera';
-  if (nombreLower.includes('audio')) return 'headphones';
-  return 'devices';
+    if (!categoriaNombre) return 'devices';
+    if (iconosCategoriaMap[categoriaNombre]) return iconosCategoriaMap[categoriaNombre];
+    
+    const nombreLower = categoriaNombre.toLowerCase();
+    if (nombreLower.includes('laptop')) return 'laptop';
+    if (nombreLower.includes('computadora') || nombreLower.includes('pc')) return 'desktop_windows';
+    if (nombreLower.includes('servidor')) return 'dns';
+    if (nombreLower.includes('monitor')) return 'monitor';
+    if (nombreLower.includes('red')) return 'router';
+    if (nombreLower.includes('accesorio')) return 'mouse';
+    if (nombreLower.includes('celular') || nombreLower.includes('telefono')) return 'smartphone';
+    if (nombreLower.includes('seguridad')) return 'security';
+    if (nombreLower.includes('camara')) return 'camera';
+    if (nombreLower.includes('audio')) return 'headphones';
+    return 'devices';
 }
 
 function actualizarContador(cantidad, filtroNombre) {
-  const contadorSpan = document.getElementById('contadorProductos');
-  if (!contadorSpan) return;
-  if (filtroNombre === 'todos') {
-    contadorSpan.innerHTML = `<span class="material-symbols-outlined text-base">grid_view</span> ${cantidad} productos disponibles`;
-  } else {
-    contadorSpan.innerHTML = `<span class="material-symbols-outlined text-base">filter_alt</span> ${cantidad} productos en <strong class="text-primary">${escapeHtml(filtroNombre)}</strong>`;
-  }
+    const contadorSpan = document.getElementById('contadorProductos');
+    if (!contadorSpan) return;
+    if (filtroNombre === 'todos') {
+        contadorSpan.innerHTML = `<span class="material-symbols-outlined text-sm sm:text-base">grid_view</span> ${cantidad} productos disponibles`;
+    } else {
+        contadorSpan.innerHTML = `<span class="material-symbols-outlined text-sm sm:text-base">filter_alt</span> ${cantidad} productos en <strong class="text-primary">${escapeHtml(filtroNombre)}</strong>`;
+    }
 }
 
 function resaltarBotonActivo(categoriaNombre) {
-  const botones = document.querySelectorAll('#filtrosContainer .filtro-btn');
-  botones.forEach(btn => {
-    const btnCat = btn.getAttribute('data-categoria');
-    if (btnCat === categoriaNombre) {
-      btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
-      btn.classList.add('bg-primary', 'text-white', 'shadow-md', 'border-primary');
-    } else {
-      btn.classList.remove('bg-primary', 'text-white', 'shadow-md', 'border-primary');
-      btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
-    }
-  });
+    const botones = document.querySelectorAll('#filtrosContainer .filtro-btn');
+    botones.forEach(btn => {
+        const btnCat = btn.getAttribute('data-categoria');
+        if (btnCat === categoriaNombre) {
+            btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+            btn.classList.add('bg-primary', 'text-white', 'shadow-md', 'border-primary');
+        } else {
+            btn.classList.remove('bg-primary', 'text-white', 'shadow-md', 'border-primary');
+            btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+        }
+    });
 }
 
-// ======================== RENDERIZADO DE PRODUCTOS ========================
 function renderizarProductos() {
-  const contenedor = document.getElementById("gridProductos");
-  if (!contenedor) return;
+    const contenedor = document.getElementById("gridProductos");
+    if (!contenedor) return;
 
-  let productosFiltrados = [];
-  let filtroNombreMostrar = "todos";
+    let productosFiltrados = [];
+    let filtroNombreMostrar = "todos";
 
-  if (categoriaActiva === "todos") {
-    productosFiltrados = [...productosGlobal];
-    filtroNombreMostrar = "todos";
-  } else {
-    productosFiltrados = productosGlobal.filter(p => p.categoria === categoriaActiva);
-    filtroNombreMostrar = categoriaActiva;
-  }
-
-  actualizarContador(productosFiltrados.length, filtroNombreMostrar);
-
-  if (!productosFiltrados.length) {
-    contenedor.innerHTML = `
-      <div class='col-span-full text-center py-16 bg-white/60 rounded-3xl'>
-        <span class="material-symbols-outlined text-6xl text-gray-300">category</span>
-        <p class='text-gray-500 mt-3 font-medium'>No hay productos en esta categoría</p>
-        <button onclick="filtrarPorCategoria('todos')" class="mt-5 text-primary font-semibold flex items-center gap-2 mx-auto hover:underline">
-          <span class="material-symbols-outlined text-base">apps</span> Ver todos
-        </button>
-      </div>`;
-    return;
-  }
-
-  contenedor.innerHTML = "";
-  
-  productosFiltrados.forEach(p => {
-    // Obtener la primera imagen
-    let imagenUrl = 'https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes';
-    if (p.imagenes && p.imagenes.length > 0) {
-      imagenUrl = p.imagenes[0];
-    } else if (p.imagen) {
-      imagenUrl = p.imagen;
+    if (categoriaActiva === "todos") {
+        productosFiltrados = [...productosGlobal];
+        filtroNombreMostrar = "todos";
+    } else {
+        productosFiltrados = productosGlobal.filter(p => p.categoria === categoriaActiva);
+        filtroNombreMostrar = categoriaActiva;
     }
-    
-    const precioFormateado = typeof p.precio === 'number' ? p.precio.toFixed(2) : p.precio;
-    const categoriaIcono = obtenerIconoCategoria(p.categoria);
-    const disponible = p.disponible === true || p.disponible === 1;
-    
-    // Obtener especificaciones del producto
-    let especificacionesList = p.especificaciones || [];
-    if (typeof especificacionesList === 'string') {
-      try {
-        especificacionesList = JSON.parse(especificacionesList);
-      } catch(e) {
-        especificacionesList = [];
-      }
+
+    actualizarContador(productosFiltrados.length, filtroNombreMostrar);
+
+    if (!productosFiltrados.length) {
+        contenedor.innerHTML = `<div class='col-span-full text-center py-16 bg-white/60 rounded-3xl'>No hay productos en esta categoría</div>`;
+        return;
     }
+
+    contenedor.innerHTML = "";
     
-    const card = document.createElement('div');
-    card.className = "producto-card bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden cursor-pointer flex flex-col border border-gray-100";
-    card.onclick = () => mostrarModalEspecificaciones(p.nombre, especificacionesList);
-    
-    card.innerHTML = `
-      <div class="relative overflow-hidden h-56 bg-gray-100 group">
-        <img src="${imagenUrl}" 
-             class="card-img w-full h-full object-cover transition-transform duration-500"
-             loading="lazy"
-             onerror="this.src='https://placehold.co/600x400/e2e8f0/6b7280?text=Imagen'">
-        <span class="absolute top-3 right-3 ${disponible ? 'bg-emerald-600' : 'bg-rose-600'} text-white text-xs px-3 py-1.5 rounded-full font-semibold">
-          ${disponible ? "Disponible" : "Agotado"}
-        </span>
-      </div>
-      <div class="p-5 space-y-2.5 flex-1 flex flex-col">
-        <div class="flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-primary text-sm">${categoriaIcono}</span>
-          <p class="text-xs font-semibold text-gray-400 uppercase">${escapeHtml(p.categoria || "General")}</p>
-        </div>
-        <h3 class="font-bold text-xl text-gray-800 leading-tight">${escapeHtml(p.nombre)}</h3>
-        ${p.descripcion ? `<p class="text-sm text-gray-500 line-clamp-2">${escapeHtml(p.descripcion.substring(0, 100))}</p>` : ''}
-        <div class="flex justify-between items-center pt-3 mt-auto border-t border-gray-100">
-          <span class="text-primary font-extrabold text-2xl">C$${precioFormateado}</span>
-          <button onclick="event.stopPropagation(); abrirCotizacion('${escapeHtml(p.nombre)}','${precioFormateado}','${imagenUrl}')" 
-                  class="bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1">
-            <span class="material-symbols-outlined text-base">shopping_cart</span>
-            Cotizar
-          </button>
-        </div>
-      </div>
-    `;
-    contenedor.appendChild(card);
-  });
+    productosFiltrados.forEach(p => {
+        let imagenUrl = 'https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes';
+        if (p.imagenes && p.imagenes.length > 0) imagenUrl = p.imagenes[0];
+        else if (p.imagen) imagenUrl = p.imagen;
+        
+        const precioFormateado = typeof p.precio === 'number' ? p.precio.toFixed(2) : p.precio;
+        const categoriaIcono = obtenerIconoCategoria(p.categoria);
+        const disponible = p.disponible === true || p.disponible === 1;
+        
+        const card = document.createElement('div');
+        card.className = "producto-card bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden flex flex-col border border-gray-100";
+        card.onclick = () => abrirModalGlobal(p);
+        
+        card.innerHTML = `
+            <div class="relative overflow-hidden h-48 sm:h-56 bg-gray-100 group">
+                <img src="${imagenUrl}" class="card-img w-full h-full object-cover transition-transform duration-500" loading="lazy" onerror="this.src='https://placehold.co/600x400/e2e8f0/6b7280?text=Imagen'">
+                <span class="absolute top-3 right-3 ${disponible ? 'bg-emerald-600' : 'bg-rose-600'} text-white text-xs px-3 py-1.5 rounded-full font-semibold">${disponible ? "Disponible" : "Agotado"}</span>
+            </div>
+            <div class="p-4 sm:p-5 space-y-2 flex-1 flex flex-col">
+                <div class="flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-primary text-sm">${categoriaIcono}</span>
+                    <p class="text-xs font-semibold text-gray-400 uppercase">${escapeHtml(p.categoria || "General")}</p>
+                </div>
+                <h3 class="font-bold text-lg sm:text-xl text-gray-800 leading-tight">${escapeHtml(p.nombre)}</h3>
+                ${p.descripcion ? `<p class="text-xs sm:text-sm text-gray-500 line-clamp-2">${escapeHtml(p.descripcion.substring(0, 100))}</p>` : ''}
+                <div class="flex justify-between items-center pt-3 mt-auto border-t border-gray-100">
+                    <span class="text-primary font-extrabold text-xl sm:text-2xl">C$${precioFormateado}</span>
+                    <button onclick="event.stopPropagation(); abrirModalGlobal(${JSON.stringify(p).replace(/"/g, '&quot;')})" class="bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm sm:text-base">shopping_cart</span>
+                        Cotizar
+                    </button>
+                </div>
+            </div>
+        `;
+        contenedor.appendChild(card);
+    });
 }
 
-// ======================== MODAL ========================
-function mostrarModalEspecificaciones(nombreProducto, especificaciones) {
-  const modal = document.getElementById('specsModal');
-  const specsTitle = document.getElementById('specsTitle');
-  const specsListDiv = document.getElementById('specsList');
-  if (!modal) return;
-  
-  if (specsTitle) specsTitle.innerHTML = `<span class="material-symbols-outlined text-primary">settings_suggest</span> ${escapeHtml(nombreProducto)}`;
-  specsListDiv.innerHTML = '';
-  
-  if (!especificaciones || especificaciones.length === 0) {
-    specsListDiv.innerHTML = `<div class="text-center text-gray-500 py-10">Sin especificaciones técnicas</div>`;
-    modal.classList.remove('hidden');
-    return;
-  }
-  
-  especificaciones.forEach(spec => {
-    const label = spec.label || spec.nombre || 'Característica';
-    const value = spec.value || spec.descripcion || 'N/A';
-    const icono = spec.icono || 'settings';
-    specsListDiv.innerHTML += `
-      <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-        <span class="material-symbols-outlined text-primary">${icono}</span>
-        <div class="flex-1">
-          <p class="text-xs font-bold text-gray-500 uppercase">${escapeHtml(label)}</p>
-          <p class="text-sm font-semibold text-gray-800">${escapeHtml(value)}</p>
-        </div>
-      </div>
-    `;
-  });
-  modal.classList.remove('hidden');
-}
-
-function cerrarSpecsModal(event) {
-  const modal = document.getElementById('specsModal');
-  if (modal) modal.classList.add('hidden');
-}
-
-// ======================== FILTROS ========================
 function filtrarPorCategoria(categoriaNombre) {
-  categoriaActiva = categoriaNombre;
-  resaltarBotonActivo(categoriaActiva);
-  renderizarProductos();
-  const grid = document.getElementById('gridProductos');
-  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    categoriaActiva = categoriaNombre;
+    resaltarBotonActivo(categoriaActiva);
+    renderizarProductos();
 }
 
-function abrirCotizacion(nombre, precio, imagen) {
-  const url = `ventanaC.html?nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&imagen=${encodeURIComponent(imagen)}`;
-  window.location.href = url;
-}
-
-// ======================== CONSTRUIR BOTONES DE FILTRO ========================
 function construirBotonesFiltros() {
-  const container = document.getElementById('filtrosContainer');
-  if (!container) return;
-  
-  container.innerHTML = '';
-  
-  // Botón "Todos"
-  const btnTodos = document.createElement('button');
-  btnTodos.setAttribute('data-categoria', 'todos');
-  btnTodos.className = "filtro-btn bg-primary text-white shadow-md flex items-center gap-2 px-5 md:px-7 py-2.5 rounded-full text-sm md:text-base font-semibold border border-primary";
-  btnTodos.innerHTML = `<span class="material-symbols-outlined">grid_view</span><span>Todos</span>`;
-  btnTodos.onclick = () => filtrarPorCategoria('todos');
-  container.appendChild(btnTodos);
-  
-  // Botones de categorías
-  const categoriasParaMostrar = categoriasGlobal.length > 0 ? categoriasGlobal : [];
-  
-  categoriasParaMostrar.forEach(cat => {
-    const nombre = cat.nombre;
-    const icono = cat.icono || obtenerIconoCategoria(nombre);
-    iconosCategoriaMap[nombre] = icono;
+    const container = document.getElementById('filtrosContainer');
+    if (!container) return;
     
-    const btn = document.createElement('button');
-    btn.setAttribute('data-categoria', nombre);
-    btn.className = "filtro-btn bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 flex items-center gap-2 px-5 md:px-7 py-2.5 rounded-full text-sm md:text-base font-medium";
-    btn.innerHTML = `<span class="material-symbols-outlined">${icono}</span><span>${escapeHtml(nombre)}</span>`;
-    btn.onclick = () => filtrarPorCategoria(nombre);
-    container.appendChild(btn);
-  });
-  
-  resaltarBotonActivo('todos');
-}
-
-// ======================== CARGA DE DATOS DESDE EL BACKEND ========================
-async function cargarCategorias() {
-  try {
-    console.log("📡 Cargando categorías desde:", `${API_BASE}/api/categorias`);
-    const response = await fetch(`${API_BASE}/api/categorias`);
+    container.innerHTML = '';
     
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    const btnTodos = document.createElement('button');
+    btnTodos.setAttribute('data-categoria', 'todos');
+    btnTodos.className = "filtro-btn bg-primary text-white shadow-md flex items-center gap-2 px-4 md:px-7 py-2 rounded-full text-sm md:text-base font-semibold border border-primary";
+    btnTodos.innerHTML = `<span class="material-symbols-outlined text-sm md:text-base">grid_view</span><span>Todos</span>`;
+    btnTodos.onclick = () => filtrarPorCategoria('todos');
+    container.appendChild(btnTodos);
     
-    categoriasGlobal = await response.json();
-    console.log("✅ Categorías cargadas:", categoriasGlobal.length);
+    const categoriasParaMostrar = categoriasGlobal.length > 0 ? categoriasGlobal : [];
     
-    // Guardar iconos en el mapa
-    categoriasGlobal.forEach(cat => {
-      if (cat.icono) {
-        iconosCategoriaMap[cat.nombre] = cat.icono;
-      }
+    categoriasParaMostrar.forEach(cat => {
+        const nombre = cat.nombre;
+        const icono = cat.icono || obtenerIconoCategoria(nombre);
+        iconosCategoriaMap[nombre] = icono;
+        
+        const btn = document.createElement('button');
+        btn.setAttribute('data-categoria', nombre);
+        btn.className = "filtro-btn bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 flex items-center gap-2 px-4 md:px-7 py-2 rounded-full text-sm md:text-base font-medium";
+        btn.innerHTML = `<span class="material-symbols-outlined text-sm md:text-base">${icono}</span><span>${escapeHtml(nombre)}</span>`;
+        btn.onclick = () => filtrarPorCategoria(nombre);
+        container.appendChild(btn);
     });
     
-  } catch (error) {
-    console.warn("⚠️ Error cargando categorías:", error.message);
-    categoriasGlobal = [];
-  }
+    resaltarBotonActivo('todos');
+}
+
+async function cargarCategorias() {
+    try {
+        const response = await fetch(`${API_BASE}/api/categorias`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        categoriasGlobal = await response.json();
+        categoriasGlobal.forEach(cat => {
+            if (cat.icono) iconosCategoriaMap[cat.nombre] = cat.icono;
+        });
+    } catch (error) {
+        console.warn("Error cargando categorías:", error.message);
+        categoriasGlobal = [];
+    }
 }
 
 async function cargarProductos() {
-  const contenedor = document.getElementById("gridProductos");
-  
-  try {
-    console.log("📡 Cargando productos desde:", `${API_BASE}/api/productos`);
-    const response = await fetch(`${API_BASE}/api/productos`);
+    const contenedor = document.getElementById("gridProductos");
     
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    try {
+        const response = await fetch(`${API_BASE}/api/productos`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        productosGlobal = await response.json();
+        
+        if (productosGlobal.length === 0) {
+            contenedor.innerHTML = `<div class='col-span-full text-center py-16'>No hay productos disponibles</div>`;
+            return;
+        }
+        
+        if (categoriasGlobal.length === 0 && productosGlobal.length > 0) {
+            const categoriasSet = new Set();
+            productosGlobal.forEach(p => {
+                if (p.categoria) categoriasSet.add(p.categoria);
+            });
+            categoriasGlobal = Array.from(categoriasSet).map(nombre => ({ nombre, icono: obtenerIconoCategoria(nombre) }));
+        }
+        
+        construirBotonesFiltros();
+        renderizarProductos();
+        
+    } catch (error) {
+        console.error("Error cargando productos:", error);
+        contenedor.innerHTML = `<div class='col-span-full text-center py-16 text-red-500'>Error de conexión: ${error.message}</div>`;
     }
-    
-    productosGlobal = await response.json();
-    console.log("✅ Productos cargados:", productosGlobal.length);
-    
-    if (productosGlobal.length === 0) {
-      contenedor.innerHTML = `
-        <div class='col-span-full text-center py-16 bg-white/60 rounded-3xl'>
-          <span class="material-symbols-outlined text-6xl text-gray-300">inventory</span>
-          <p class='text-gray-500 mt-3 font-medium'>No hay productos disponibles</p>
-          <p class='text-gray-400 text-sm mt-1'>Agrega productos desde el panel de administración</p>
-        </div>`;
-      return;
-    }
-    
-    // Extraer categorías únicas de los productos si no hay categorías cargadas
-    if (categoriasGlobal.length === 0 && productosGlobal.length > 0) {
-      const categoriasSet = new Set();
-      productosGlobal.forEach(p => {
-        if (p.categoria) categoriasSet.add(p.categoria);
-      });
-      categoriasGlobal = Array.from(categoriasSet).map(nombre => ({ nombre, icono: obtenerIconoCategoria(nombre) }));
-      console.log("📁 Categorías extraídas de productos:", categoriasGlobal);
-    }
-    
-    construirBotonesFiltros();
-    renderizarProductos();
-    
-  } catch (error) {
-    console.error("❌ Error cargando productos:", error);
-    contenedor.innerHTML = `
-      <div class='col-span-full text-center py-16 bg-white/60 rounded-3xl'>
-        <span class="material-symbols-outlined text-6xl text-red-400">error</span>
-        <p class='text-red-500 mt-3 font-medium'>Error de conexión con el servidor</p>
-        <p class='text-gray-500 text-sm mt-2'>${error.message}</p>
-        <p class='text-gray-400 text-xs mt-1'>Verifica que el servidor esté corriendo en ${API_BASE}</p>
-        <button onclick="location.reload()" class="mt-5 bg-primary text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-primary/90 transition">
-          Reintentar
-        </button>
-      </div>`;
-  }
 }
 
-// ======================== INICIALIZACIÓN PRINCIPAL ========================
 async function iniciarCatalogo() {
-  console.log("🚀 Inicializando catálogo...");
-  ocultarFooterSiEsNecesario();
-  await cargarCategorias();
-  await cargarProductos();
+    console.log("Inicializando catálogo...");
+    crearModalEnBody();
+    await cargarCategorias();
+    await cargarProductos();
 }
 
-// Exponer funciones globales para que puedan ser llamadas desde onclick
-window.filtrarPorCategoria = filtrarPorCategoria;
-window.abrirCotizacion = abrirCotizacion;
-window.cerrarSpecsModal = cerrarSpecsModal;
 window.iniciarCatalogo = iniciarCatalogo;
+window.abrirModalGlobal = abrirModalGlobal;
+window.cerrarModalGlobal = cerrarModalGlobal;
+window.cambiarImagenGlobal = cambiarImagenGlobal;
+window.whatsappContactoGlobal = whatsappContactoGlobal;
+window.abrirProductoRelacionado = abrirProductoRelacionado;
+window.filtrarPorCategoria = filtrarPorCategoria;
 
-// Iniciar automáticamente cuando el DOM esté listo
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', iniciarCatalogo);
+    document.addEventListener('DOMContentLoaded', iniciarCatalogo);
 } else {
-  iniciarCatalogo();
+    iniciarCatalogo();
 }
 </script>
 </body>

@@ -138,7 +138,6 @@ function setupUsersTable() {
         if (err) {
             console.error("Error creando tabla usuarios:", err);
         } else {
-            console.log("Tabla usuarios lista");
 
             db.get("SELECT * FROM usuarios WHERE username = ?", ["edapymes_devCatalog"], (err, user) => {
                 if (err) {
@@ -168,7 +167,6 @@ function setupUsersTable() {
                         );
                     });
                 } else {
-                    console.log("Usuario administrador ya existe");
                 }
             });
         }
@@ -244,7 +242,6 @@ function insertarCategoriasEjemplo() {
             });
             console.log("Categorías de ejemplo insertadas");
         } else {
-            console.log(`Ya existen ${row.count} categorías, no se insertan ejemplos`);
         }
     });
 }
@@ -257,7 +254,6 @@ db.serialize(() => {
         nombre TEXT UNIQUE NOT NULL
     )`, (err) => {
         if (err) console.error("Error creando tabla categorias:", err);
-        else console.log("Tabla categorías lista");
     });
 
     db.run(`CREATE TABLE IF NOT EXISTS productos(
@@ -268,7 +264,6 @@ db.serialize(() => {
         disponible INTEGER DEFAULT 1
     )`, (err) => {
         if (err) console.error("Error creando tabla productos:", err);
-        else console.log("Tabla productos lista");
     });
 
     setTimeout(() => {
@@ -695,8 +690,8 @@ app.post("/api/enviar-correo", async (req, res) => {
                         
                         <div class="contact-box">
                             <p style="margin: 0; color: #034AB0; font-weight: bold;">📞 ¿Necesitas ayuda inmediata?</p>
-                            <p style="margin: 10px 0 0;">Contáctanos al <strong>+505 8888 8888</strong><br>
-                            o escríbenos a <strong>contacto@edapymes.com</strong></p>
+                            <p style="margin: 10px 0 0;">Contáctanos al <strong>+505 8329 5424</strong><br>
+                            o escríbenos a <strong>evelingespinoza@gmail.com</strong></p>
                         </div>
                     </div>
                     <div class="footer">
@@ -742,21 +737,5 @@ app.use((err, req, res, next) => {
 ================================ */
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`\n========================================`);
-    console.log(`🚀 Servidor iniciado en http://localhost:${PORT}`);
-    console.log(`========================================`);
-    console.log(`📁 Uploads: ${uploadsDir}`);
-    console.log(`🗄️ Base de datos: ${dbPath}`);
-    console.log(`\n📄 Páginas disponibles:`);
-    console.log(`   - Inicio: http://localhost:${PORT}/`);
-    console.log(`   - Catálogo: http://localhost:${PORT}/Catalogo.html`);
-    console.log(`   - Admin Login: http://localhost:${PORT}/admin-login.html`);
-    console.log(`   - Admin Panel: http://localhost:${PORT}/admin.html (protegido)`);
-    console.log(`\n🔐 Credenciales de acceso:`);
-    console.log(`   - Usuario: edapymes_devCatalog`);
-    console.log(`   - Contraseña: EdaPymes$5%12@!7857`);
-    console.log(`\n📧 Correo:`);
-    console.log(`   - La imagen se envía como adjunta usando CID`);
-    console.log(`   - Busca el logo en: src/image/TU-LOGO.png o src/image/redimension.png`);
-    console.log(`\n✨ Sistema de autenticación activo con bcrypt\n`);
+    console.log(`Servidor en linea`);
 });

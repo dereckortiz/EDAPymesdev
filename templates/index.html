@@ -227,6 +227,52 @@
                 height: 24px;
             }
         }
+        
+        /* Estilos para el modal de producto */
+        .image-zoom-container {
+            position: relative;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        .image-zoom-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .thumbnail-detail {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        .thumbnail-detail:hover {
+            transform: scale(1.05);
+            border-color: #0059b6;
+        }
+        .thumbnail-detail.active {
+            border-color: #0059b6;
+            transform: scale(1.02);
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .producto-card {
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+            cursor: pointer;
+        }
+        .producto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0,89,182,0.15);
+        }
+        .card-img {
+            transition: transform 0.5s ease;
+        }
+        .group:hover .card-img {
+            transform: scale(1.05);
+        }
     </style>
 
 <script>
@@ -478,6 +524,7 @@
   .bg-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(7,105,210,0.15) 0%, transparent 70%); }
   .bg-contacto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
   .contacto-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(7,105,210,0.2) 0%, transparent 70%); }
+
 </style>
 </head>
 
@@ -490,7 +537,7 @@
             <div class="text-2xl font-black text-gray-900">EDAPymes</div>
         </div>
         
-        <!-- Desktop Navigation - Centrado -->
+        <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center justify-center flex-1 mx-8" id="main-nav">
             <div class="flex items-center gap-8 relative">
                 <a class="nav-link active text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('inicio', this)">Inicio</a>
@@ -543,13 +590,20 @@
                 <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Contacto</h4>
                 <div class="space-y-2">
                     <p class="text-sm text-gray-600 flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">location_on</span> Nicaragua</p>
-                    <p class="text-sm text-gray-600 flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">mail</span> contacto@edapymes.com</p>
+                    <p class="text-sm text-gray-600 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">mail</span>
+                        <a href="mailto:evelingespinoza@gmail.com" class="hover:text-primary transition-colors">evelingespinoza@gmail.com</a>
+                    </p>
                 </div>
             </div>
             <div>
                 <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Redes Sociales</h4>
                 <div class="flex gap-5">
-                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all"><span class="material-symbols-outlined">public</span></a>
+                    <a href="https://www.facebook.com/profile.php?id=61576401396435&mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+                        </svg>
+                    </a>
                     <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all"><span class="material-symbols-outlined">photo_camera</span></a>
                 </div>
             </div>
@@ -559,7 +613,7 @@
 </footer>
 
 <!-- Botón de WhatsApp Flotante -->
-<a href="https://wa.me/50588888888?text=Hola%2C%20me%20interesa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20servicios%20y%20productos%20de%20EDAPymes" 
+<a href="https://wa.me/50583295424?text=Hola%2C%20me%20interesa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20servicios%20y%20productos%20de%20EDAPymes" 
    target="_blank" 
    rel="noopener noreferrer"
    class="whatsapp-float"
@@ -576,7 +630,6 @@ const mobileNav = document.getElementById('mobileNav');
 
 mobileMenuBtn.addEventListener('click', () => {
     mobileNav.classList.toggle('open');
-    // Animate hamburger to X
     const spans = mobileMenuBtn.querySelectorAll('span');
     if (mobileNav.classList.contains('open')) {
         spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -592,6 +645,7 @@ mobileMenuBtn.addEventListener('click', () => {
 // Variables globales
 let carruselActivo = false;
 let intervaloAutoPlay = null;
+let productosGlobales = [];
 
 // Función para ir a un servicio específico en la página de servicios
 function irAServicioEspecifico(servicioId) {
@@ -765,6 +819,7 @@ function cargarSeccion(pagina, linkElement) {
             setTimeout(() => {
                 iniciarCarrusel();
                 configurarCardsServicios();
+                cargarProductosDestacados();
             }, 150);
         } else {
             fetch(pagina)
@@ -830,6 +885,217 @@ function configurarCardsServicios() {
         };
         card.addEventListener('click', card.clickHandler);
     });
+}
+
+// Función para cargar productos destacados desde el backend (CORREGIDA)
+async function cargarProductosDestacados() {
+    const contenedorDestacados = document.getElementById('productos-destacados-grid');
+    if (!contenedorDestacados) return;
+    
+    contenedorDestacados.innerHTML = `
+        <div class="col-span-full flex justify-center py-12">
+            <div class="loading-spinner w-10 h-10 border-4"></div>
+        </div>
+    `;
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/productos');
+        if (!response.ok) throw new Error('Error al cargar productos');
+        
+        const productos = await response.json();
+        productosGlobales = productos;
+        // Tomar los últimos 4 productos agregados (más recientes)
+        const destacados = productos.slice(0, 4);
+        
+        if (destacados.length === 0) {
+            contenedorDestacados.innerHTML = `
+                <div class="col-span-full text-center py-12 text-gray-500">
+                    <span class="material-symbols-outlined text-5xl">inventory</span>
+                    <p class="mt-2">No hay productos disponibles</p>
+                </div>
+            `;
+            return;
+        }
+        
+        contenedorDestacados.innerHTML = '';
+        
+        destacados.forEach(producto => {
+            let imagenUrl = 'https://placehold.co/400x300/e2e8f0/475569?text=EDAPymes';
+            if (producto.imagenes && producto.imagenes.length > 0) {
+                imagenUrl = producto.imagenes[0];
+            }
+            
+            const precioFormateado = typeof producto.precio === 'number' ? producto.precio.toFixed(2) : producto.precio;
+            const disponible = producto.disponible === true || producto.disponible === 1;
+            
+            const card = document.createElement('div');
+            card.className = "producto-card group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all";
+            card.onclick = () => abrirModalProducto(producto);
+            card.innerHTML = `
+                <div class="relative h-64 overflow-hidden">
+                    <img class="card-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="${imagenUrl}" alt="${escapeHtmlGlobal(producto.nombre)}" onerror="this.src='https://placehold.co/400x300/e2e8f0/475569?text=Imagen'">
+                    <span class="absolute top-4 right-4 ${disponible ? 'bg-primary' : 'bg-gray-500'} text-white text-[10px] font-bold px-2 py-1 rounded-full">${disponible ? 'Disponible' : 'Agotado'}</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs text-on-surface-variant">${escapeHtmlGlobal(producto.categoria || 'Tecnología')}</span>
+                    <h4 class="text-lg font-bold text-on-surface mt-1 mb-4">${escapeHtmlGlobal(producto.nombre)}</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-primary">${precioFormateado.includes('C$') ? precioFormateado : 'C$' + precioFormateado}</span>
+                        <button onclick="event.stopPropagation(); abrirModalProducto(${JSON.stringify(producto).replace(/"/g, '&quot;')})" class="bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">shopping_cart</span>
+                            Cotizar
+                        </button>
+                    </div>
+                </div>
+            `;
+            contenedorDestacados.appendChild(card);
+        });
+        
+    } catch (error) {
+        console.error('Error cargando productos destacados:', error);
+        contenedorDestacados.innerHTML = `
+            <div class="col-span-full text-center py-12 text-red-500">
+                <span class="material-symbols-outlined text-5xl">error</span>
+                <p class="mt-2">Error al cargar productos destacados</p>
+                <p class="text-sm text-gray-400">Asegúrate que el servidor backend esté corriendo en http://localhost:3000</p>
+            </div>
+        `;
+    }
+}
+
+// Función para abrir modal de producto
+function abrirModalProducto(producto) {
+    const modal = document.getElementById('productModal');
+    if (!modal) return;
+    
+    let imagenes = [];
+    if (producto.imagenes && producto.imagenes.length > 0) {
+        imagenes = producto.imagenes;
+    } else {
+        imagenes = ['https://placehold.co/800x1000/e2e8f0/475569?text=Sin+Imagen'];
+    }
+    
+    const precioFormateado = typeof producto.precio === 'number' ? producto.precio.toFixed(2) : producto.precio;
+    const disponible = producto.disponible === true || producto.disponible === 1;
+    
+    document.getElementById('modalProductoNombre').textContent = producto.nombre;
+    document.getElementById('modalProductoPrecio').textContent = `C$${precioFormateado}`;
+    document.getElementById('modalProductoCategoria').innerHTML = `<span class="material-symbols-outlined text-sm">devices</span> ${escapeHtmlGlobal(producto.categoria || 'Tecnología')}`;
+    document.getElementById('modalProductoDescripcion').textContent = producto.descripcion || 'Producto tecnológico de alta calidad. Consulta con nuestros asesores para obtener más información.';
+    document.getElementById('modalProductoDisponible').textContent = disponible ? 'Disponible' : 'Agotado';
+    document.getElementById('modalProductoDisponible').className = `text-sm font-semibold ${disponible ? 'text-green-600' : 'text-red-600'}`;
+    
+    const imgPrincipal = document.getElementById('modalImagenPrincipal');
+    imgPrincipal.src = imagenes[0];
+    
+    const miniaturasContainer = document.getElementById('modalMiniaturas');
+    miniaturasContainer.innerHTML = '';
+    imagenes.forEach((img, idx) => {
+        const miniatura = document.createElement('div');
+        miniatura.className = `thumbnail-detail rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer ${idx === 0 ? 'active' : ''}`;
+        miniatura.innerHTML = `<img src="${img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/e2e8f0/475569?text=Error'">`;
+        miniatura.onclick = () => {
+            imgPrincipal.src = img;
+            document.querySelectorAll('#modalMiniaturas .thumbnail-detail').forEach((thumb, i) => {
+                if (i === idx) thumb.classList.add('active');
+                else thumb.classList.remove('active');
+            });
+        };
+        miniaturasContainer.appendChild(miniatura);
+    });
+    
+    // Especificaciones
+    const specsContainer = document.getElementById('modalEspecificaciones');
+    if (producto.especificaciones && producto.especificaciones.length > 0) {
+        specsContainer.innerHTML = '';
+        producto.especificaciones.forEach(spec => {
+            if (spec.label && spec.value) {
+                specsContainer.innerHTML += `
+                    <div class="bg-gray-50 p-3 rounded-xl flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary">${spec.icono || 'bolt'}</span>
+                        <div>
+                            <p class="text-xs font-bold text-gray-500">${escapeHtmlGlobal(spec.label)}</p>
+                            <p class="text-sm font-medium text-gray-800">${escapeHtmlGlobal(spec.value)}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    } else {
+        specsContainer.innerHTML = '<div class="text-center text-gray-500 py-6 bg-gray-50 rounded-xl">No hay especificaciones técnicas disponibles</div>';
+    }
+    
+    // Botón WhatsApp
+    const btnWhatsApp = document.getElementById('modalWhatsAppBtn');
+    const mensaje = `Hola, me gustaría recibir información sobre EDAPymes y el producto: ${producto.nombre} - Precio: C$${precioFormateado}`;
+    btnWhatsApp.onclick = () => {
+        window.open(`https://wa.me/50583295424?text=${encodeURIComponent(mensaje)}`, '_blank');
+    };
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalProducto() {
+    const modal = document.getElementById('productModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+// Modal de producto (se agrega al body dinámicamente)
+function crearModalProducto() {
+    let modalExistente = document.getElementById('productModal');
+    if (modalExistente) return;
+    
+    const modalHTML = `
+        <div id="productModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[1000] p-4" onclick="if(event.target === this) cerrarModalProducto()">
+            <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white z-10 flex justify-end p-4 border-b">
+                    <button onclick="cerrarModalProducto()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div class="image-zoom-container bg-gray-100 rounded-xl overflow-hidden">
+                                <img id="modalImagenPrincipal" class="w-full aspect-[4/5] object-cover" src="" alt="">
+                            </div>
+                            <div id="modalMiniaturas" class="grid grid-cols-4 gap-3"></div>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <h2 id="modalProductoNombre" class="text-2xl md:text-3xl font-bold text-gray-800"></h2>
+                                <div class="flex items-center justify-between mt-4">
+                                    <span id="modalProductoPrecio" class="text-3xl font-bold text-primary"></span>
+                                    <span id="modalProductoDisponible" class="text-sm font-semibold"></span>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-2">Categoría</p>
+                                <p id="modalProductoCategoria" class="text-gray-600 flex items-center gap-1"></p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-2">Descripción</p>
+                                <p id="modalProductoDescripcion" class="text-gray-600 leading-relaxed"></p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-3">Especificaciones</p>
+                                <div id="modalEspecificaciones" class="space-y-3"></div>
+                            </div>
+                            <button id="modalWhatsAppBtn" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-green-700 transition-all">
+                                <span class="material-symbols-outlined">chat</span>
+                                Contactar por WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
 function obtenerHTMLInicio() {
@@ -916,19 +1182,27 @@ function obtenerHTMLInicio() {
   <div class="absolute top-0 left-0 w-72 h-72 bg-primary/10 blur-3xl rounded-full"></div>
   <div class="absolute bottom-0 right-0 w-72 h-72 bg-secondary/10 blur-3xl rounded-full"></div>
   <div class="max-w-7xl mx-auto px-8">
-    <div class="flex items-center justify-between mb-16"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface">Catálogo <span class="text-primary">Destacado</span></h2></div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C1.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Disponible</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">EliteBook X-Pro 14"</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">$1,299.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
-      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C2.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Disponible</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">ThinkPad X1 Carbon</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">$1,499.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
-      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C3.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Disponible</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">DELL Inspiron i5-11</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">$899.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
-      <div class="group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all"><div class="relative h-64 overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="/src/image/C4.png" alt="Producto" onerror="this.src='https://placehold.co/400x300'"><span class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Hot</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">Laptops</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">DELL 5430 i5-12</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">C$15,620.00</span><button class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:scale-105 transition-all">Cotizar</button></div></div></div>
+    <div class="flex items-center justify-between mb-16"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface">Catálogo <span class="text-primary">Destacado</span></h2><button onclick="cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todo <span class="material-symbols-outlined">east</span></button></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10" id="productos-destacados-grid">
+      <div class="col-span-full flex justify-center py-12">
+        <div class="loading-spinner w-10 h-10 border-4"></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="py-24 relative overflow-hidden bg-team"><div class="bg-efecto"></div><div class="relative z-10 max-w-7xl mx-auto px-8"><div class="text-center mb-16 space-y-4"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">El Equipo <span class="text-primary">Detrás</span></h2><p class="text-white/70 max-w-2xl mx-auto">Expertos comprometidos con el éxito tecnológico de tu empresa.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12"><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcO5UUoxKj86ssBca82Aq6Ec7RYeiA5FwpKG7j0sfeqz2wkxWAMG3I4cqx9hN9Os27Q84dY3msQjZvDQNb63CB9BQm3zJ8HwpUSZwLuK6n7D5DeukOFn8FwuKiHuPebht1xTxljRjTyoUZyDP306_6GPldq2DBHcqzqvFEee4TsEDlfeDA_erzRdnQxxbr0sRV5tPo43pVRF3JiMtem5af_bKOo8KbCm_tCvEqwARon9k7zSrRyERvBQXJ4O73LrENTJWKkn6zTB0z" alt="Roberto Mendoza"></div><h4 class="text-xl font-headline font-bold text-white">Roberto Mendoza</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">CEO & Founder</p><p class="text-white/70 text-sm mt-4">Líder con más de 15 años transformando el panorama IT local.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-eW26GNEgI3xjJNN-Desvabn0ZIghvdv1gOD3yaR6K8cNsIdy1VKc3V20L8tI0CTgDcU6dZz06VWCFj8hecz7wndqMaIkN1ArUMfiT7-W16cdY0yu4zEcELnC4LYOhj2j4O6kPaHrzof0q-QmfpfChwWcHtMf1Gj75rhbjphi4tI_u4pHhqOO9dwbfR1iEFstMw-IMfrFnj5W8rlFvOOhXy0zksjRd6GRLg0gQ5NI15lq8u-c_PHHvcVkUDYdnGTzyiWaM__JT4Pw" alt="Elena Casares"></div><h4 class="text-xl font-headline font-bold text-white">Elena Casares</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">CTO</p><p class="text-white/70 text-sm mt-4">Arquitecta de soluciones y apasionada por la ciberseguridad.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjXrcQkZmljokYZNdKFZZuA_PFyTwPcoWn7WQsnjHg9r-Yi0t1jGS1rla0MkbVwxXA5dDVMcPU4XfVf4HdPOLPXLlg_UgUNV59QjHgeRnp-IkhJ4-3NbXFl67buWmbKOen3i9MASOPH8ZPW333lOrWOzMJKwlih0jr3ktsWsyQMi8LX0I1MFvKvNSCRSw1ZngXfjJ8C1VurXXQ2VDV-Fmn7IS_uZRBLYmxTzQgrXN-KOXqVDw8wow4AyofEji--PBdz5QWRW7yuk11" alt="Marco Valdivia"></div><h4 class="text-xl font-headline font-bold text-white">Marco Valdivia</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Director Comercial</p><p class="text-white/70 text-sm mt-4">Especialista en alianzas estratégicas y expansión de mercado.</p></div></div></div></section>
+<section class="py-24 relative overflow-hidden bg-team"><div class="bg-efecto"></div><div class="relative z-10 max-w-7xl mx-auto px-8"><div class="text-center mb-16 space-y-4"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">El Equipo <span class="text-primary">Detrás</span></h2><p class="text-white/70 max-w-2xl mx-auto">Expertos comprometidos con el éxito tecnológico de tu empresa.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+  
+<!-- Dereck Sevilla - Desarrollador Backend -->
+  <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/Dereck3.png" alt="Dereck Sevilla" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=DS'"></div><h4 class="text-xl font-headline font-bold text-white">Dereck Sevilla</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrollador Backend</p><p class="text-white/70 text-sm mt-4">BackEnd Junior con 4 años de experiencia en TICs.</p></div>
 
-<section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:contacto@edapymes.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">contacto@edapymes.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8888 8888 / +505 7777 7777</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
+  <!-- Evelyn Espinoza - Project Manager & CEO -->
+  <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/WhatsApp%20Image%202026-04-03%20at%206.18.21%20PM.jpeg" alt="Evelyn Espinoza" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=EE'"></div><h4 class="text-xl font-headline font-bold text-white">Evelyn Espinoza</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Project Manager & CEO</p><p class="text-white/70 text-sm mt-4">Máster en Computación con énfasis en Sistemas de Información con más de 28 años de experiencia brindando soluciones tecnológicas con calidad comprobada.</p></div>
+  <!-- Ana Fernanda Tapia - Desarrolladora Frontend -->
+  <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/ana-fernanda-tapia.jpg" alt="Ana Fernanda Tapia" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=AFT'"></div><h4 class="text-xl font-headline font-bold text-white">Ana Fernanda Tapia</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrolladora Frontend</p><p class="text-white/70 text-sm mt-4">FrontEnd Junior con 4 años de experiencia en soluciones amigables, navegables y óptimas.</p></div>
+
+</div></div></section>
+<section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:evelingespinoza@gmail.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">evelingespinoza@gmail.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8329 5424 / +505 8599 8144</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
 <form id="contactoForm" onsubmit="enviarCorreo(event)" class="space-y-6">
   <div><label for="contacto_nombre" class="text-white/70 text-sm">Nombre</label><input type="text" id="contacto_nombre" name="nombre" required placeholder="Tu nombre" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div>
   <div><label for="contacto_email" class="text-white/70 text-sm">Correo</label><input type="email" id="contacto_email" name="email" required placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div>
@@ -1087,13 +1361,18 @@ function handleVisibilityChange() {
 function iniciarTodo() { configurarCardsServicios(); }
 
 window.addEventListener("DOMContentLoaded", () => {
+    crearModalProducto();
     const inicioLink = document.querySelector(".nav-link.active");
     const contenedor = document.getElementById("contenido");
     contenedor.innerHTML = obtenerHTMLInicio();
     window.scrollTo(0, 0);
     activarAnimacionesScroll();
     if (inicioLink) moverIndicador(inicioLink);
-    setTimeout(() => { iniciarCarrusel(); configurarCardsServicios(); }, 150);
+    setTimeout(() => { 
+        iniciarCarrusel(); 
+        configurarCardsServicios();
+        cargarProductosDestacados();
+    }, 150);
     if(inicioLink) { document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active")); inicioLink.classList.add("active"); }
 });
 
@@ -1111,6 +1390,9 @@ window.moverIndicador = moverIndicador;
 window.mostrarEspecificacionesModal = mostrarEspecificacionesModal;
 window.cerrarSpecsModalGlobal = cerrarSpecsModalGlobal;
 window.escapeHtmlGlobal = escapeHtmlGlobal;
+window.cargarProductosDestacados = cargarProductosDestacados;
+window.abrirModalProducto = abrirModalProducto;
+window.cerrarModalProducto = cerrarModalProducto;
 </script>
 
 </body>
