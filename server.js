@@ -10,22 +10,22 @@ const session = require("express-session");
 
 const app = express();
 
-// Configuración de sesiones
+// Configuracion de sesiones
 app.use(session({
-    secret: 'edapymes_super_secret_key_2024_secure_crypto',
+    secret: process.env.SESSION_SECRET || 'edapymes_super_secret_key_2024_secure_crypto',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
         sameSite: 'lax'
     }
 }));
 
-// Configuración CORS mejorada
+// Configuracion CORS
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500', 'http://127.0.0.1:5501', 'http://localhost:5501'],
+    origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -52,14 +52,14 @@ if (!fs.existsSync(templatesDir)) fs.mkdirSync(templatesDir, { recursive: true }
 if (!fs.existsSync(adminDir)) fs.mkdirSync(adminDir, { recursive: true });
 
 /* ===============================
-   ARCHIVOS ESTÁTICOS
+   ARCHIVOS ESTATICOS
 ================================ */
 app.use("/uploads", express.static(uploadsDir));
 app.use("/static", express.static(staticDir));
 app.use("/src", express.static(srcDir));
 app.use("/templates", express.static(templatesDir));
 
-// Middleware de autenticación para rutas protegidas
+// Middleware de autenticacion
 function requireAuth(req, res, next) {
     if (req.session && req.session.isAuthenticated) {
         next();
@@ -68,7 +68,7 @@ function requireAuth(req, res, next) {
     }
 }
 
-// Páginas públicas
+// Paginas publicas
 app.get("/", (req, res) => {
     res.sendFile(path.join(templatesDir, "index.html"));
 });
@@ -97,12 +97,10 @@ app.get("/ventanaC.html", (req, res) => {
     res.sendFile(path.join(templatesDir, "ventanaC.html"));
 });
 
-// Página de login (pública)
 app.get("/admin-login.html", (req, res) => {
     res.sendFile(path.join(adminDir, "login.html"));
 });
 
-// Página de admin (protegida)
 app.get("/admin.html", requireAuth, (req, res) => {
     res.sendFile(path.join(adminDir, "admin.html"));
 });
@@ -112,18 +110,18 @@ app.get("/templates/admin/admin.html", requireAuth, (req, res) => {
 });
 
 /* ===============================
-   CONFIGURACIÓN DE NODEMAILER
+   CONFIGURACION DE NODEMAILER
 ================================ */
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'derecksevi@gmail.com',
-        pass: 'kwuv yclp fytd qtqk'
+        user: process.env.EMAIL_USER || 'derecksevi@gmail.com',
+        pass: process.env.EMAIL_PASS || 'kwuv yclp fytd qtqk'
     }
 });
 
 /* ===============================
-   SQLITE CON MIGRACIONES Y TABLA DE USUARIOS
+   SQLITE - SOLO CREAR TABLAS SIN USUARIO DEFAULT
 ================================ */
 const dbPath = path.join(dbDir, "edapymes.db");
 const db = new sqlite3.Database(dbPath);
@@ -137,79 +135,33 @@ function setupUsersTable() {
     )`, (err) => {
         if (err) {
             console.error("Error creando tabla usuarios:", err);
-        } else {
-
-            db.get("SELECT * FROM usuarios WHERE username = ?", ["edapymes_devCatalog"], (err, user) => {
-                if (err) {
-                    console.error("Error verificando usuario:", err);
-                    return;
-                }
-
-                if (!user) {
-                    console.log("Creando usuario administrador...");
-                    const password = "EdaPymes$5%12@!7857";
-
-                    bcrypt.hash(password, 12, (err, hash) => {
-                        if (err) {
-                            console.error("Error encriptando contraseña:", err);
-                            return;
-                        }
-
-                        db.run("INSERT INTO usuarios (username, password) VALUES (?, ?)",
-                            ["edapymes_devCatalog", hash],
-                            (err) => {
-                                if (err) {
-                                    console.error("Error insertando usuario:", err);
-                                } else {
-                                    console.log("Usuario administrador creado exitosamente");
-                                }
-                            }
-                        );
-                    });
-                } else {
-                }
-            });
         }
     });
 }
 
 function runMigrations() {
     db.all("PRAGMA table_info(categorias)", (err, columns) => {
-        if (err) {
-            console.error("Error obteniendo columnas de categorias:", err);
-            return;
-        }
+        if (err) return;
         const columnNames = columns.map(c => c.name);
         if (!columnNames.includes('icono')) {
-            console.log("Agregando columna icono a categorias...");
-            db.run("ALTER TABLE categorias ADD COLUMN icono TEXT DEFAULT 'category'", (err) => {
-                if (err) console.error("Error agregando columna icono:", err);
-                else console.log("Columna icono agregada a categorias");
-            });
+            db.run("ALTER TABLE categorias ADD COLUMN icono TEXT DEFAULT 'category'");
         }
     });
 
     db.all("PRAGMA table_info(productos)", (err, columns) => {
-        if (err) {
-            console.error("Error obteniendo columnas de productos:", err);
-            return;
-        }
+        if (err) return;
         const columnNames = columns.map(c => c.name);
 
         if (!columnNames.includes('descripcion')) {
-            console.log("Agregando columna descripcion a productos...");
             db.run("ALTER TABLE productos ADD COLUMN descripcion TEXT");
         }
         if (!columnNames.includes('especificaciones')) {
-            console.log("Agregando columna especificaciones a productos...");
             db.run("ALTER TABLE productos ADD COLUMN especificaciones TEXT");
         }
         if (!columnNames.includes('imagenes')) {
-            console.log("Agregando columna imagenes a productos...");
             db.run("ALTER TABLE productos ADD COLUMN imagenes TEXT");
         }
         if (!columnNames.includes('created_at')) {
-            console.log("Agregando columna created_at a productos...");
             db.run("ALTER TABLE productos ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
         }
     });
@@ -217,13 +169,8 @@ function runMigrations() {
 
 function insertarCategoriasEjemplo() {
     db.get("SELECT COUNT(*) as count FROM categorias", (err, row) => {
-        if (err) {
-            console.error("Error verificando categorías existentes:", err);
-            return;
-        }
-
+        if (err) return;
         if (row.count === 0) {
-            console.log("Insertando categorías de ejemplo...");
             const categoriasEjemplo = [
                 { nombre: "Laptops", icono: "laptop" },
                 { nombre: "Computadoras", icono: "desktop_windows" },
@@ -231,17 +178,13 @@ function insertarCategoriasEjemplo() {
                 { nombre: "Celulares", icono: "smartphone" },
                 { nombre: "Seguridad", icono: "security" },
                 { nombre: "Redes", icono: "router" },
-                { nombre: "Cámaras", icono: "camera" },
+                { nombre: "Camaras", icono: "camera" },
                 { nombre: "Audio", icono: "headphones" }
             ];
 
             categoriasEjemplo.forEach(cat => {
-                db.run("INSERT INTO categorias (nombre, icono) VALUES (?, ?)", [cat.nombre, cat.icono], (err) => {
-                    if (err) console.error("Error insertando categoría:", err);
-                });
+                db.run("INSERT INTO categorias (nombre, icono) VALUES (?, ?)", [cat.nombre, cat.icono]);
             });
-            console.log("Categorías de ejemplo insertadas");
-        } else {
         }
     });
 }
@@ -251,31 +194,32 @@ db.serialize(() => {
 
     db.run(`CREATE TABLE IF NOT EXISTS categorias(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT UNIQUE NOT NULL
-    )`, (err) => {
-        if (err) console.error("Error creando tabla categorias:", err);
-    });
+        nombre TEXT UNIQUE NOT NULL,
+        icono TEXT DEFAULT 'category'
+    )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS productos(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL,
         precio REAL NOT NULL,
         categoria TEXT,
-        disponible INTEGER DEFAULT 1
-    )`, (err) => {
-        if (err) console.error("Error creando tabla productos:", err);
-    });
+        descripcion TEXT,
+        especificaciones TEXT,
+        imagenes TEXT,
+        disponible INTEGER DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
 
     setTimeout(() => {
         runMigrations();
         setTimeout(() => {
             insertarCategoriasEjemplo();
-        }, 200);
+        }, 100);
     }, 100);
 });
 
 /* ===============================
-   CONFIGURACIÓN DE MULTER
+   CONFIGURACION DE MULTER
 ================================ */
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -295,7 +239,7 @@ const fileFilter = (req, file, cb) => {
     if (mimetype && extname) {
         cb(null, true);
     } else {
-        cb(new Error("Solo se permiten imágenes"), false);
+        cb(new Error("Solo se permiten imagenes"), false);
     }
 };
 
@@ -308,28 +252,26 @@ const upload = multer({
 const uploadMultiple = upload.array('imagenes', 6);
 
 /* ===============================
-   API DE AUTENTICACIÓN
+   API DE AUTENTICACION
 ================================ */
 app.post("/api/login", (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.status(400).json({ error: "Usuario y contraseña requeridos" });
+        return res.status(400).json({ error: "Usuario y contrasena requeridos" });
     }
 
     db.get("SELECT * FROM usuarios WHERE username = ?", [username], (err, user) => {
         if (err) {
-            console.error("Error en login:", err);
             return res.status(500).json({ error: "Error en el servidor" });
         }
 
         if (!user) {
-            return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+            return res.status(401).json({ error: "Usuario o contrasena incorrectos" });
         }
 
         bcrypt.compare(password, user.password, (err, result) => {
             if (err) {
-                console.error("Error verificando contraseña:", err);
                 return res.status(500).json({ error: "Error en el servidor" });
             }
 
@@ -344,7 +286,7 @@ app.post("/api/login", (req, res) => {
                     redirect: "/admin.html"
                 });
             } else {
-                res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+                res.status(401).json({ error: "Usuario o contrasena incorrectos" });
             }
         });
     });
@@ -353,10 +295,9 @@ app.post("/api/login", (req, res) => {
 app.post("/api/logout", (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            console.error("Error en logout:", err);
-            return res.status(500).json({ error: "Error al cerrar sesión" });
+            return res.status(500).json({ error: "Error al cerrar sesion" });
         }
-        res.json({ success: true, message: "Sesión cerrada exitosamente" });
+        res.json({ success: true, message: "Sesion cerrada exitosamente" });
     });
 });
 
@@ -389,7 +330,6 @@ app.get("/api/check-session", (req, res) => {
 app.get("/api/productos", (req, res) => {
     db.all("SELECT * FROM productos ORDER BY id DESC", (err, rows) => {
         if (err) {
-            console.error("Error obteniendo productos:", err);
             return res.status(500).json({ error: err.message });
         }
 
@@ -430,7 +370,6 @@ app.get("/api/productos", (req, res) => {
 app.post("/api/productos", requireAuth, (req, res) => {
     uploadMultiple(req, res, (err) => {
         if (err) {
-            console.error("Error en upload:", err);
             return res.status(400).json({ error: err.message });
         }
 
@@ -468,7 +407,6 @@ app.post("/api/productos", requireAuth, (req, res) => {
             [nombre, parseFloat(precio), categoria || null, descripcion || null, especificacionesJSON, imagenesJSON, 1],
             function (err) {
                 if (err) {
-                    console.error("Error insertando producto:", err);
                     return res.status(500).json({ error: err.message });
                 }
                 res.json({
@@ -490,9 +428,7 @@ app.delete("/api/productos/:id", requireAuth, (req, res) => {
                 const imagenes = JSON.parse(row.imagenes);
                 imagenes.forEach(img => {
                     const imagePath = path.join(uploadsDir, img.filename);
-                    fs.unlink(imagePath, (err) => {
-                        if (err) console.error("Error eliminando imagen:", img.filename);
-                    });
+                    fs.unlink(imagePath, (err) => { });
                 });
             } catch (e) { }
         }
@@ -504,7 +440,7 @@ app.delete("/api/productos/:id", requireAuth, (req, res) => {
 });
 
 /* ===============================
-   API DE CATEGORÍAS
+   API DE CATEGORIAS
 ================================ */
 app.get("/api/categorias", (req, res) => {
     db.all("SELECT * FROM categorias ORDER BY nombre", (err, rows) => {
@@ -516,29 +452,29 @@ app.get("/api/categorias", (req, res) => {
 app.post("/api/categorias", requireAuth, (req, res) => {
     const { nombre, icono } = req.body;
     if (!nombre || nombre.trim() === "") {
-        return res.status(400).json({ error: "Nombre de categoría requerido" });
+        return res.status(400).json({ error: "Nombre de categoria requerido" });
     }
     const iconoFinal = icono || "category";
     db.run("INSERT INTO categorias(nombre, icono) VALUES(?, ?)", [nombre.trim(), iconoFinal], function (err) {
         if (err) {
             if (err.message.includes("UNIQUE")) {
-                return res.status(400).json({ error: "La categoría ya existe" });
+                return res.status(400).json({ error: "La categoria ya existe" });
             }
             return res.status(500).json({ error: err.message });
         }
-        res.json({ id: this.lastID, nombre: nombre.trim(), icono: iconoFinal, message: "Categoría creada" });
+        res.json({ id: this.lastID, nombre: nombre.trim(), icono: iconoFinal, message: "Categoria creada" });
     });
 });
 
 app.delete("/api/categorias/:id", requireAuth, (req, res) => {
     db.run("DELETE FROM categorias WHERE id = ?", [req.params.id], function (err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: "Categoría eliminada", changes: this.changes });
+        res.json({ message: "Categoria eliminada", changes: this.changes });
     });
 });
 
 /* ===============================
-   API DE ENVÍO DE CORREOS CON IMAGEN ADJUNTA
+   API DE ENVIO DE CORREOS
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -553,7 +489,6 @@ app.post("/api/enviar-correo", async (req, res) => {
         timeStyle: 'short'
     });
 
-    // Buscar el logo en diferentes posibles ubicaciones
     const posiblesLogos = [
         path.join(__dirname, "src", "image", "TU-LOGO.png"),
         path.join(__dirname, "src", "image", "redimension.png"),
@@ -566,18 +501,12 @@ app.post("/api/enviar-correo", async (req, res) => {
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
             logoPath = ruta;
-            console.log("Logo encontrado en:", ruta);
             break;
         }
     }
 
-    if (!logoPath) {
-        console.log("⚠️ No se encontró ningún logo en las rutas verificadas");
-    }
-
     const logoCid = 'edapymes-logo';
 
-    // Función para crear el encabezado con logo adjunto (usando CID)
     const crearHeaderConLogo = () => `
         <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -587,14 +516,13 @@ app.post("/api/enviar-correo", async (req, res) => {
                     </td>
                     <td style="vertical-align: middle; padding-left: 18px;">
                         <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold;">EDAPymes</h1>
-                        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnología con Calidad y Calidez</p>
+                        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnologia con Calidad y Calidez</p>
                     </td>
                 </tr>
             </table>
         </div>
     `;
 
-    // Preparar los attachments (solo si existe el logo)
     const attachments = [];
     if (logoPath) {
         attachments.push({
@@ -604,7 +532,6 @@ app.post("/api/enviar-correo", async (req, res) => {
         });
     }
 
-    // Correo para el administrador
     const adminMailOptions = {
         from: `"${nombre}" <${email}>`,
         to: 'derecksevi@gmail.com',
@@ -628,17 +555,17 @@ app.post("/api/enviar-correo", async (req, res) => {
                 <div class="container">
                     ${crearHeaderConLogo()}
                     <div class="content">
-                        <h2 style="color: #034AB0; margin-top: 0;">📬 Nuevo mensaje de contacto</h2>
+                        <h2 style="color: #034AB0; margin-top: 0;">Nuevo mensaje de contacto</h2>
                         
                         <div style="margin: 20px 0;">
-                            <p><strong>📅 Fecha:</strong> ${fecha}</p>
-                            <p><strong>👤 Nombre:</strong> ${nombre}</p>
-                            <p><strong>📧 Correo:</strong> ${email}</p>
-                            <p><strong>🔧 Servicio:</strong> ${servicio || 'No especificado'}</p>
+                            <p><strong>Fecha:</strong> ${fecha}</p>
+                            <p><strong>Nombre:</strong> ${nombre}</p>
+                            <p><strong>Correo:</strong> ${email}</p>
+                            <p><strong>Servicio:</strong> ${servicio || 'No especificado'}</p>
                         </div>
                         
                         <div class="info-box">
-                            <p style="margin: 0 0 10px;"><strong>📝 Mensaje:</strong></p>
+                            <p style="margin: 0 0 10px;"><strong>Mensaje:</strong></p>
                             <p style="margin: 0; line-height: 1.6;">${mensaje.replace(/\n/g, '<br>')}</p>
                         </div>
                     </div>
@@ -652,11 +579,10 @@ app.post("/api/enviar-correo", async (req, res) => {
         attachments: attachments
     };
 
-    // Correo de respuesta para el usuario
     const userMailOptions = {
         from: `"EDAPymes" <derecksevi@gmail.com>`,
         to: email,
-        subject: `¡Gracias por contactarnos ${nombre}! - EDAPymes`,
+        subject: `Gracias por contactarnos ${nombre}! - EDAPymes`,
         html: `
             <!DOCTYPE html>
             <html>
@@ -676,27 +602,27 @@ app.post("/api/enviar-correo", async (req, res) => {
                 <div class="container">
                     ${crearHeaderConLogo()}
                     <div class="content">
-                        <h2 style="color: #034AB0;">✨ ¡Hola ${nombre}!</h2>
-                        <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje y uno de nuestros asesores te responderá a la brevedad.</p>
+                        <h2 style="color: #034AB0;">Hola ${nombre}!</h2>
+                        <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con EDAPymes. Hemos recibido tu mensaje y uno de nuestros asesores te respondera a la brevedad.</p>
                         
                         <div class="info-box">
-                            <p style="margin: 0 0 10px;"><strong>📋 Detalle de tu consulta:</strong></p>
-                            <p><strong>🔧 Servicio de interés:</strong> ${servicio || 'Consulta general'}</p>
-                            <p><strong>📝 Mensaje:</strong></p>
+                            <p style="margin: 0 0 10px;"><strong>Detalle de tu consulta:</strong></p>
+                            <p><strong>Servicio de interes:</strong> ${servicio || 'Consulta general'}</p>
+                            <p><strong>Mensaje:</strong></p>
                             <p style="margin: 8px 0 0; color: #555;">${mensaje.replace(/\n/g, '<br>')}</p>
                         </div>
                         
-                        <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las próximas <strong>24 horas hábiles</strong> para brindarte la atención que mereces.</p>
+                        <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las proximas 24 horas habiles para brindarte la atencion que mereces.</p>
                         
                         <div class="contact-box">
-                            <p style="margin: 0; color: #034AB0; font-weight: bold;">📞 ¿Necesitas ayuda inmediata?</p>
-                            <p style="margin: 10px 0 0;">Contáctanos al <strong>+505 8329 5424</strong><br>
-                            o escríbenos a <strong>evelingespinoza@gmail.com</strong></p>
+                            <p style="margin: 0; color: #034AB0; font-weight: bold;">Necesitas ayuda inmediata?</p>
+                            <p style="margin: 10px 0 0;">Contactanos al +505 8329 5424<br>
+                            o escribenos a evelingespinoza@gmail.com</p>
                         </div>
                     </div>
                     <div class="footer">
-                        Este es un mensaje automático, por favor no responder a este correo.<br>
-                        <strong>EDAPymes</strong> - Tecnología con Calidad y Calidez<br>
+                        Este es un mensaje automatico, por favor no responder a este correo.<br>
+                        EDAPymes - Tecnologia con Calidad y Calidez<br>
                         Nicaragua
                     </div>
                 </div>
@@ -709,10 +635,8 @@ app.post("/api/enviar-correo", async (req, res) => {
     try {
         await transporter.sendMail(adminMailOptions);
         await transporter.sendMail(userMailOptions);
-        console.log("✅ Correo enviado exitosamente a:", email);
         res.json({ message: "Correo enviado exitosamente" });
     } catch (error) {
-        console.error("Error enviando correo:", error);
         res.status(500).json({ error: "Error al enviar el correo: " + error.message });
     }
 });
@@ -721,21 +645,20 @@ app.post("/api/enviar-correo", async (req, res) => {
    ENDPOINT DE PRUEBA
 ================================ */
 app.get("/api/health", (req, res) => {
-    res.json({ status: "OK", timestamp: new Date().toISOString(), uploadsDir, dbPath });
+    res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
 /* ===============================
    MANEJO DE ERRORES GLOBAL
 ================================ */
 app.use((err, req, res, next) => {
-    console.error("Error global:", err.stack);
-    res.status(500).json({ error: "Algo salió mal", message: err.message });
+    res.status(500).json({ error: "Error interno del servidor" });
 });
 
 /* ===============================
    INICIAR SERVIDOR
 ================================ */
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor en linea`);
+    console.log(`Servidor en puerto ${PORT}`);
 });
