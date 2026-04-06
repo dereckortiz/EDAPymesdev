@@ -1,45 +1,29 @@
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
 
-const NEON_URL = 'postgresql://neondb_owner:npg_7LdzOe5sNtnK@ep-still-hill-amsrhy4v-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require';
-const neon = new Pool({ connectionString: NEON_URL, ssl: { rejectUnauthorized: false } });
+const pool = new Pool({
+    connectionString: 'postgresql://neondb_owner:npg_7LdzOe5sNtnK@ep-still-hill-amsrhy4v-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require',
+    ssl: { rejectUnauthorized: false }
+});
 
-async function fixImages() {
-    console.log('🔧 Corrigiendo URLs de imágenes...\n');
+async function checkAdmin() {
+    const result = await pool.query("SELECT * FROM usuarios WHERE username = 'admin'");
 
-    const productos = await neon.query('SELECT id, imagenes FROM productos');
-
-    for (const producto of productos.rows) {
-        let imagenesArray = [];
-        try {
-            imagenesArray = JSON.parse(producto.imagenes);
-        } catch (e) {
-            continue;
-        }
-
-        let modificado = false;
-        const nuevasImagenes = imagenesArray.map(img => {
-            // Si no tiene URL o tiene una URL antigua
-            if (!img.url || img.url.includes('localhost') || img.url.includes('edapymes.onrender.com')) {
-                modificado = true;
-                return {
-                    ...img,
-                    url: `https://edapymesdev.onrender.com/uploads/${img.filename}`
-                };
-            }
-            return img;
-        });
-
-        if (modificado) {
-            await neon.query(
-                'UPDATE productos SET imagenes = $1 WHERE id = $2',
-                [JSON.stringify(nuevasImagenes), producto.id]
-            );
-            console.log(`✅ Producto ${producto.id}: URLs actualizadas`);
-        }
+    if (result.rows.length === 0) {
+        console.log('❌ Usuario admin NO existe. Creándolo...');
+        const hash = await bcrypt.hash('Admin123!', 10);
+        await pool.query(
+            "INSERT INTO usuarios (username, password) VALUES ($1, $2)",
+            ['admin', hash]
+        );
+        console.log('✅ Usuario admin creado');
+    } else {
+        console.log('✅ Usuario admin existe');
+        console.log('   Usuario:', result.rows[0].username);
+        console.log('   Password hash:', result.rows[0].password.substring(0, 20) + '...');
     }
 
-    console.log('\n🎉 Todas las URLs han sido corregidas!');
-    await neon.end();
+    await pool.end();
 }
 
-fixImages();
+checkAdmin();

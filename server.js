@@ -7,11 +7,35 @@ const fs = require("fs");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
+const pgSession = require('connect-pg-simple')(session);
 
 const app = express();
 
-// Configuracion de sesiones
+/* ===============================
+   POSTGRESQL - CONEXION (PRIMERO)
+================================ */
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
+
+pool.connect((err) => {
+    if (err) {
+        console.error('❌ Error conectando a PostgreSQL:', err.message);
+    } else {
+        console.log('✅ Conectado a PostgreSQL');
+    }
+});
+
+/* ===============================
+   CONFIGURACION DE SESIONES CON POSTGRESQL
+================================ */
 app.use(session({
+    store: new pgSession({
+        pool: pool,
+        tableName: 'session',
+        createTableIfMissing: true
+    }),
     secret: process.env.SESSION_SECRET || 'edapymes_super_secret_key_2024_secure_crypto',
     resave: false,
     saveUninitialized: false,
@@ -23,7 +47,9 @@ app.use(session({
     }
 }));
 
-// Configuracion CORS
+/* ===============================
+   CONFIGURACION CORS
+================================ */
 const allowedOrigins = process.env.NODE_ENV === 'production'
     ? [process.env.FRONTEND_URL || 'https://edapymesdev.onrender.com']
     : ['https://edapymesdev.onrender.com', 'http://127.0.0.1:5500', 'http://localhost:5500'];
@@ -61,7 +87,9 @@ app.use("/static", express.static(staticDir));
 app.use("/src", express.static(srcDir));
 app.use("/templates", express.static(templatesDir));
 
-// Middleware de autenticacion
+/* ===============================
+   MIDDLEWARE DE AUTENTICACION
+================================ */
 function requireAuth(req, res, next) {
     if (req.session && req.session.isAuthenticated) {
         next();
@@ -70,7 +98,9 @@ function requireAuth(req, res, next) {
     }
 }
 
-// Paginas publicas
+/* ===============================
+   PAGINAS PUBLICAS
+================================ */
 app.get("/", (req, res) => {
     res.sendFile(path.join(templatesDir, "index.html"));
 });
@@ -103,7 +133,6 @@ app.get("/admin-login.html", (req, res) => {
     res.sendFile(path.join(adminDir, "login.html"));
 });
 
-// ✅ RUTAS CORREGIDAS PARA ADMIN
 app.get("/admin.html", requireAuth, (req, res) => {
     res.sendFile(path.join(adminDir, "admin.html"));
 });
@@ -120,22 +149,6 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.EMAIL_USER || 'derecksevi@gmail.com',
         pass: process.env.EMAIL_PASS || 'kwuv yclp fytd qtqk'
-    }
-});
-
-/* ===============================
-   POSTGRESQL - CONEXION A SUPABASE
-================================ */
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
-});
-
-pool.connect((err) => {
-    if (err) {
-        console.error('❌ Error conectando a PostgreSQL:', err.message);
-    } else {
-        console.log('✅ Conectado a PostgreSQL (Supabase)');
     }
 });
 
@@ -200,7 +213,6 @@ app.post("/api/login", async (req, res) => {
         req.session.username = user.username;
         req.session.userId = user.id;
 
-        // ✅ REDIRECT CORREGIDO
         res.json({
             success: true,
             message: "Login exitoso",
@@ -250,7 +262,7 @@ app.get("/api/check-session", (req, res) => {
 app.get("/api/productos", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM productos ORDER BY id DESC");
-        const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+        const baseUrl = process.env.BASE_URL || `https://edapymesdev.onrender.com`;
 
         const productos = result.rows.map(p => {
             let imagenesArray = [];
@@ -453,7 +465,7 @@ app.post("/api/enviar-correo", async (req, res) => {
                         <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnologia con Calidad y Calidez</p>
                     </td>
                 </tr>
-            </table>
+            </tr>
         </div>
     `;
 
@@ -471,8 +483,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         to: 'derecksevi@gmail.com',
         replyTo: email,
         subject: `Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`,
-        html: `
-            <!DOCTYPE html>
+        html: `<!DOCTYPE html>
             <html>
             <head>
                 <meta charset="UTF-8">
@@ -490,14 +501,12 @@ app.post("/api/enviar-correo", async (req, res) => {
                     ${crearHeaderConLogo()}
                     <div class="content">
                         <h2 style="color: #034AB0; margin-top: 0;">Nuevo mensaje de contacto</h2>
-                        
                         <div style="margin: 20px 0;">
                             <p><strong>Fecha:</strong> ${fecha}</p>
                             <p><strong>Nombre:</strong> ${nombre}</p>
                             <p><strong>Correo:</strong> ${email}</p>
                             <p><strong>Servicio:</strong> ${servicio || 'No especificado'}</p>
                         </div>
-                        
                         <div class="info-box">
                             <p style="margin: 0 0 10px;"><strong>Mensaje:</strong></p>
                             <p style="margin: 0; line-height: 1.6;">${mensaje.replace(/\n/g, '<br>')}</p>
@@ -508,8 +517,7 @@ app.post("/api/enviar-correo", async (req, res) => {
                     </div>
                 </div>
             </body>
-            </html>
-        `,
+            </html>`,
         attachments: attachments
     };
 
@@ -517,8 +525,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         from: `"EDAPymes" <derecksevi@gmail.com>`,
         to: email,
         subject: `Gracias por contactarnos ${nombre}! - EDAPymes`,
-        html: `
-            <!DOCTYPE html>
+        html: `<!DOCTYPE html>
             <html>
             <head>
                 <meta charset="UTF-8">
@@ -538,16 +545,13 @@ app.post("/api/enviar-correo", async (req, res) => {
                     <div class="content">
                         <h2 style="color: #034AB0;">Hola ${nombre}!</h2>
                         <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con EDAPymes. Hemos recibido tu mensaje y uno de nuestros asesores te respondera a la brevedad.</p>
-                        
                         <div class="info-box">
                             <p style="margin: 0 0 10px;"><strong>Detalle de tu consulta:</strong></p>
                             <p><strong>Servicio de interes:</strong> ${servicio || 'Consulta general'}</p>
                             <p><strong>Mensaje:</strong></p>
                             <p style="margin: 8px 0 0; color: #555;">${mensaje.replace(/\n/g, '<br>')}</p>
                         </div>
-                        
                         <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las proximas 24 horas habiles para brindarte la atencion que mereces.</p>
-                        
                         <div class="contact-box">
                             <p style="margin: 0; color: #034AB0; font-weight: bold;">Necesitas ayuda inmediata?</p>
                             <p style="margin: 10px 0 0;">Contactanos al +505 8329 5424<br>
@@ -561,8 +565,7 @@ app.post("/api/enviar-correo", async (req, res) => {
                     </div>
                 </div>
             </body>
-            </html>
-        `,
+            </html>`,
         attachments: attachments
     };
 
@@ -598,5 +601,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
     console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
     console.log(`📁 Directorio de uploads: ${uploadsDir}`);
-    console.log(`💾 Base de datos: PostgreSQL en Supabase`);
+    console.log(`💾 Base de datos: PostgreSQL`);
 });
