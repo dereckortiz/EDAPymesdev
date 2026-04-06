@@ -888,7 +888,6 @@ function configurarCardsServicios() {
 }
 
 // Función para cargar productos destacados desde el backend (CORREGIDA)
-// Función para cargar productos destacados desde el backend (CORREGIDA)
 async function cargarProductosDestacados() {
     const contenedorDestacados = document.getElementById('productos-destacados-grid');
     if (!contenedorDestacados) return;
@@ -905,7 +904,6 @@ async function cargarProductosDestacados() {
         
         const productos = await response.json();
         productosGlobales = productos;
-        
         // Tomar los últimos 4 productos agregados (más recientes)
         const destacados = productos.slice(0, 4);
         
@@ -922,18 +920,9 @@ async function cargarProductosDestacados() {
         contenedorDestacados.innerHTML = '';
         
         destacados.forEach(producto => {
-            // 🔧 CORREGIDO: Obtener URL de imagen correctamente
             let imagenUrl = 'https://placehold.co/400x300/e2e8f0/475569?text=EDAPymes';
-            
             if (producto.imagenes && producto.imagenes.length > 0) {
-                const primeraImagen = producto.imagenes[0];
-                if (typeof primeraImagen === 'string') {
-                    imagenUrl = primeraImagen;
-                } else if (primeraImagen && primeraImagen.url) {
-                    imagenUrl = primeraImagen.url;
-                } else if (primeraImagen && primeraImagen.filename) {
-                    imagenUrl = `https://edapymesdev.onrender.com/uploads/${primeraImagen.filename}`;
-                }
+                imagenUrl = producto.imagenes[0];
             }
             
             const precioFormateado = typeof producto.precio === 'number' ? producto.precio.toFixed(2) : producto.precio;
@@ -951,7 +940,7 @@ async function cargarProductosDestacados() {
                     <span class="text-xs text-on-surface-variant">${escapeHtmlGlobal(producto.categoria || 'Tecnología')}</span>
                     <h4 class="text-lg font-bold text-on-surface mt-1 mb-4">${escapeHtmlGlobal(producto.nombre)}</h4>
                     <div class="flex items-center justify-between">
-                        <span class="text-xl font-bold text-primary">C$${precioFormateado}</span>
+                        <span class="text-xl font-bold text-primary">${precioFormateado.includes('C$') ? precioFormateado : 'C$' + precioFormateado}</span>
                         <button onclick="event.stopPropagation(); abrirModalProducto(${JSON.stringify(producto).replace(/"/g, '&quot;')})" class="bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1">
                             <span class="material-symbols-outlined text-sm">shopping_cart</span>
                             Cotizar
@@ -975,20 +964,13 @@ async function cargarProductosDestacados() {
 }
 
 // Función para abrir modal de producto
-// Función para abrir modal de producto (CORREGIDA)
 function abrirModalProducto(producto) {
     const modal = document.getElementById('productModal');
     if (!modal) return;
     
-    // 🔧 CORREGIDO: Obtener URLs de imágenes correctamente
     let imagenes = [];
     if (producto.imagenes && producto.imagenes.length > 0) {
-        imagenes = producto.imagenes.map(img => {
-            if (typeof img === 'string') return img;
-            if (img && img.url) return img.url;
-            if (img && img.filename) return `https://edapymesdev.onrender.com/uploads/${img.filename}`;
-            return 'https://placehold.co/800x1000/e2e8f0/475569?text=Sin+Imagen';
-        });
+        imagenes = producto.imagenes;
     } else {
         imagenes = ['https://placehold.co/800x1000/e2e8f0/475569?text=Sin+Imagen'];
     }
