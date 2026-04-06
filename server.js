@@ -1,5 +1,5 @@
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
+const { Pool } = require("pg");
 const multer = require("multer");
 const cors = require("cors");
 const path = require("path");
@@ -23,9 +23,9 @@ app.use(session({
     }
 }));
 
-// Configuracion CORS - Modificado para producción
+// Configuracion CORS
 const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL || 'https://edapymes.onrender.com', 'https://edapymes.onrender.com']
+    ? [process.env.FRONTEND_URL || 'https://edapymesdev.onrender.com']
     : ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500'];
 
 app.use(cors({
@@ -42,14 +42,12 @@ app.use(express.urlencoded({ extended: true }));
    ASEGURAR CARPETAS
 ================================ */
 const uploadsDir = path.join(__dirname, "uploads");
-const dbDir = path.join(__dirname, "db");
 const srcDir = path.join(__dirname, "src");
 const staticDir = path.join(__dirname, "static");
 const templatesDir = path.join(__dirname, "templates");
 const adminDir = path.join(templatesDir, "admin");
 
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
 if (!fs.existsSync(srcDir)) fs.mkdirSync(srcDir, { recursive: true });
 if (!fs.existsSync(staticDir)) fs.mkdirSync(staticDir, { recursive: true });
 if (!fs.existsSync(templatesDir)) fs.mkdirSync(templatesDir, { recursive: true });
@@ -125,113 +123,19 @@ const transporter = nodemailer.createTransport({
 });
 
 /* ===============================
-   SQLITE - MODIFICADO PARA RENDER
+   POSTGRESQL - CONEXION A SUPABASE
 ================================ */
-// Usar disco persistente en producción o carpeta local en desarrollo
-const dbPath = process.env.DB_PATH || path.join(dbDir, "edapymes.db");
-console.log(`📁 Base de datos en: ${dbPath}`);
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
-// Asegurar que el directorio existe para la BD
-const dbDirPath = path.dirname(dbPath);
-if (!fs.existsSync(dbDirPath)) {
-    fs.mkdirSync(dbDirPath, { recursive: true });
-}
-
-const db = new sqlite3.Database(dbPath);
-
-function setupUsersTable() {
-    db.run(`CREATE TABLE IF NOT EXISTS usuarios(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`, (err) => {
-        if (err) {
-            console.error("Error creando tabla usuarios:", err);
-        } else {
-            console.log("✅ Tabla usuarios verificada/creada");
-        }
-    });
-}
-
-function runMigrations() {
-    db.all("PRAGMA table_info(categorias)", (err, columns) => {
-        if (err) return;
-        const columnNames = columns.map(c => c.name);
-        if (!columnNames.includes('icono')) {
-            db.run("ALTER TABLE categorias ADD COLUMN icono TEXT DEFAULT 'category'");
-        }
-    });
-
-    db.all("PRAGMA table_info(productos)", (err, columns) => {
-        if (err) return;
-        const columnNames = columns.map(c => c.name);
-
-        if (!columnNames.includes('descripcion')) {
-            db.run("ALTER TABLE productos ADD COLUMN descripcion TEXT");
-        }
-        if (!columnNames.includes('especificaciones')) {
-            db.run("ALTER TABLE productos ADD COLUMN especificaciones TEXT");
-        }
-        if (!columnNames.includes('imagenes')) {
-            db.run("ALTER TABLE productos ADD COLUMN imagenes TEXT");
-        }
-        if (!columnNames.includes('created_at')) {
-            db.run("ALTER TABLE productos ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
-        }
-    });
-}
-
-function insertarCategoriasEjemplo() {
-    db.get("SELECT COUNT(*) as count FROM categorias", (err, row) => {
-        if (err) return;
-        if (row.count === 0) {
-            const categoriasEjemplo = [
-                { nombre: "Laptops", icono: "laptop" },
-                { nombre: "Computadoras", icono: "desktop_windows" },
-                { nombre: "Accesorios", icono: "mouse" },
-                { nombre: "Celulares", icono: "smartphone" },
-                { nombre: "Seguridad", icono: "security" },
-                { nombre: "Redes", icono: "router" },
-                { nombre: "Camaras", icono: "camera" },
-                { nombre: "Audio", icono: "headphones" }
-            ];
-
-            categoriasEjemplo.forEach(cat => {
-                db.run("INSERT INTO categorias (nombre, icono) VALUES (?, ?)", [cat.nombre, cat.icono]);
-            });
-            console.log("📂 Categorías de ejemplo insertadas");
-        }
-    });
-}
-
-db.serialize(() => {
-    setupUsersTable();
-
-    db.run(`CREATE TABLE IF NOT EXISTS categorias(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT UNIQUE NOT NULL,
-        icono TEXT DEFAULT 'category'
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS productos(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
-        precio REAL NOT NULL,
-        categoria TEXT,
-        descripcion TEXT,
-        especificaciones TEXT,
-        imagenes TEXT,
-        disponible INTEGER DEFAULT 1,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-
-    setTimeout(() => {
-        runMigrations();
-        setTimeout(() => {
-            insertarCategoriasEjemplo();
-        }, 100);
-    }, 100);
+pool.connect((err) => {
+    if (err) {
+        console.error('❌ Error conectando a PostgreSQL:', err.message);
+    } else {
+        console.log('✅ Conectado a PostgreSQL (Supabase)');
+    }
 });
 
 /* ===============================
@@ -270,42 +174,40 @@ const uploadMultiple = upload.array('imagenes', 6);
 /* ===============================
    API DE AUTENTICACION
 ================================ */
-app.post("/api/login", (req, res) => {
+app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
         return res.status(400).json({ error: "Usuario y contrasena requeridos" });
     }
 
-    db.get("SELECT * FROM usuarios WHERE username = ?", [username], (err, user) => {
-        if (err) {
-            return res.status(500).json({ error: "Error en el servidor" });
-        }
+    try {
+        const result = await pool.query("SELECT * FROM usuarios WHERE username = $1", [username]);
 
-        if (!user) {
+        if (result.rows.length === 0) {
             return res.status(401).json({ error: "Usuario o contrasena incorrectos" });
         }
 
-        bcrypt.compare(password, user.password, (err, result) => {
-            if (err) {
-                return res.status(500).json({ error: "Error en el servidor" });
-            }
+        const user = result.rows[0];
+        const validPassword = await bcrypt.compare(password, user.password);
 
-            if (result) {
-                req.session.isAuthenticated = true;
-                req.session.username = user.username;
-                req.session.userId = user.id;
+        if (!validPassword) {
+            return res.status(401).json({ error: "Usuario o contrasena incorrectos" });
+        }
 
-                res.json({
-                    success: true,
-                    message: "Login exitoso",
-                    redirect: "/admin.html"
-                });
-            } else {
-                res.status(401).json({ error: "Usuario o contrasena incorrectos" });
-            }
+        req.session.isAuthenticated = true;
+        req.session.username = user.username;
+        req.session.userId = user.id;
+
+        res.json({
+            success: true,
+            message: "Login exitoso",
+            redirect: "/admin.html"
         });
-    });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
 });
 
 app.post("/api/logout", (req, res) => {
@@ -341,18 +243,14 @@ app.get("/api/check-session", (req, res) => {
 });
 
 /* ===============================
-   API DE PRODUCTOS - MODIFICADA PARA RENDER
+   API DE PRODUCTOS
 ================================ */
-app.get("/api/productos", (req, res) => {
-    db.all("SELECT * FROM productos ORDER BY id DESC", (err, rows) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-
-        // Determinar la URL base para las imágenes
+app.get("/api/productos", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM productos ORDER BY id DESC");
         const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
 
-        const productos = rows.map(p => {
+        const productos = result.rows.map(p => {
             let imagenesArray = [];
             if (p.imagenes) {
                 try {
@@ -383,11 +281,13 @@ app.get("/api/productos", (req, res) => {
             };
         });
         res.json(productos);
-    });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 app.post("/api/productos", requireAuth, (req, res) => {
-    uploadMultiple(req, res, (err) => {
+    uploadMultiple(req, res, async (err) => {
         if (err) {
             return res.status(400).json({ error: err.message });
         }
@@ -420,76 +320,89 @@ app.post("/api/productos", requireAuth, (req, res) => {
             }
         }
 
-        db.run(
-            `INSERT INTO productos(nombre, precio, categoria, descripcion, especificaciones, imagenes, disponible, created_at) 
-             VALUES(?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
-            [nombre, parseFloat(precio), categoria || null, descripcion || null, especificacionesJSON, imagenesJSON, 1],
-            function (err) {
-                if (err) {
-                    return res.status(500).json({ error: err.message });
-                }
-                res.json({
-                    id: this.lastID,
-                    message: "Producto creado exitosamente",
-                    imagenesCount: req.files ? req.files.length : 0
-                });
-            }
-        );
+        try {
+            const result = await pool.query(
+                `INSERT INTO productos(nombre, precio, categoria, descripcion, especificaciones, imagenes, disponible, created_at) 
+                 VALUES($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING id`,
+                [nombre, parseFloat(precio), categoria || null, descripcion || null, especificacionesJSON, imagenesJSON, 1]
+            );
+
+            res.json({
+                id: result.rows[0].id,
+                message: "Producto creado exitosamente",
+                imagenesCount: req.files ? req.files.length : 0
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     });
 });
 
-app.delete("/api/productos/:id", requireAuth, (req, res) => {
+app.delete("/api/productos/:id", requireAuth, async (req, res) => {
     const { id } = req.params;
-    db.get("SELECT imagenes FROM productos WHERE id = ?", [id], (err, row) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (row && row.imagenes) {
+
+    try {
+        const result = await pool.query("SELECT imagenes FROM productos WHERE id = $1", [id]);
+
+        if (result.rows.length > 0 && result.rows[0].imagenes) {
             try {
-                const imagenes = JSON.parse(row.imagenes);
+                const imagenes = JSON.parse(result.rows[0].imagenes);
                 imagenes.forEach(img => {
                     const imagePath = path.join(uploadsDir, img.filename);
                     fs.unlink(imagePath, (err) => { });
                 });
             } catch (e) { }
         }
-        db.run("DELETE FROM productos WHERE id = ?", [id], function (err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ message: "Producto eliminado", changes: this.changes });
-        });
-    });
+
+        await pool.query("DELETE FROM productos WHERE id = $1", [id]);
+        res.json({ message: "Producto eliminado", changes: 1 });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 /* ===============================
    API DE CATEGORIAS
 ================================ */
-app.get("/api/categorias", (req, res) => {
-    db.all("SELECT * FROM categorias ORDER BY nombre", (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
-    });
+app.get("/api/categorias", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM categorias ORDER BY nombre");
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
-app.post("/api/categorias", requireAuth, (req, res) => {
+app.post("/api/categorias", requireAuth, async (req, res) => {
     const { nombre, icono } = req.body;
     if (!nombre || nombre.trim() === "") {
         return res.status(400).json({ error: "Nombre de categoria requerido" });
     }
     const iconoFinal = icono || "category";
-    db.run("INSERT INTO categorias(nombre, icono) VALUES(?, ?)", [nombre.trim(), iconoFinal], function (err) {
-        if (err) {
-            if (err.message.includes("UNIQUE")) {
-                return res.status(400).json({ error: "La categoria ya existe" });
-            }
-            return res.status(500).json({ error: err.message });
+
+    try {
+        const result = await pool.query(
+            "INSERT INTO categorias(nombre, icono) VALUES($1, $2) ON CONFLICT (nombre) DO NOTHING RETURNING id",
+            [nombre.trim(), iconoFinal]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ error: "La categoria ya existe" });
         }
-        res.json({ id: this.lastID, nombre: nombre.trim(), icono: iconoFinal, message: "Categoria creada" });
-    });
+
+        res.json({ id: result.rows[0].id, nombre: nombre.trim(), icono: iconoFinal, message: "Categoria creada" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
-app.delete("/api/categorias/:id", requireAuth, (req, res) => {
-    db.run("DELETE FROM categorias WHERE id = ?", [req.params.id], function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: "Categoria eliminada", changes: this.changes });
-    });
+app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
+    try {
+        const result = await pool.query("DELETE FROM categorias WHERE id = $1", [req.params.id]);
+        res.json({ message: "Categoria eliminada", changes: result.rowCount });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 /* ===============================
@@ -668,38 +581,6 @@ app.get("/api/health", (req, res) => {
 });
 
 /* ===============================
-   ENDPOINT TEMPORAL PARA CREAR ADMIN (ELIMINAR DESPUES DE USAR)
-================================ */
-app.get("/api/setup-admin", async (req, res) => {
-    // Solo funciona en desarrollo o si se activa manualmente
-    if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_SETUP) {
-        return res.status(404).json({ error: "Endpoint no disponible" });
-    }
-
-    const username = 'admin';
-    const password = 'Admin123!';
-
-    try {
-        const hash = await bcrypt.hash(password, 10);
-        db.run(`INSERT OR REPLACE INTO usuarios (username, password, created_at) 
-                VALUES (?, ?, datetime('now'))`,
-            [username, hash], function (err) {
-                if (err) {
-                    return res.json({ error: err.message });
-                }
-                res.json({
-                    message: '✅ Usuario administrador creado exitosamente',
-                    usuario: username,
-                    contraseña: password,
-                    advertencia: '¡Cambia esta contraseña después del primer inicio de sesión!'
-                });
-            });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-/* ===============================
    MANEJO DE ERRORES GLOBAL
 ================================ */
 app.use((err, req, res, next) => {
@@ -708,12 +589,12 @@ app.use((err, req, res, next) => {
 });
 
 /* ===============================
-   INICIAR SERVIDOR - MODIFICADO PARA RENDER
+   INICIAR SERVIDOR
 ================================ */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
     console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
     console.log(`📁 Directorio de uploads: ${uploadsDir}`);
-    console.log(`💾 Base de datos: ${dbPath}`);
+    console.log(`💾 Base de datos: PostgreSQL en Supabase`);
 });
