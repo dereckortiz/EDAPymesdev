@@ -23,9 +23,13 @@ app.use(session({
     }
 }));
 
-// Configuracion CORS
+// Configuracion CORS - Modificado para producción
+const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? [process.env.FRONTEND_URL || 'https://edapymes.onrender.com', 'https://edapymes.onrender.com']
+    : ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500'];
+
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500'],
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -121,9 +125,18 @@ const transporter = nodemailer.createTransport({
 });
 
 /* ===============================
-   SQLITE - SOLO CREAR TABLAS SIN USUARIO DEFAULT
+   SQLITE - MODIFICADO PARA RENDER
 ================================ */
-const dbPath = path.join(dbDir, "edapymes.db");
+// Usar disco persistente en producción o carpeta local en desarrollo
+const dbPath = process.env.DB_PATH || path.join(dbDir, "edapymes.db");
+console.log(`📁 Base de datos en: ${dbPath}`);
+
+// Asegurar que el directorio existe para la BD
+const dbDirPath = path.dirname(dbPath);
+if (!fs.existsSync(dbDirPath)) {
+    fs.mkdirSync(dbDirPath, { recursive: true });
+}
+
 const db = new sqlite3.Database(dbPath);
 
 function setupUsersTable() {
@@ -135,6 +148,8 @@ function setupUsersTable() {
     )`, (err) => {
         if (err) {
             console.error("Error creando tabla usuarios:", err);
+        } else {
+            console.log("✅ Tabla usuarios verificada/creada");
         }
     });
 }
@@ -185,6 +200,7 @@ function insertarCategoriasEjemplo() {
             categoriasEjemplo.forEach(cat => {
                 db.run("INSERT INTO categorias (nombre, icono) VALUES (?, ?)", [cat.nombre, cat.icono]);
             });
+            console.log("📂 Categorías de ejemplo insertadas");
         }
     });
 }
@@ -325,13 +341,16 @@ app.get("/api/check-session", (req, res) => {
 });
 
 /* ===============================
-   API DE PRODUCTOS
+   API DE PRODUCTOS - MODIFICADA PARA RENDER
 ================================ */
 app.get("/api/productos", (req, res) => {
     db.all("SELECT * FROM productos ORDER BY id DESC", (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
+
+        // Determinar la URL base para las imágenes
+        const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
 
         const productos = rows.map(p => {
             let imagenesArray = [];
@@ -357,7 +376,7 @@ app.get("/api/productos", (req, res) => {
                 categoria: p.categoria,
                 descripcion: p.descripcion,
                 especificaciones: especificacionesArray,
-                imagenes: imagenesArray.map(img => `http://localhost:3000/uploads/${img.filename}`),
+                imagenes: imagenesArray.map(img => `${baseUrl}/uploads/${img.filename}`),
                 imagenes_raw: imagenesArray,
                 disponible: p.disponible === 1,
                 created_at: p.created_at
@@ -649,16 +668,52 @@ app.get("/api/health", (req, res) => {
 });
 
 /* ===============================
+   ENDPOINT TEMPORAL PARA CREAR ADMIN (ELIMINAR DESPUES DE USAR)
+================================ */
+app.get("/api/setup-admin", async (req, res) => {
+    // Solo funciona en desarrollo o si se activa manualmente
+    if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_SETUP) {
+        return res.status(404).json({ error: "Endpoint no disponible" });
+    }
+
+    const username = 'admin';
+    const password = 'Admin123!';
+
+    try {
+        const hash = await bcrypt.hash(password, 10);
+        db.run(`INSERT OR REPLACE INTO usuarios (username, password, created_at) 
+                VALUES (?, ?, datetime('now'))`,
+            [username, hash], function (err) {
+                if (err) {
+                    return res.json({ error: err.message });
+                }
+                res.json({
+                    message: '✅ Usuario administrador creado exitosamente',
+                    usuario: username,
+                    contraseña: password,
+                    advertencia: '¡Cambia esta contraseña después del primer inicio de sesión!'
+                });
+            });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/* ===============================
    MANEJO DE ERRORES GLOBAL
 ================================ */
 app.use((err, req, res, next) => {
+    console.error('Error:', err.message);
     res.status(500).json({ error: "Error interno del servidor" });
 });
 
 /* ===============================
-   INICIAR SERVIDOR
+   INICIAR SERVIDOR - MODIFICADO PARA RENDER
 ================================ */
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor en puerto ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+    console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`📁 Directorio de uploads: ${uploadsDir}`);
+    console.log(`💾 Base de datos: ${dbPath}`);
 });
