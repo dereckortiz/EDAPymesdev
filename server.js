@@ -12,7 +12,7 @@ const pgSession = require('connect-pg-simple')(session);
 const app = express();
 
 /* ===============================
-   POSTGRESQL - CONEXION (PRIMERO)
+   POSTGRESQL - CONEXION
 ================================ */
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -26,36 +26,22 @@ pool.connect((err) => {
         console.log('✅ Conectado a PostgreSQL');
     }
 });
-/* ===============================
-   CONFIGURACION DE SESIONES CON POSTGRESQL - CORREGIDA PARA RENDER
-================================ */
-app.set('trust proxy', 1); // IMPORTANTE para Render
-
-app.use(session({
-    store: new pgSession({
-        pool: pool,
-        tableName: 'session',
-        createTableIfMissing: true
-    }),
-    secret: process.env.SESSION_SECRET || 'edapymes_super_secret_key_2024_secure_crypto',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: true,        // Siempre true en producción (HTTPS)
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'lax',     // Cambiado de 'none' a 'lax' para funcionar mejor
-        // QUITA la línea domain - déjala que se establezca automáticamente
-    }
-}));
 
 /* ===============================
-   CONFIGURACION CORS - CORREGIDA
+   MIDDLEWARE ESENCIALES - DEBEN IR PRIMERO
 ================================ */
-// Detectar el origen dinámicamente
+// IMPORTANTE: express.json() debe ir ANTES que cualquier ruta
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Configurar trust proxy para Render
+app.set('trust proxy', 1);
+
+/* ===============================
+   CONFIGURACION CORS
+================================ */
 app.use(cors({
     origin: function (origin, callback) {
-        // Permitir solicitudes sin origen (como Postman, o desde el mismo servidor)
         if (!origin) return callback(null, true);
 
         const allowedOrigins = [
@@ -65,7 +51,7 @@ app.use(cors({
             'http://localhost:3000'
         ];
 
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
             console.log('Origen bloqueado por CORS:', origin);
@@ -77,11 +63,41 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
 
-// Middleware para asegurar que las cookies se envíen correctamente
+// Middleware adicional para CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', 'true');
     next();
 });
+
+// Middleware para logging de peticiones (útil para debug)
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    if (req.body && Object.keys(req.body).length > 0) {
+        console.log('Body:', req.body);
+    }
+    next();
+});
+
+/* ===============================
+   CONFIGURACION DE SESIONES CON POSTGRESQL
+================================ */
+app.use(session({
+    store: new pgSession({
+        pool: pool,
+        tableName: 'session',
+        createTableIfMissing: true
+    }),
+    secret: process.env.SESSION_SECRET || 'edapymes_super_secret_key_2024_secure_crypto',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: true,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        sameSite: 'lax'
+    }
+}));
+
 /* ===============================
    ASEGURAR CARPETAS
 ================================ */
@@ -204,41 +220,62 @@ const upload = multer({
 const uploadMultiple = upload.array('imagenes', 6);
 
 /* ===============================
-   API DE AUTENTICACION
+   API DE AUTENTICACION - VERSION CORREGIDA
 ================================ */
 app.post("/api/login", async (req, res) => {
+    console.log("=== LOGIN REQUEST RECIBIDO ===");
+    console.log("Body completo:", req.body);
+
     const { username, password } = req.body;
 
     if (!username || !password) {
+        console.log("ERROR: Faltan credenciales");
         return res.status(400).json({ error: "Usuario y contrasena requeridos" });
     }
 
+    console.log(`Intentando login para usuario: ${username}`);
+
     try {
         const result = await pool.query("SELECT * FROM usuarios WHERE username = $1", [username]);
+        console.log(`Usuario encontrado: ${result.rows.length > 0}`);
 
         if (result.rows.length === 0) {
             return res.status(401).json({ error: "Usuario o contrasena incorrectos" });
         }
 
         const user = result.rows[0];
+        console.log("Verificando contraseña...");
+
         const validPassword = await bcrypt.compare(password, user.password);
+        console.log(`Contraseña válida: ${validPassword}`);
 
         if (!validPassword) {
             return res.status(401).json({ error: "Usuario o contrasena incorrectos" });
         }
 
+        // Establecer sesión
         req.session.isAuthenticated = true;
         req.session.username = user.username;
         req.session.userId = user.id;
 
-        res.json({
-            success: true,
-            message: "Login exitoso",
-            redirect: "/admin.html"
+        // Guardar sesión explícitamente
+        req.session.save((err) => {
+            if (err) {
+                console.error("Error guardando sesión:", err);
+                return res.status(500).json({ error: "Error al guardar sesión" });
+            }
+
+            console.log("✅ Login exitoso - Sesión guardada");
+            res.json({
+                success: true,
+                message: "Login exitoso",
+                redirect: "/admin.html"
+            });
         });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error en el servidor" });
+        console.error("ERROR en login:", error);
+        res.status(500).json({ error: "Error en el servidor: " + error.message });
     }
 });
 
@@ -252,7 +289,9 @@ app.post("/api/logout", (req, res) => {
 });
 
 app.get("/api/verify", (req, res) => {
-    console.log('Verificando sesión:', req.sessionID, 'Autenticado:', req.session?.isAuthenticated);
+    console.log('Verificando sesión - SessionID:', req.sessionID);
+    console.log('Session data:', req.session);
+
     if (req.session && req.session.isAuthenticated) {
         res.json({
             authenticated: true,
@@ -273,6 +312,47 @@ app.get("/api/check-session", (req, res) => {
     } else {
         res.json({ authenticated: false });
     }
+});
+
+// Endpoint de diagnóstico para verificar usuario
+app.get("/api/diagnostico-usuario", async (req, res) => {
+    try {
+        const username = 'edapymes_devCatalog';
+        const password = 'EdaPymesdev1472';
+
+        const result = await pool.query("SELECT * FROM usuarios WHERE username = $1", [username]);
+
+        if (result.rows.length === 0) {
+            return res.json({ error: "Usuario no encontrado" });
+        }
+
+        const user = result.rows[0];
+        const isValid = await bcrypt.compare(password, user.password);
+
+        res.json({
+            usuario_existe: true,
+            username: user.username,
+            hash_en_bd: user.password.substring(0, 40) + "...",
+            password_probada: password,
+            password_valida: isValid,
+            mensaje: isValid ? "✅ Login funcionaría" : "❌ La contraseña no coincide"
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Endpoint para debug de sesión
+app.get("/api/debug-session", (req, res) => {
+    res.json({
+        sessionID: req.sessionID,
+        isAuthenticated: req.session?.isAuthenticated || false,
+        sessionData: req.session ? {
+            username: req.session.username,
+            userId: req.session.userId
+        } : null,
+        cookie: req.headers.cookie || 'no cookie'
+    });
 });
 
 /* ===============================
@@ -597,31 +677,30 @@ app.post("/api/enviar-correo", async (req, res) => {
     }
 });
 
-// Endpoint para debug de sesión (solo desarrollo)
-app.get("/api/debug-session", (req, res) => {
-    res.json({
-        sessionID: req.sessionID,
-        isAuthenticated: req.session?.isAuthenticated || false,
-        sessionData: req.session ? {
-            username: req.session.username,
-            userId: req.session.userId
-        } : null,
-        cookie: req.headers.cookie || 'no cookie'
-    });
-});
 /* ===============================
-   ENDPOINT DE PRUEBA
+   ENDPOINTS DE PRUEBA Y DIAGNOSTICO
 ================================ */
 app.get("/api/health", (req, res) => {
     res.json({ status: "OK", timestamp: new Date().toISOString() });
+});
+
+// Endpoint de prueba para verificar que el body se recibe correctamente
+app.post("/api/test-body", (req, res) => {
+    console.log("Test body recibido:", req.body);
+    res.json({
+        received: true,
+        body: req.body,
+        headers: req.headers['content-type']
+    });
 });
 
 /* ===============================
    MANEJO DE ERRORES GLOBAL
 ================================ */
 app.use((err, req, res, next) => {
-    console.error('Error:', err.message);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error('Error global:', err.message);
+    console.error('Stack:', err.stack);
+    res.status(500).json({ error: "Error interno del servidor: " + err.message });
 });
 
 /* ===============================
