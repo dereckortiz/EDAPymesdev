@@ -28,7 +28,7 @@ pool.connect((err) => {
 });
 
 /* ===============================
-   CONFIGURACION DE SESIONES CON POSTGRESQL
+   CONFIGURACION DE SESIONES CON POSTGRESQL - CORREGIDA PARA RENDER
 ================================ */
 app.set('trust proxy', 1); // IMPORTANTE para Render
 
@@ -42,11 +42,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // true en producción
+        secure: true,        // Siempre true en producción (HTTPS)
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'lax',
-        domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
+        sameSite: 'none',    // Cambiado de 'lax' a 'none' para cross-origin
+        domain: '.onrender.com'  // Dominio específico para Render
     }
 }));
 
@@ -468,7 +468,7 @@ app.post("/api/enviar-correo", async (req, res) => {
                         <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnologia con Calidad y Calidez</p>
                     </td>
                 </tr>
-            </tr>
+            </table>
         </div>
     `;
 
