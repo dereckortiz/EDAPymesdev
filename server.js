@@ -103,6 +103,7 @@ app.get("/admin-login.html", (req, res) => {
     res.sendFile(path.join(adminDir, "login.html"));
 });
 
+// ✅ RUTAS CORREGIDAS PARA ADMIN
 app.get("/admin.html", requireAuth, (req, res) => {
     res.sendFile(path.join(adminDir, "admin.html"));
 });
@@ -199,6 +200,7 @@ app.post("/api/login", async (req, res) => {
         req.session.username = user.username;
         req.session.userId = user.id;
 
+        // ✅ REDIRECT CORREGIDO
         res.json({
             success: true,
             message: "Login exitoso",
