@@ -6,24 +6,33 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-async function checkAdmin() {
-    const result = await pool.query("SELECT * FROM usuarios WHERE username = 'admin'");
+async function actualizarContraseña() {
+    try {
+        const nuevoPassword = 'EdaPymes$5%12@!7857';
+        const hash = await bcrypt.hash(nuevoPassword, 10);
 
-    if (result.rows.length === 0) {
-        console.log('❌ Usuario admin NO existe. Creándolo...');
-        const hash = await bcrypt.hash('Admin123!', 10);
-        await pool.query(
-            "INSERT INTO usuarios (username, password) VALUES ($1, $2)",
-            ['admin', hash]
+        // Actualizar el usuario existente
+        const result = await pool.query(
+            "UPDATE usuarios SET password = $1 WHERE username = $2 RETURNING id, username",
+            [hash, 'edapymes_devCatalog']
         );
-        console.log('✅ Usuario admin creado');
-    } else {
-        console.log('✅ Usuario admin existe');
-        console.log('   Usuario:', result.rows[0].username);
-        console.log('   Password hash:', result.rows[0].password.substring(0, 20) + '...');
-    }
 
-    await pool.end();
+        if (result.rows.length > 0) {
+            console.log(`✅ Contraseña actualizada para: ${result.rows[0].username}`);
+            console.log(`   Nueva contraseña: ${nuevoPassword}`);
+        } else {
+            console.log('❌ Usuario no encontrado');
+        }
+
+        // Verificar que funcionó
+        const verify = await pool.query("SELECT username FROM usuarios WHERE username = 'edapymes_devCatalog'");
+        console.log(`\n📋 Usuario listo para login: ${verify.rows[0].username}`);
+
+    } catch (error) {
+        console.error('Error:', error.message);
+    } finally {
+        await pool.end();
+    }
 }
 
-checkAdmin();
+actualizarContraseña();

@@ -30,6 +30,8 @@ pool.connect((err) => {
 /* ===============================
    CONFIGURACION DE SESIONES CON POSTGRESQL
 ================================ */
+app.set('trust proxy', 1); // IMPORTANTE para Render
+
 app.use(session({
     store: new pgSession({
         pool: pool,
@@ -40,10 +42,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production', // true en producción
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'lax'
+        sameSite: 'lax',
+        domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
     }
 }));
 
