@@ -1,6 +1,6 @@
 console.log("🔥 admin.js VERSIÓN ACTUALIZADA - con campo 'imagenes'");
 
-const API = "http://localhost:3000/api";
+const API = "https://edapymesdev.onrender.com/api";
 
 let currentTab = 'productos';
 let imagenesSeleccionadas = [];

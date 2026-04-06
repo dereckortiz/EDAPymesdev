@@ -684,7 +684,7 @@ async function enviarCorreo(e) {
     submitBtn.disabled = true;
     
     try {
-        const response = await fetch('http://localhost:3000/api/enviar-correo', {
+        const response = await fetch('https://edapymesdev.onrender.com/api/enviar-correo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, email, servicio, mensaje })
@@ -899,7 +899,7 @@ async function cargarProductosDestacados() {
     `;
     
     try {
-        const response = await fetch('http://localhost:3000/api/productos');
+        const response = await fetch('https://edapymesdev.onrender.com/api/productos');
         if (!response.ok) throw new Error('Error al cargar productos');
         
         const productos = await response.json();
@@ -957,7 +957,7 @@ async function cargarProductosDestacados() {
             <div class="col-span-full text-center py-12 text-red-500">
                 <span class="material-symbols-outlined text-5xl">error</span>
                 <p class="mt-2">Error al cargar productos destacados</p>
-                <p class="text-sm text-gray-400">Asegúrate que el servidor backend esté corriendo en http://localhost:3000</p>
+                <p class="text-sm text-gray-400">Asegúrate que el servidor backend esté corriendo en https://edapymesdev.onrender.com</p>
             </div>
         `;
     }
