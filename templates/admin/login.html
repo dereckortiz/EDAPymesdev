@@ -88,51 +88,45 @@
     </div>
 
     <script>
-        const API = "https://edapymesdev.onrender.com/api";
+    const API = "https://edapymesdev.onrender.com/api";
+    
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const btnLogin = document.getElementById('btnLogin');
+        const errorDiv = document.getElementById('errorMessage');
+        
+        btnLogin.disabled = true;
+        btnLogin.innerHTML = '<div class="loading-spinner"></div> Verificando...';
+        
+        try {
+            const response = await fetch(`${API}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ username, password })
+            });
             
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const btnLogin = document.getElementById('btnLogin');
-            const errorDiv = document.getElementById('errorMessage');
+            const data = await response.json();
             
-            // Mostrar loading
-            btnLogin.disabled = true;
-            btnLogin.innerHTML = '<div class="loading-spinner"></div> Verificando...';
-            
-            try {
-                const response = await fetch(`${API}/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ username, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    // Login exitoso - redirección directa
-                    errorDiv.classList.add('hidden');
-                    // Usar redirección absoluta para evitar problemas
-                    window.location.replace('/admin.html');
-                } else {
-                    errorDiv.textContent = data.error || 'Usuario o contraseña incorrectos';
-                    errorDiv.classList.remove('hidden');
-                    btnLogin.disabled = false;
-                    btnLogin.innerHTML = '<span class="material-symbols-outlined">login</span> Iniciar Sesión';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                errorDiv.textContent = 'Error de conexión con el servidor';
+            if (response.ok && data.success) {
+                // Redirección forzada
+                window.location.href = 'https://edapymesdev.onrender.com/admin.html';
+            } else {
+                errorDiv.textContent = data.error || 'Credenciales incorrectas';
                 errorDiv.classList.remove('hidden');
                 btnLogin.disabled = false;
                 btnLogin.innerHTML = '<span class="material-symbols-outlined">login</span> Iniciar Sesión';
             }
-        });
-    </script>
+        } catch (error) {
+            errorDiv.textContent = 'Error de conexión: ' + error.message;
+            errorDiv.classList.remove('hidden');
+            btnLogin.disabled = false;
+            btnLogin.innerHTML = '<span class="material-symbols-outlined">login</span> Iniciar Sesión';
+        }
+    });
+</script>
 </body>
 </html>
