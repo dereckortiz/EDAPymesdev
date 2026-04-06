@@ -26,7 +26,6 @@ pool.connect((err) => {
         console.log('✅ Conectado a PostgreSQL');
     }
 });
-
 /* ===============================
    CONFIGURACION DE SESIONES CON POSTGRESQL - CORREGIDA PARA RENDER
 ================================ */
@@ -45,28 +44,44 @@ app.use(session({
         secure: true,        // Siempre true en producción (HTTPS)
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'none',    // Cambiado de 'lax' a 'none' para cross-origin
-        domain: '.onrender.com'  // Dominio específico para Render
+        sameSite: 'lax',     // Cambiado de 'none' a 'lax' para funcionar mejor
+        // QUITA la línea domain - déjala que se establezca automáticamente
     }
 }));
 
 /* ===============================
-   CONFIGURACION CORS
+   CONFIGURACION CORS - CORREGIDA
 ================================ */
-const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL || 'https://edapymesdev.onrender.com']
-    : ['https://edapymesdev.onrender.com', 'http://127.0.0.1:5500', 'http://localhost:5500'];
-
+// Detectar el origen dinámicamente
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+        // Permitir solicitudes sin origen (como Postman, o desde el mismo servidor)
+        if (!origin) return callback(null, true);
+
+        const allowedOrigins = [
+            'https://edapymesdev.onrender.com',
+            'http://localhost:5500',
+            'http://127.0.0.1:5500',
+            'http://localhost:3000'
+        ];
+
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+            callback(null, true);
+        } else {
+            console.log('Origen bloqueado por CORS:', origin);
+            callback(new Error('No permitido por CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+// Middleware para asegurar que las cookies se envíen correctamente
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 /* ===============================
    ASEGURAR CARPETAS
 ================================ */
@@ -237,6 +252,7 @@ app.post("/api/logout", (req, res) => {
 });
 
 app.get("/api/verify", (req, res) => {
+    console.log('Verificando sesión:', req.sessionID, 'Autenticado:', req.session?.isAuthenticated);
     if (req.session && req.session.isAuthenticated) {
         res.json({
             authenticated: true,
@@ -581,6 +597,18 @@ app.post("/api/enviar-correo", async (req, res) => {
     }
 });
 
+// Endpoint para debug de sesión (solo desarrollo)
+app.get("/api/debug-session", (req, res) => {
+    res.json({
+        sessionID: req.sessionID,
+        isAuthenticated: req.session?.isAuthenticated || false,
+        sessionData: req.session ? {
+            username: req.session.username,
+            userId: req.session.userId
+        } : null,
+        cookie: req.headers.cookie || 'no cookie'
+    });
+});
 /* ===============================
    ENDPOINT DE PRUEBA
 ================================ */

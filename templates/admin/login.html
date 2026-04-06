@@ -87,8 +87,30 @@
         </div>
     </div>
 
-    <script>
+<script>
         const API = "https://edapymesdev.onrender.com/api";
+        
+        // Verificar si ya hay una sesión activa al cargar la página
+        async function verificarSesionExistente() {
+            try {
+                const response = await fetch(`${API}/check-session`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                if (data.authenticated) {
+                    // Ya hay sesión, redirigir directamente
+                    window.location.replace('https://edapymesdev.onrender.com/admin.html');
+                }
+            } catch (error) {
+                console.log('No hay sesión activa');
+            }
+        }
+        
+        // Verificar al cargar
+        verificarSesionExistente();
         
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -100,19 +122,31 @@
             
             btnLogin.disabled = true;
             btnLogin.innerHTML = '<div class="loading-spinner"></div> Verificando...';
+            errorDiv.classList.add('hidden');
             
             try {
+                console.log('Intentando login...');
+                
                 const response = await fetch(`${API}/login`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     credentials: 'include',
                     body: JSON.stringify({ username, password })
                 });
                 
+                console.log('Status response:', response.status);
                 const data = await response.json();
+                console.log('Data response:', data);
                 
                 if (response.ok && data.success) {
-                    window.location.replace('https://edapymesdev.onrender.com/admin.html');
+                    console.log('Login exitoso, redirigiendo...');
+                    // Pequeña pausa para asegurar que la cookie se establezca
+                    setTimeout(() => {
+                        window.location.replace('https://edapymesdev.onrender.com/admin.html');
+                    }, 100);
                 } else {
                     errorDiv.textContent = data.error || 'Credenciales incorrectas';
                     errorDiv.classList.remove('hidden');
@@ -120,12 +154,22 @@
                     btnLogin.innerHTML = '<span class="material-symbols-outlined">login</span> Iniciar Sesión';
                 }
             } catch (error) {
+                console.error('Error detallado:', error);
                 errorDiv.textContent = 'Error de conexión: ' + error.message;
                 errorDiv.classList.remove('hidden');
                 btnLogin.disabled = false;
                 btnLogin.innerHTML = '<span class="material-symbols-outlined">login</span> Iniciar Sesión';
             }
         });
+        
+        // Agregar evento para probar la sesión manualmente (opcional)
+        window.testSession = async function() {
+            const response = await fetch(`${API}/check-session`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            console.log('Estado de sesión:', data);
+        };
     </script>
 </body>
 </html>
