@@ -10,6 +10,20 @@ const session = require("express-session");
 const pgSession = require('connect-pg-simple')(session);
 const ImageKit = require('imagekit');
 
+// FORZAR IPv4 - SOLUCIÓN PARA EL ERROR ENETUNREACH
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
+// También forzar para el socket
+const net = require('net');
+const originalCreateConnection = net.createConnection;
+net.createConnection = function (...args) {
+    if (args[0] && typeof args[0] === 'object' && args[0].host && args[0].host.includes('gmail')) {
+        args[0].family = 4;
+    }
+    return originalCreateConnection.apply(this, args);
+};
+
 const app = express();
 
 /* ===============================
@@ -54,6 +68,7 @@ app.use(cors({
         if (!origin) return callback(null, true);
         const allowedOrigins = [
             'https://edapymesdev.onrender.com',
+            'https://edapymes.onrender.com',
             'http://localhost:5500',
             'http://127.0.0.1:5500',
             'http://localhost:3000'
@@ -181,20 +196,36 @@ app.get("/templates/admin/admin.html", requireAuth, (req, res) => {
 });
 
 /* ===============================
-   CONFIGURACION DE NODEMAILER - CORREGIDA
+   CONFIGURACION DE NODEMAILER - CORREGIDA CON IPv4
 ================================ */
-// Obtener credenciales de variables de entorno
 const emailUser = process.env.EMAIL_USER || 'derecksevi@gmail.com';
 const emailPass = process.env.EMAIL_PASS;
 
-console.log('📧 Configurando nodemailer con:', {
+console.log('📧 Configurando nodemailer con IPv4 forzado:', {
     user: emailUser,
     hasPass: !!emailPass,
     passLength: emailPass ? emailPass.length : 0
 });
 
-// Configuración para Gmail con puerto 587 (recomendado)
-const transporter = nodemailer.createTransport({
+// Configuración 1: Gmail con puerto 465 (SSL) - más estable
+const transporter1 = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: emailUser,
+        pass: emailPass
+    },
+    tls: {
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000
+});
+
+// Configuración 2: Gmail con puerto 587 (TLS) - alternativa
+const transporter2 = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
@@ -211,18 +242,40 @@ const transporter = nodemailer.createTransport({
     socketTimeout: 30000
 });
 
-// Verificar conexión al iniciar
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('❌ Error en nodemailer:', error.message);
-        console.error('Detalles del error:', error);
-    } else {
-        console.log('✅ Servidor de correo listo y verificado');
-        console.log(`📧 Enviando correos como: ${emailUser}`);
-    }
-});
+// Usar el primer transporter, fallback al segundo
+let transporter = transporter1;
+let transporterActive = 'transporter1';
 
-// Función auxiliar para escapar HTML (versión para Node.js, sin document)
+// Verificar conexión al iniciar
+async function testTransporter() {
+    try {
+        await transporter1.verify();
+        console.log('✅ Servidor de correo listo (puerto 465 SSL)');
+        console.log(`📧 Enviando correos como: ${emailUser}`);
+        return true;
+    } catch (error1) {
+        console.log('⚠️ Puerto 465 falló:', error1.message);
+        console.log('🔄 Intentando con puerto 587...');
+        try {
+            await transporter2.verify();
+            transporter = transporter2;
+            transporterActive = 'transporter2';
+            console.log('✅ Servidor de correo listo (puerto 587 TLS)');
+            console.log(`📧 Enviando correos como: ${emailUser}`);
+            return true;
+        } catch (error2) {
+            console.error('❌ Ambos transportes fallaron');
+            console.error('Error 465:', error1.message);
+            console.error('Error 587:', error2.message);
+            return false;
+        }
+    }
+}
+
+// Ejecutar prueba
+testTransporter();
+
+// Función auxiliar para escapar HTML
 function escapeHtml(text) {
     if (!text) return '';
     return text
@@ -550,7 +603,7 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   API DE ENVIO DE CORREOS - CORREGIDA
+   API DE ENVIO DE CORREOS - CORREGIDA CON FALLBACK
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -562,7 +615,6 @@ app.post("/api/enviar-correo", async (req, res) => {
         return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
-    // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         console.log('❌ Email inválido:', email);
@@ -575,7 +627,6 @@ app.post("/api/enviar-correo", async (req, res) => {
         timeStyle: 'short'
     });
 
-    // Buscar logo
     const posiblesLogos = [
         path.join(__dirname, "src", "image", "TU-LOGO.png"),
         path.join(__dirname, "src", "image", "redimension.png"),
@@ -592,17 +643,15 @@ app.post("/api/enviar-correo", async (req, res) => {
         }
     }
 
-    const logoCid = 'edapymes-logo';
     const attachments = [];
     if (logoPath) {
         attachments.push({
             filename: 'edapymes-logo.png',
             path: logoPath,
-            cid: logoCid
+            cid: 'edapymes-logo'
         });
     }
 
-    // Correo para el administrador
     const adminMailOptions = {
         from: `"EDAPymes Contacto" <${emailUser}>`,
         to: emailUser,
@@ -611,57 +660,23 @@ app.post("/api/enviar-correo", async (req, res) => {
         html: `
             <!DOCTYPE html>
             <html>
-            <head>
-                <meta charset="UTF-8">
-                <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: #034AB0; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 20px; background: #f5f5f5; }
-                    .field { margin-bottom: 15px; }
-                    .label { font-weight: bold; color: #034AB0; }
-                    .value { margin-top: 5px; }
-                    .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="header">
-                        <h2>📬 Nuevo Mensaje de Contacto</h2>
-                    </div>
-                    <div class="content">
-                        <div class="field">
-                            <div class="label">📅 Fecha:</div>
-                            <div class="value">${escapeHtml(fecha)}</div>
-                        </div>
-                        <div class="field">
-                            <div class="label">👤 Nombre:</div>
-                            <div class="value">${escapeHtml(nombre)}</div>
-                        </div>
-                        <div class="field">
-                            <div class="label">📧 Correo:</div>
-                            <div class="value">${escapeHtml(email)}</div>
-                        </div>
-                        <div class="field">
-                            <div class="label">🔧 Servicio:</div>
-                            <div class="value">${escapeHtml(servicio || 'No especificado')}</div>
-                        </div>
-                        <div class="field">
-                            <div class="label">💬 Mensaje:</div>
-                            <div class="value">${escapeHtml(mensaje).replace(/\n/g, '<br>')}</div>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <p>EDAPymes - Tecnología con Calidad y Calidez</p>
-                    </div>
-                </div>
+            <head><meta charset="UTF-8"></head>
+            <body style="font-family: Arial, sans-serif;">
+                <h2 style="color: #034AB0;">📬 Nuevo Mensaje de Contacto</h2>
+                <p><strong>📅 Fecha:</strong> ${escapeHtml(fecha)}</p>
+                <p><strong>👤 Nombre:</strong> ${escapeHtml(nombre)}</p>
+                <p><strong>📧 Correo:</strong> ${escapeHtml(email)}</p>
+                <p><strong>🔧 Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
+                <p><strong>💬 Mensaje:</strong></p>
+                <p>${escapeHtml(mensaje).replace(/\n/g, '<br>')}</p>
+                <hr>
+                <p style="color: #666;">EDAPymes - Tecnología con Calidad y Calidez</p>
             </body>
             </html>
         `,
         attachments: attachments
     };
 
-    // Correo de confirmación para el usuario
     const userMailOptions = {
         from: `"EDAPymes" <${emailUser}>`,
         to: email,
@@ -669,49 +684,17 @@ app.post("/api/enviar-correo", async (req, res) => {
         html: `
             <!DOCTYPE html>
             <html>
-            <head>
-                <meta charset="UTF-8">
-                <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: #034AB0; color: white; padding: 20px; text-align: center; }
-                    .content { padding: 20px; background: #f5f5f5; }
-                    .message-box { background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #034AB0; }
-                    .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
-                    .btn { display: inline-block; background: #034AB0; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px; }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="header">
-                        <h2>✨ ¡Hola ${escapeHtml(nombre)}!</h2>
-                    </div>
-                    <div class="content">
-                        <p>Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
-                        
-                        <div class="message-box">
-                            <strong>📝 Tu mensaje:</strong><br>
-                            ${escapeHtml(mensaje)}
-                        </div>
-                        
-                        <p>Uno de nuestros asesores te responderá a la brevedad posible (normalmente en menos de 24 horas hábiles).</p>
-                        
-                        <p>Mientras tanto, te invitamos a:</p>
-                        <ul>
-                            <li>📱 Seguirnos en <a href="https://www.facebook.com/profile.php?id=61576401396435">Facebook</a></li>
-                            <li>💬 Contactarnos por <a href="https://wa.me/50583295424">WhatsApp</a> para consultas rápidas</li>
-                            <li>🌐 Visitar nuestro <a href="https://edapymesdev.onrender.com">sitio web</a></li>
-                        </ul>
-                        
-                        <div style="text-align: center;">
-                            <a href="https://wa.me/50583295424" class="btn">📱 Contactar por WhatsApp</a>
-                        </div>
-                    </div>
-                    <div class="footer">
-                        <p>EDAPymes - Tecnología con Calidad y Calidez</p>
-                        <p>© ${new Date().getFullYear()} Todos los derechos reservados</p>
-                    </div>
+            <head><meta charset="UTF-8"></head>
+            <body style="font-family: Arial, sans-serif;">
+                <h2 style="color: #034AB0;">✨ ¡Hola ${escapeHtml(nombre)}!</h2>
+                <p>Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
+                <div style="background: #f5f5f5; padding: 15px; border-left: 4px solid #034AB0; margin: 15px 0;">
+                    <strong>📝 Tu mensaje:</strong><br>
+                    ${escapeHtml(mensaje)}
                 </div>
+                <p>Uno de nuestros asesores te responderá a la brevedad posible.</p>
+                <hr>
+                <p style="color: #666;">EDAPymes - Tecnología con Calidad y Calidez</p>
             </body>
             </html>
         `,
@@ -732,7 +715,7 @@ app.post("/api/enviar-correo", async (req, res) => {
             message: "Correo enviado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error detallado enviando correo:', error);
+        console.error('❌ Error enviando correo:', error.message);
         res.status(500).json({
             error: "Error al enviar el correo",
             details: error.message
@@ -761,7 +744,8 @@ app.get("/api/diagnostico-email", async (req, res) => {
         res.json({
             status: "OK",
             message: "Conexión SMTP exitosa",
-            emailUser: emailUser
+            emailUser: emailUser,
+            activeTransporter: transporterActive
         });
     } catch (error) {
         res.status(500).json({
@@ -771,7 +755,6 @@ app.get("/api/diagnostico-email", async (req, res) => {
     }
 });
 
-// Endpoint de prueba de envío de correo
 app.post("/api/test-email", async (req, res) => {
     const testEmail = req.body.email || emailUser;
 
@@ -782,13 +765,12 @@ app.post("/api/test-email", async (req, res) => {
         html: `
             <h2>✅ Configuración de correo funcionando!</h2>
             <p>Este es un correo de prueba enviado desde el servidor de EDAPymes.</p>
-            <p>Si recibiste este mensaje, la configuración de nodemailer está correcta.</p>
             <p>Fecha: ${new Date().toLocaleString()}</p>
             <hr>
             <p><strong>Configuración actual:</strong></p>
             <ul>
                 <li>Email user: ${emailUser}</li>
-                <li>Has password: ${!!emailPass}</li>
+                <li>Transporter activo: ${transporterActive}</li>
             </ul>
         `
     };
@@ -829,4 +811,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`💾 Base de datos: PostgreSQL`);
     console.log(`🖼️ ImageKit: Configurado`);
     console.log(`📧 Email configurado con: ${emailUser}`);
+    console.log(`🔧 IPv4 forzado para conexiones SMTP`);
 });
