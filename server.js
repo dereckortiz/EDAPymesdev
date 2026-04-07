@@ -365,13 +365,29 @@ app.get("/api/productos", async (req, res) => {
 
         const productos = result.rows.map(p => {
             let imagenesArray = [];
+            let imagenesUrls = [];
+
             if (p.imagenes) {
                 try {
                     imagenesArray = JSON.parse(p.imagenes);
+                    // Construir URLs completas para cada imagen
+                    imagenesUrls = imagenesArray.map(img => {
+                        if (typeof img === 'string') {
+                            return img.startsWith('http') ? img : `${baseUrl}/uploads/${img}`;
+                        } else if (img && img.filename) {
+                            return `${baseUrl}/uploads/${img.filename}`;
+                        } else if (img && img.url) {
+                            return img.url;
+                        }
+                        return `${baseUrl}/uploads/${img}`;
+                    });
                 } catch (e) {
+                    console.error('Error parseando imagenes:', e);
                     imagenesArray = [];
+                    imagenesUrls = [];
                 }
             }
+
             let especificacionesArray = [];
             if (p.especificaciones) {
                 try {
@@ -380,6 +396,7 @@ app.get("/api/productos", async (req, res) => {
                     especificacionesArray = [];
                 }
             }
+
             return {
                 id: p.id,
                 nombre: p.nombre,
@@ -387,7 +404,7 @@ app.get("/api/productos", async (req, res) => {
                 categoria: p.categoria,
                 descripcion: p.descripcion,
                 especificaciones: especificacionesArray,
-                imagenes: imagenesArray.map(img => `${baseUrl}/uploads/${img.filename}`),
+                imagenes: imagenesUrls,  // Ahora enviamos las URLs completas
                 imagenes_raw: imagenesArray,
                 disponible: p.disponible === 1,
                 created_at: p.created_at
@@ -395,6 +412,7 @@ app.get("/api/productos", async (req, res) => {
         });
         res.json(productos);
     } catch (error) {
+        console.error('Error en /api/productos:', error);
         res.status(500).json({ error: error.message });
     }
 });

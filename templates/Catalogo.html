@@ -688,14 +688,8 @@ function renderizarProductos() {
     contenedor.innerHTML = "";
     
     productosFiltrados.forEach(p => {
-        // 🔧 CORREGIR: Obtener URL de imagen correctamente
-        let imagenUrl = 'https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes';
-        if (p.imagenes && p.imagenes.length > 0) {
-            const primeraImagen = p.imagenes[0];
-            if (typeof primeraImagen === 'string') imagenUrl = primeraImagen;
-            else if (primeraImagen && primeraImagen.url) imagenUrl = primeraImagen.url;
-            else if (primeraImagen && primeraImagen.filename) imagenUrl = `${API_BASE}/uploads/${primeraImagen.filename}`;
-        }
+        // Obtener URL de imagen correctamente (ya normalizada)
+        let imagenUrl = p.imagenes && p.imagenes.length > 0 ? p.imagenes[0] : 'https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes';
         
         const precioFormateado = typeof p.precio === 'number' ? p.precio.toFixed(2) : p.precio;
         const categoriaIcono = obtenerIconoCategoria(p.categoria);
@@ -790,29 +784,52 @@ async function cargarProductos() {
         
         productosGlobal = await response.json();
         
-        // 🔧 CORREGIR: Normalizar las URLs de imágenes
+        // 🔧 CORREGIR: Normalizar las URLs de imágenes de manera más robusta
         productosGlobal = productosGlobal.map(p => {
             let imagenesUrls = [];
             
+            // Verificar diferentes formatos de imágenes
             if (p.imagenes && Array.isArray(p.imagenes)) {
                 imagenesUrls = p.imagenes.map(img => {
-                    // Si es string, usarlo directamente
-                    if (typeof img === 'string') return img;
-                    // Si es objeto con url, usarlo
-                    if (img && img.url) return img.url;
-                    // Si es objeto con filename, construir URL
-                    if (img && img.filename) return `${API_BASE}/uploads/${img.filename}`;
+                    // Si es string, verificar si es URL completa o solo filename
+                    if (typeof img === 'string') {
+                        if (img.startsWith('http')) {
+                            return img;
+                        } else {
+                            return `${API_BASE}/uploads/${img}`;
+                        }
+                    }
+                    // Si es objeto con url
+                    if (img && img.url) {
+                        return img.url;
+                    }
+                    // Si es objeto con filename
+                    if (img && img.filename) {
+                        return `${API_BASE}/uploads/${img.filename}`;
+                    }
                     return 'https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes';
                 });
             } else if (p.imagen) {
-                imagenesUrls = [p.imagen];
+                if (typeof p.imagen === 'string') {
+                    imagenesUrls = [p.imagen.startsWith('http') ? p.imagen : `${API_BASE}/uploads/${p.imagen}`];
+                } else {
+                    imagenesUrls = ['https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes'];
+                }
+            }
+            
+            // Si no hay imágenes, usar placeholder
+            if (imagenesUrls.length === 0) {
+                imagenesUrls = ['https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes'];
             }
             
             return {
                 ...p,
-                imagenes: imagenesUrls.length > 0 ? imagenesUrls : ['https://placehold.co/600x400/e2e8f0/475569?text=EDAPymes']
+                imagenes: imagenesUrls
             };
         });
+        
+        console.log('Productos cargados:', productosGlobal.length);
+        console.log('Primer producto:', productosGlobal[0]);
         
         if (productosGlobal.length === 0) {
             contenedor.innerHTML = `<div class='col-span-full text-center py-16'>No hay productos disponibles</div>`;
@@ -832,7 +849,7 @@ async function cargarProductos() {
         
     } catch (error) {
         console.error("Error cargando productos:", error);
-        contenedor.innerHTML = `<div class='col-span-full text-center py-16 text-red-500'>Error de conexión: ${error.message}</div>`;
+        contenedor.innerHTML = `<div class='col-span-full text-center py-16 text-red-500'>Error de conexión: ${error.message}<br><br>Verifica que el servidor esté corriendo en ${API_BASE}</div>`;
     }
 }
 
