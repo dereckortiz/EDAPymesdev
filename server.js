@@ -504,6 +504,24 @@ app.get("/api/categorias", async (req, res) => {
     }
 });
 
+// Endpoint para ver las imágenes subidas
+app.get("/api/ver-imagenes", (req, res) => {
+    const fs = require('fs');
+    const path = require('path');
+    const uploadsDir = path.join(__dirname, "uploads");
+
+    fs.readdir(uploadsDir, (err, files) => {
+        if (err) {
+            return res.json({ error: err.message });
+        }
+        res.json({
+            imagenes_en_servidor: files,
+            cantidad: files.length,
+            ruta: uploadsDir
+        });
+    });
+});
+
 app.post("/api/categorias", requireAuth, async (req, res) => {
     const { nombre, icono } = req.body;
     if (!nombre || nombre.trim() === "") {
