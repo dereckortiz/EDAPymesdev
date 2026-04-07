@@ -183,17 +183,28 @@ app.get("/templates/admin/admin.html", requireAuth, (req, res) => {
 /* ===============================
    CONFIGURACION DE NODEMAILER - CORREGIDA
 ================================ */
-// Usar puerto 587 en lugar de 465 para evitar bloqueos
+// Obtener credenciales de variables de entorno
+const emailUser = process.env.EMAIL_USER || 'derecksevi@gmail.com';
+const emailPass = process.env.EMAIL_PASS;
+
+console.log('📧 Configurando nodemailer con:', {
+    user: emailUser,
+    hasPass: !!emailPass,
+    passLength: emailPass ? emailPass.length : 0
+});
+
+// Configuración para Gmail con puerto 587 (recomendado)
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
-    secure: false, // IMPORTANTE: false para puerto 587
+    secure: false, // false para STARTTLS en puerto 587
     auth: {
-        user: process.env.EMAIL_USER || 'derecksevi@gmail.com',
-        pass: process.env.EMAIL_PASS || 'kwuv yclp fytd qtqk'
+        user: emailUser,
+        pass: emailPass
     },
     tls: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        ciphers: 'SSLv3'
     },
     connectionTimeout: 30000,
     greetingTimeout: 30000,
@@ -204,10 +215,20 @@ const transporter = nodemailer.createTransport({
 transporter.verify((error, success) => {
     if (error) {
         console.error('❌ Error en nodemailer:', error.message);
+        console.error('Detalles del error:', error);
     } else {
-        console.log('✅ Servidor de correo listo');
+        console.log('✅ Servidor de correo listo y verificado');
+        console.log(`📧 Enviando correos como: ${emailUser}`);
     }
 });
+
+// Función auxiliar para escapar HTML
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
 /* ===============================
    CONFIGURACION DE MULTER
@@ -531,8 +552,18 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
 
+    console.log('📨 Recibida solicitud de correo:', { nombre, email, servicio });
+
     if (!nombre || !email || !mensaje) {
+        console.log('❌ Faltan campos requeridos');
         return res.status(400).json({ error: "Todos los campos son requeridos" });
+    }
+
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        console.log('❌ Email inválido:', email);
+        return res.status(400).json({ error: "Correo electrónico inválido" });
     }
 
     const fecha = new Date().toLocaleString('es-ES', {
@@ -568,44 +599,168 @@ app.post("/api/enviar-correo", async (req, res) => {
         });
     }
 
+    // Correo para el administrador
     const adminMailOptions = {
-        from: `"${nombre}" <${email}>`,
-        to: 'derecksevi@gmail.com',
+        from: `"EDAPymes Contacto" <${emailUser}>`,
+        to: emailUser,
         replyTo: email,
-        subject: `Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`,
+        subject: `📧 Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`,
         html: `
-            <h2>Nuevo mensaje de contacto</h2>
-            <p><strong>Fecha:</strong> ${fecha}</p>
-            <p><strong>Nombre:</strong> ${nombre}</p>
-            <p><strong>Correo:</strong> ${email}</p>
-            <p><strong>Servicio:</strong> ${servicio || 'No especificado'}</p>
-            <p><strong>Mensaje:</strong></p>
-            <p>${mensaje.replace(/\n/g, '<br>')}</p>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: #034AB0; color: white; padding: 20px; text-align: center; }
+                    .content { padding: 20px; background: #f5f5f5; }
+                    .field { margin-bottom: 15px; }
+                    .label { font-weight: bold; color: #034AB0; }
+                    .value { margin-top: 5px; }
+                    .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>📬 Nuevo Mensaje de Contacto</h2>
+                    </div>
+                    <div class="content">
+                        <div class="field">
+                            <div class="label">📅 Fecha:</div>
+                            <div class="value">${escapeHtml(fecha)}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">👤 Nombre:</div>
+                            <div class="value">${escapeHtml(nombre)}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">📧 Correo:</div>
+                            <div class="value">${escapeHtml(email)}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">🔧 Servicio:</div>
+                            <div class="value">${escapeHtml(servicio || 'No especificado')}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">💬 Mensaje:</div>
+                            <div class="value">${escapeHtml(mensaje).replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <p>EDAPymes - Tecnología con Calidad y Calidez</p>
+                    </div>
+                </div>
+            </body>
+            </html>
         `,
         attachments: attachments
     };
 
+    // Correo de confirmación para el usuario
     const userMailOptions = {
-        from: `"EDAPymes" <derecksevi@gmail.com>`,
+        from: `"EDAPymes" <${emailUser}>`,
         to: email,
-        subject: `Gracias por contactarnos ${nombre}! - EDAPymes`,
+        subject: `✅ Gracias por contactarnos ${nombre} - EDAPymes`,
         html: `
-            <h2>Hola ${nombre}!</h2>
-            <p>Gracias por contactarte con EDAPymes. Hemos recibido tu mensaje y uno de nuestros asesores te respondera a la brevedad.</p>
-            <p><strong>Tu mensaje:</strong> ${mensaje}</p>
-            <p>Saludos,<br>Equipo EDAPymes</p>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: #034AB0; color: white; padding: 20px; text-align: center; }
+                    .content { padding: 20px; background: #f5f5f5; }
+                    .message-box { background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #034AB0; }
+                    .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+                    .btn { display: inline-block; background: #034AB0; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 15px; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>✨ ¡Hola ${escapeHtml(nombre)}!</h2>
+                    </div>
+                    <div class="content">
+                        <p>Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
+                        
+                        <div class="message-box">
+                            <strong>📝 Tu mensaje:</strong><br>
+                            ${escapeHtml(mensaje)}
+                        </div>
+                        
+                        <p>Uno de nuestros asesores te responderá a la brevedad posible (normalmente en menos de 24 horas hábiles).</p>
+                        
+                        <p>Mientras tanto, te invitamos a:</p>
+                        <ul>
+                            <li>📱 Seguirnos en <a href="https://www.facebook.com/profile.php?id=61576401396435">Facebook</a></li>
+                            <li>💬 Contactarnos por <a href="https://wa.me/50583295424">WhatsApp</a> para consultas rápidas</li>
+                            <li>🌐 Visitar nuestro <a href="https://edapymesdev.onrender.com">sitio web</a></li>
+                        </ul>
+                        
+                        <div style="text-align: center;">
+                            <a href="https://wa.me/50583295424" class="btn">📱 Contactar por WhatsApp</a>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <p>EDAPymes - Tecnología con Calidad y Calidez</p>
+                        <p>© ${new Date().getFullYear()} Todos los derechos reservados</p>
+                    </div>
+                </div>
+            </body>
+            </html>
         `,
         attachments: attachments
     };
 
     try {
-        await transporter.sendMail(adminMailOptions);
-        await transporter.sendMail(userMailOptions);
-        res.json({ message: "Correo enviado exitosamente" });
+        console.log('📤 Enviando correo al administrador...');
+        const adminResult = await transporter.sendMail(adminMailOptions);
+        console.log('✅ Correo a administrador enviado:', adminResult.messageId);
+
+        console.log('📤 Enviando correo de confirmación al usuario...');
+        const userResult = await transporter.sendMail(userMailOptions);
+        console.log('✅ Correo de confirmación enviado:', userResult.messageId);
+
+        res.json({
+            success: true,
+            message: "Correo enviado exitosamente"
+        });
     } catch (error) {
-        console.error('Error enviando correo:', error.message);
-        // No fallamos la petición, solo logueamos el error
-        res.json({ message: "Mensaje recibido. Te contactaremos pronto." });
+        console.error('❌ Error detallado enviando correo:', error);
+
+        // Intentar con configuración alternativa si falla
+        if (error.code === 'EAUTH' || error.code === 'ECONNECTION') {
+            console.log('🔄 Intentando con configuración alternativa...');
+
+            const altTransporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: emailUser,
+                    pass: emailPass
+                },
+                tls: { rejectUnauthorized: false }
+            });
+
+            try {
+                const altAdminResult = await altTransporter.sendMail(adminMailOptions);
+                console.log('✅ Correo alternativo enviado:', altAdminResult.messageId);
+                res.json({ success: true, message: "Correo enviado exitosamente" });
+            } catch (altError) {
+                console.error('❌ También falló el modo alternativo:', altError.message);
+                res.status(500).json({
+                    error: "Error al enviar el correo",
+                    details: error.message
+                });
+            }
+        } else {
+            res.status(500).json({
+                error: "Error al enviar el correo",
+                details: error.message
+            });
+        }
     }
 });
 
@@ -629,12 +784,51 @@ app.get("/api/diagnostico-email", async (req, res) => {
         await transporter.verify();
         res.json({
             status: "OK",
-            message: "Conexión SMTP exitosa"
+            message: "Conexión SMTP exitosa",
+            emailUser: emailUser
         });
     } catch (error) {
         res.status(500).json({
             status: "ERROR",
             message: error.message
+        });
+    }
+});
+
+// Endpoint de prueba de envío de correo
+app.post("/api/test-email", async (req, res) => {
+    const testEmail = req.body.email || emailUser;
+
+    const testOptions = {
+        from: `"EDAPymes Test" <${emailUser}>`,
+        to: testEmail,
+        subject: "🔧 Prueba de configuración de correo - EDAPymes",
+        html: `
+            <h2>✅ Configuración de correo funcionando!</h2>
+            <p>Este es un correo de prueba enviado desde el servidor de EDAPymes.</p>
+            <p>Si recibiste este mensaje, la configuración de nodemailer está correcta.</p>
+            <p>Fecha: ${new Date().toLocaleString()}</p>
+            <hr>
+            <p><strong>Configuración actual:</strong></p>
+            <ul>
+                <li>Email user: ${emailUser}</li>
+                <li>Has password: ${!!emailPass}</li>
+            </ul>
+        `
+    };
+
+    try {
+        const result = await transporter.sendMail(testOptions);
+        res.json({
+            success: true,
+            message: "Correo de prueba enviado exitosamente",
+            messageId: result.messageId
+        });
+    } catch (error) {
+        console.error('Error en correo de prueba:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message
         });
     }
 });
@@ -658,4 +852,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`📁 Directorio de uploads: ${uploadsDir}`);
     console.log(`💾 Base de datos: PostgreSQL`);
     console.log(`🖼️ ImageKit: Configurado`);
+    console.log(`📧 Email configurado con: ${emailUser}`);
 });
