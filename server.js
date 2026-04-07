@@ -197,7 +197,7 @@ console.log('📧 Configurando nodemailer con:', {
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
-    secure: false, // false para STARTTLS en puerto 587
+    secure: false,
     auth: {
         user: emailUser,
         pass: emailPass
@@ -222,12 +222,15 @@ transporter.verify((error, success) => {
     }
 });
 
-// Función auxiliar para escapar HTML
+// Función auxiliar para escapar HTML (versión para Node.js, sin document)
 function escapeHtml(text) {
     if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 /* ===============================
@@ -730,37 +733,10 @@ app.post("/api/enviar-correo", async (req, res) => {
         });
     } catch (error) {
         console.error('❌ Error detallado enviando correo:', error);
-
-        // Intentar con configuración alternativa si falla
-        if (error.code === 'EAUTH' || error.code === 'ECONNECTION') {
-            console.log('🔄 Intentando con configuración alternativa...');
-
-            const altTransporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: emailUser,
-                    pass: emailPass
-                },
-                tls: { rejectUnauthorized: false }
-            });
-
-            try {
-                const altAdminResult = await altTransporter.sendMail(adminMailOptions);
-                console.log('✅ Correo alternativo enviado:', altAdminResult.messageId);
-                res.json({ success: true, message: "Correo enviado exitosamente" });
-            } catch (altError) {
-                console.error('❌ También falló el modo alternativo:', altError.message);
-                res.status(500).json({
-                    error: "Error al enviar el correo",
-                    details: error.message
-                });
-            }
-        } else {
-            res.status(500).json({
-                error: "Error al enviar el correo",
-                details: error.message
-            });
-        }
+        res.status(500).json({
+            error: "Error al enviar el correo",
+            details: error.message
+        });
     }
 });
 
