@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const pgSession = require('connect-pg-simple')(session);
+const ImageKit = require('imagekit');
 
 const app = express();
 
@@ -28,13 +29,21 @@ pool.connect((err) => {
 });
 
 /* ===============================
+   CONFIGURACION DE IMAGEKIT
+================================ */
+const imagekit = new ImageKit({
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+});
+
+console.log('✅ ImageKit configurado');
+
+/* ===============================
    MIDDLEWARE ESENCIALES - DEBEN IR PRIMERO
 ================================ */
-// IMPORTANTE: express.json() debe ir ANTES que cualquier ruta
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Configurar trust proxy para Render
 app.set('trust proxy', 1);
 
 /* ===============================
@@ -63,13 +72,11 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
 
-// Middleware adicional para CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', 'true');
     next();
 });
 
-// Middleware para logging de peticiones (útil para debug)
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
     if (req.body && Object.keys(req.body).length > 0) {
@@ -187,18 +194,9 @@ const transporter = nodemailer.createTransport({
 });
 
 /* ===============================
-   CONFIGURACION DE MULTER
+   CONFIGURACION DE MULTER (MEMORIA PARA IMAGEKIT)
 ================================ */
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadsDir);
-    },
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        const unique = Date.now() + '-' + Math.round(Math.random() * 1E9) + ext;
-        cb(null, unique);
-    }
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -220,7 +218,7 @@ const upload = multer({
 const uploadMultiple = upload.array('imagenes', 6);
 
 /* ===============================
-   API DE AUTENTICACION - VERSION CORREGIDA
+   API DE AUTENTICACION
 ================================ */
 app.post("/api/login", async (req, res) => {
     console.log("=== LOGIN REQUEST RECIBIDO ===");
@@ -253,12 +251,10 @@ app.post("/api/login", async (req, res) => {
             return res.status(401).json({ error: "Usuario o contrasena incorrectos" });
         }
 
-        // Establecer sesión
         req.session.isAuthenticated = true;
         req.session.username = user.username;
         req.session.userId = user.id;
 
-        // Guardar sesión explícitamente
         req.session.save((err) => {
             if (err) {
                 console.error("Error guardando sesión:", err);
@@ -290,7 +286,6 @@ app.post("/api/logout", (req, res) => {
 
 app.get("/api/verify", (req, res) => {
     console.log('Verificando sesión - SessionID:', req.sessionID);
-    console.log('Session data:', req.session);
 
     if (req.session && req.session.isAuthenticated) {
         res.json({
@@ -314,7 +309,6 @@ app.get("/api/check-session", (req, res) => {
     }
 });
 
-// Endpoint de diagnóstico para verificar usuario
 app.get("/api/diagnostico-usuario", async (req, res) => {
     try {
         const username = 'edapymes_devCatalog';
@@ -332,8 +326,6 @@ app.get("/api/diagnostico-usuario", async (req, res) => {
         res.json({
             usuario_existe: true,
             username: user.username,
-            hash_en_bd: user.password.substring(0, 40) + "...",
-            password_probada: password,
             password_valida: isValid,
             mensaje: isValid ? "✅ Login funcionaría" : "❌ La contraseña no coincide"
         });
@@ -342,7 +334,6 @@ app.get("/api/diagnostico-usuario", async (req, res) => {
     }
 });
 
-// Endpoint para debug de sesión
 app.get("/api/debug-session", (req, res) => {
     res.json({
         sessionID: req.sessionID,
@@ -350,41 +341,26 @@ app.get("/api/debug-session", (req, res) => {
         sessionData: req.session ? {
             username: req.session.username,
             userId: req.session.userId
-        } : null,
-        cookie: req.headers.cookie || 'no cookie'
+        } : null
     });
 });
 
 /* ===============================
-   API DE PRODUCTOS
+   API DE PRODUCTOS CON IMAGEKIT
 ================================ */
 app.get("/api/productos", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM productos ORDER BY id DESC");
-        const baseUrl = process.env.BASE_URL || `https://edapymesdev.onrender.com`;
 
         const productos = result.rows.map(p => {
-            let imagenesArray = [];
             let imagenesUrls = [];
 
             if (p.imagenes) {
                 try {
-                    imagenesArray = JSON.parse(p.imagenes);
-                    // Construir URLs completas para cada imagen
-                    imagenesUrls = imagenesArray.map(img => {
-                        if (typeof img === 'string') {
-                            return img.startsWith('http') ? img : `${baseUrl}/uploads/${img}`;
-                        } else if (img && img.filename) {
-                            return `${baseUrl}/uploads/${img.filename}`;
-                        } else if (img && img.url) {
-                            return img.url;
-                        }
-                        return `${baseUrl}/uploads/${img}`;
-                    });
+                    const imagenesArray = JSON.parse(p.imagenes);
+                    imagenesUrls = imagenesArray.map(img => img.url);
                 } catch (e) {
                     console.error('Error parseando imagenes:', e);
-                    imagenesArray = [];
-                    imagenesUrls = [];
                 }
             }
 
@@ -404,8 +380,7 @@ app.get("/api/productos", async (req, res) => {
                 categoria: p.categoria,
                 descripcion: p.descripcion,
                 especificaciones: especificacionesArray,
-                imagenes: imagenesUrls,  // Ahora enviamos las URLs completas
-                imagenes_raw: imagenesArray,
+                imagenes: imagenesUrls,
                 disponible: p.disponible === 1,
                 created_at: p.created_at
             };
@@ -429,29 +404,48 @@ app.post("/api/productos", requireAuth, (req, res) => {
             return res.status(400).json({ error: "Nombre y precio son requeridos" });
         }
 
-        let imagenesData = [];
-        if (req.files && req.files.length > 0) {
-            imagenesData = req.files.map((file, index) => ({
-                filename: file.filename,
-                originalName: file.originalname,
-                isMain: index === 0,
-                order: index
-            }));
-        }
-
-        const imagenesJSON = JSON.stringify(imagenesData);
-
-        let especificacionesJSON = null;
-        if (especificaciones && especificaciones !== '[]' && especificaciones !== 'null') {
-            try {
-                const parsed = JSON.parse(especificaciones);
-                especificacionesJSON = JSON.stringify(parsed.filter(s => s.label && s.value));
-            } catch (e) {
-                especificacionesJSON = especificaciones;
-            }
-        }
-
         try {
+            let imagenesData = [];
+
+            if (req.files && req.files.length > 0) {
+                for (let i = 0; i < req.files.length; i++) {
+                    const file = req.files[i];
+                    const base64 = file.buffer.toString('base64');
+
+                    console.log(`Subiendo imagen ${i + 1} a ImageKit...`);
+
+                    const result = await imagekit.upload({
+                        file: base64,
+                        fileName: `${Date.now()}-${file.originalname}`,
+                        folder: '/edapymes/productos',
+                        useUniqueFileName: true,
+                        tags: ['producto', categoria || 'general']
+                    });
+
+                    imagenesData.push({
+                        url: result.url,
+                        fileId: result.fileId,
+                        originalName: file.originalname,
+                        isMain: i === 0,
+                        order: i
+                    });
+
+                    console.log(`✅ Imagen ${i + 1} subida: ${result.url}`);
+                }
+            }
+
+            const imagenesJSON = JSON.stringify(imagenesData);
+
+            let especificacionesJSON = null;
+            if (especificaciones && especificaciones !== '[]' && especificaciones !== 'null') {
+                try {
+                    const parsed = JSON.parse(especificaciones);
+                    especificacionesJSON = JSON.stringify(parsed.filter(s => s.label && s.value));
+                } catch (e) {
+                    especificacionesJSON = especificaciones;
+                }
+            }
+
             const result = await pool.query(
                 `INSERT INTO productos(nombre, precio, categoria, descripcion, especificaciones, imagenes, disponible, created_at) 
                  VALUES($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING id`,
@@ -464,7 +458,8 @@ app.post("/api/productos", requireAuth, (req, res) => {
                 imagenesCount: req.files ? req.files.length : 0
             });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error al subir a ImageKit:', error);
+            res.status(500).json({ error: "Error al subir imágenes: " + error.message });
         }
     });
 });
@@ -478,16 +473,21 @@ app.delete("/api/productos/:id", requireAuth, async (req, res) => {
         if (result.rows.length > 0 && result.rows[0].imagenes) {
             try {
                 const imagenes = JSON.parse(result.rows[0].imagenes);
-                imagenes.forEach(img => {
-                    const imagePath = path.join(uploadsDir, img.filename);
-                    fs.unlink(imagePath, (err) => { });
-                });
-            } catch (e) { }
+                for (const img of imagenes) {
+                    if (img.fileId) {
+                        await imagekit.deleteFile(img.fileId);
+                        console.log(`✅ Imagen eliminada de ImageKit: ${img.fileId}`);
+                    }
+                }
+            } catch (e) {
+                console.error('Error eliminando de ImageKit:', e);
+            }
         }
 
         await pool.query("DELETE FROM productos WHERE id = $1", [id]);
         res.json({ message: "Producto eliminado", changes: 1 });
     } catch (error) {
+        console.error('Error al eliminar producto:', error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -502,24 +502,6 @@ app.get("/api/categorias", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-});
-
-// Endpoint para ver las imágenes subidas
-app.get("/api/ver-imagenes", (req, res) => {
-    const fs = require('fs');
-    const path = require('path');
-    const uploadsDir = path.join(__dirname, "uploads");
-
-    fs.readdir(uploadsDir, (err, files) => {
-        if (err) {
-            return res.json({ error: err.message });
-        }
-        res.json({
-            imagenes_en_servidor: files,
-            cantidad: files.length,
-            ruta: uploadsDir
-        });
-    });
 });
 
 app.post("/api/categorias", requireAuth, async (req, res) => {
@@ -714,19 +696,17 @@ app.post("/api/enviar-correo", async (req, res) => {
 });
 
 /* ===============================
-   ENDPOINTS DE PRUEBA Y DIAGNOSTICO
+   ENDPOINTS DE PRUEBA
 ================================ */
 app.get("/api/health", (req, res) => {
     res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// Endpoint de prueba para verificar que el body se recibe correctamente
 app.post("/api/test-body", (req, res) => {
     console.log("Test body recibido:", req.body);
     res.json({
         received: true,
-        body: req.body,
-        headers: req.headers['content-type']
+        body: req.body
     });
 });
 
@@ -748,4 +728,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
     console.log(`📁 Directorio de uploads: ${uploadsDir}`);
     console.log(`💾 Base de datos: PostgreSQL`);
+    console.log(`🖼️ ImageKit: Configurado`);
 });
