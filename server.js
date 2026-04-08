@@ -40,17 +40,26 @@ const imagekit = new ImageKit({
 console.log('✅ ImageKit configurado');
 
 /* ===============================
-   CONFIGURACION DE BREVO - VERSIÓN 1.0.1 CORRECTA
+   CONFIGURACION DE BREVO - VERSIÓN 1.0.1 CORREGIDA
 ================================ */
 const brevoApiKey = process.env.BREVO_API_KEY;
 const emailUser = process.env.EMAIL_USER || 'edapymestech@gmail.com';
 
 let brevoClient = null;
 if (brevoApiKey) {
-    brevoClient = new brevo.TransactionalEmailsApi();
-    brevoClient.setApiKey('api-key', brevoApiKey);
-    console.log('✅ Brevo configurado correctamente');
-    console.log(`📧 Los correos se enviarán desde: ${emailUser}`);
+    try {
+        // Configuración correcta para Brevo 1.0.1
+        const defaultClient = brevo.ApiClient.instance;
+        const apiKey = defaultClient.authentications['api-key'];
+        apiKey.apiKey = brevoApiKey;
+
+        brevoClient = new brevo.TransactionalEmailsApi();
+        console.log('✅ Brevo configurado correctamente');
+        console.log(`📧 Los correos se enviarán desde: ${emailUser}`);
+    } catch (error) {
+        console.error('❌ Error configurando Brevo:', error.message);
+        brevoClient = null;
+    }
 } else {
     console.log('❌ BREVO_API_KEY no configurada en variables de entorno');
     console.log('⚠️ Los correos NO funcionarán hasta que la configures');
@@ -549,7 +558,7 @@ function crearHeaderConLogo() {
 }
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON BREVO - VERSIÓN 1.0.1
+   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -684,7 +693,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         </html>
     `;
 
-    // ✅ CORRECTO para versión 1.0.1 (usando clases, no objetos)
+    // Crear los emails
     const adminEmail = new brevo.SendSmtpEmail();
     adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
     adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
