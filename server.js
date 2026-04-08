@@ -40,7 +40,7 @@ const imagekit = new ImageKit({
 console.log('✅ ImageKit configurado');
 
 /* ===============================
-   CONFIGURACION DE BREVO
+   CONFIGURACION DE BREVO - CORREGIDA
 ================================ */
 const brevoApiKey = process.env.BREVO_API_KEY;
 const emailUser = process.env.EMAIL_USER || 'edapymestech@gmail.com';
@@ -549,7 +549,7 @@ function crearHeaderConLogo() {
 }
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON BREVO
+   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -587,11 +587,9 @@ app.post("/api/enviar-correo", async (req, res) => {
         path.join(__dirname, "public", "image", "logo.png")
     ];
 
-    let logoPath = null;
     let logoBase64 = null;
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
-            logoPath = ruta;
             logoBase64 = fs.readFileSync(ruta, { encoding: 'base64' });
             break;
         }
@@ -686,28 +684,30 @@ app.post("/api/enviar-correo", async (req, res) => {
         </html>
     `;
 
-    // Configurar emails para Brevo
-    const adminEmail = new brevo.SendSmtpEmail();
-    adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
-    adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
-    adminEmail.replyTo = { email: email, name: nombre };
-    adminEmail.subject = `📧 Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
-    adminEmail.htmlContent = adminEmailContent;
+    // ✅ Configurar emails para Brevo - FORMA CORRECTA (objetos, no clases)
+    const adminEmail = {
+        to: [{ email: emailUser, name: 'Administrador EDAPymes' }],
+        sender: { email: emailUser, name: 'EDAPymes Contacto' },
+        replyTo: { email: email, name: nombre },
+        subject: `📧 Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`,
+        htmlContent: adminEmailContent
+    };
 
-    const userEmail = new brevo.SendSmtpEmail();
-    userEmail.to = [{ email: email, name: nombre }];
-    userEmail.sender = { email: emailUser, name: 'EDAPymes' };
-    userEmail.subject = `✅ Gracias por contactarnos ${nombre} - EDAPymes`;
-    userEmail.htmlContent = userEmailContent;
+    const userEmail = {
+        to: [{ email: email, name: nombre }],
+        sender: { email: emailUser, name: 'EDAPymes' },
+        subject: `✅ Gracias por contactarnos ${nombre} - EDAPymes`,
+        htmlContent: userEmailContent
+    };
 
     // Agregar logo como adjunto si existe
     if (logoBase64) {
-        const attachment = {
+        const attachment = [{
             content: logoBase64,
             name: 'edapymes-logo.png'
-        };
-        adminEmail.attachment = [attachment];
-        userEmail.attachment = [attachment];
+        }];
+        adminEmail.attachment = attachment;
+        userEmail.attachment = attachment;
     }
 
     try {
@@ -763,22 +763,23 @@ app.post("/api/test-email", async (req, res) => {
         return res.status(500).json({ error: "Brevo no configurado" });
     }
 
-    const testMsg = new brevo.SendSmtpEmail();
-    testMsg.to = [{ email: testEmail }];
-    testMsg.sender = { email: emailUser, name: 'EDAPymes Test' };
-    testMsg.subject = "🔧 Prueba de configuración - EDAPymes";
-    testMsg.htmlContent = `
-        <h2>✅ Brevo funcionando correctamente!</h2>
-        <p>Este es un correo de prueba desde EDAPymes con Brevo.</p>
-        <p>Fecha: ${new Date().toLocaleString()}</p>
-        <hr>
-        <p><strong>Configuración actual:</strong></p>
-        <ul>
-            <li>Email remitente: ${emailUser}</li>
-            <li>Servicio: Brevo</li>
-            <li>API Key configurada: ${!!brevoApiKey ? '✅ Sí' : '❌ No'}</li>
-        </ul>
-    `;
+    const testMsg = {
+        to: [{ email: testEmail }],
+        sender: { email: emailUser, name: 'EDAPymes Test' },
+        subject: "🔧 Prueba de configuración - EDAPymes",
+        htmlContent: `
+            <h2>✅ Brevo funcionando correctamente!</h2>
+            <p>Este es un correo de prueba desde EDAPymes con Brevo.</p>
+            <p>Fecha: ${new Date().toLocaleString()}</p>
+            <hr>
+            <p><strong>Configuración actual:</strong></p>
+            <ul>
+                <li>Email remitente: ${emailUser}</li>
+                <li>Servicio: Brevo</li>
+                <li>API Key configurada: ${!!brevoApiKey ? '✅ Sí' : '❌ No'}</li>
+            </ul>
+        `
+    };
 
     try {
         await brevoClient.sendTransacEmail(testMsg);
