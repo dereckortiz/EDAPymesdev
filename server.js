@@ -40,9 +40,9 @@ const imagekit = new ImageKit({
 console.log('✅ ImageKit configurado');
 
 /* ===============================
-   CONFIGURACION DE SENDGRID
+   CONFIGURACION DE SENDGRID - SOLO VARIABLES DE ENTORNO
 ================================ */
-const sendgridApiKey = process.env.SENDGRID_API_KEY || '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';
+const sendgridApiKey = process.env.SENDGRID_API_KEY;
 const emailUser = process.env.EMAIL_USER || 'derecksevi@gmail.com';
 
 if (sendgridApiKey) {
@@ -50,7 +50,8 @@ if (sendgridApiKey) {
     console.log('✅ SendGrid configurado correctamente');
     console.log(`📧 Los correos se enviarán desde: ${emailUser}`);
 } else {
-    console.log('❌ SENDGRID_API_KEY no configurada');
+    console.log('❌ SENDGRID_API_KEY no configurada en variables de entorno');
+    console.log('⚠️ Los correos NO funcionarán hasta que la configures');
 }
 
 /* ===============================
@@ -558,11 +559,9 @@ app.post("/api/enviar-correo", async (req, res) => {
         path.join(__dirname, "public", "image", "logo.png")
     ];
 
-    let logoPath = null;
     let logoBase64 = null;
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
-            logoPath = ruta;
             logoBase64 = fs.readFileSync(ruta, { encoding: 'base64' });
             break;
         }
@@ -575,7 +574,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         <head><meta charset="UTF-8"></head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6;">
             <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: #034AB0; color: white; padding: 20px; text-align: center;">
+                <div style="background: #034AB0; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
                     <h2>📬 Nuevo Mensaje de Contacto</h2>
                 </div>
                 <div style="padding: 20px; background: #f5f5f5;">
@@ -601,7 +600,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         <head><meta charset="UTF-8"></head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6;">
             <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: #034AB0; color: white; padding: 20px; text-align: center;">
+                <div style="background: #034AB0; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
                     <h2>✨ ¡Hola ${escapeHtml(nombre)}!</h2>
                 </div>
                 <div style="padding: 20px; background: #f5f5f5;">
@@ -722,12 +721,13 @@ app.post("/api/test-email", async (req, res) => {
             <ul>
                 <li>Email remitente: ${emailUser}</li>
                 <li>Servicio: SendGrid</li>
+                <li>API Key configurada: ${!!sendgridApiKey ? '✅ Sí' : '❌ No'}</li>
             </ul>
         `
     };
 
     try {
-        const result = await sgMail.send(testMsg);
+        await sgMail.send(testMsg);
         res.json({
             success: true,
             message: "Correo de prueba enviado exitosamente"
@@ -760,5 +760,6 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`📁 Directorio de uploads: ${uploadsDir}`);
     console.log(`💾 Base de datos: PostgreSQL`);
     console.log(`🖼️ ImageKit: Configurado`);
-    console.log(`📧 SendGrid configurado con: ${emailUser}`);
+    console.log(`📧 SendGrid: ${sendgridApiKey ? '✅ Configurado' : '❌ No configurado'}`);
+    console.log(`📧 Email remitente: ${emailUser}`);
 });
