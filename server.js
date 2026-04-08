@@ -4,25 +4,11 @@ const multer = require("multer");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const pgSession = require('connect-pg-simple')(session);
 const ImageKit = require('imagekit');
-
-// FORZAR IPv4 - SOLUCIÓN PARA EL ERROR ENETUNREACH
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
-
-// También forzar para el socket
-const net = require('net');
-const originalCreateConnection = net.createConnection;
-net.createConnection = function (...args) {
-    if (args[0] && typeof args[0] === 'object' && args[0].host && args[0].host.includes('gmail')) {
-        args[0].family = 4;
-    }
-    return originalCreateConnection.apply(this, args);
-};
+const sgMail = require('@sendgrid/mail');
 
 const app = express();
 
@@ -52,6 +38,20 @@ const imagekit = new ImageKit({
 });
 
 console.log('✅ ImageKit configurado');
+
+/* ===============================
+   CONFIGURACION DE SENDGRID
+================================ */
+const sendgridApiKey = process.env.SENDGRID_API_KEY || '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';
+const emailUser = process.env.EMAIL_USER || 'derecksevi@gmail.com';
+
+if (sendgridApiKey) {
+    sgMail.setApiKey(sendgridApiKey);
+    console.log('✅ SendGrid configurado correctamente');
+    console.log(`📧 Los correos se enviarán desde: ${emailUser}`);
+} else {
+    console.log('❌ SENDGRID_API_KEY no configurada');
+}
 
 /* ===============================
    MIDDLEWARE ESENCIALES
@@ -196,86 +196,8 @@ app.get("/templates/admin/admin.html", requireAuth, (req, res) => {
 });
 
 /* ===============================
-   CONFIGURACION DE NODEMAILER - CORREGIDA CON IPv4
+   FUNCIONES AUXILIARES
 ================================ */
-const emailUser = process.env.EMAIL_USER || 'derecksevi@gmail.com';
-const emailPass = process.env.EMAIL_PASS;
-
-console.log('📧 Configurando nodemailer con IPv4 forzado:', {
-    user: emailUser,
-    hasPass: !!emailPass,
-    passLength: emailPass ? emailPass.length : 0
-});
-
-// Configuración 1: Gmail con puerto 465 (SSL) - más estable
-const transporter1 = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: emailUser,
-        pass: emailPass
-    },
-    tls: {
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000
-});
-
-// Configuración 2: Gmail con puerto 587 (TLS) - alternativa
-const transporter2 = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: emailUser,
-        pass: emailPass
-    },
-    tls: {
-        rejectUnauthorized: false,
-        ciphers: 'SSLv3'
-    },
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000
-});
-
-// Usar el primer transporter, fallback al segundo
-let transporter = transporter1;
-let transporterActive = 'transporter1';
-
-// Verificar conexión al iniciar
-async function testTransporter() {
-    try {
-        await transporter1.verify();
-        console.log('✅ Servidor de correo listo (puerto 465 SSL)');
-        console.log(`📧 Enviando correos como: ${emailUser}`);
-        return true;
-    } catch (error1) {
-        console.log('⚠️ Puerto 465 falló:', error1.message);
-        console.log('🔄 Intentando con puerto 587...');
-        try {
-            await transporter2.verify();
-            transporter = transporter2;
-            transporterActive = 'transporter2';
-            console.log('✅ Servidor de correo listo (puerto 587 TLS)');
-            console.log(`📧 Enviando correos como: ${emailUser}`);
-            return true;
-        } catch (error2) {
-            console.error('❌ Ambos transportes fallaron');
-            console.error('Error 465:', error1.message);
-            console.error('Error 587:', error2.message);
-            return false;
-        }
-    }
-}
-
-// Ejecutar prueba
-testTransporter();
-
-// Función auxiliar para escapar HTML
 function escapeHtml(text) {
     if (!text) return '';
     return text
@@ -603,7 +525,7 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   API DE ENVIO DE CORREOS - CORREGIDA CON FALLBACK
+   API DE ENVIO DE CORREOS CON SENDGRID
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -627,6 +549,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         timeStyle: 'short'
     });
 
+    // Buscar logo
     const posiblesLogos = [
         path.join(__dirname, "src", "image", "TU-LOGO.png"),
         path.join(__dirname, "src", "image", "redimension.png"),
@@ -636,89 +559,125 @@ app.post("/api/enviar-correo", async (req, res) => {
     ];
 
     let logoPath = null;
+    let logoBase64 = null;
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
             logoPath = ruta;
+            logoBase64 = fs.readFileSync(ruta, { encoding: 'base64' });
             break;
         }
     }
 
-    const attachments = [];
-    if (logoPath) {
-        attachments.push({
-            filename: 'edapymes-logo.png',
-            path: logoPath,
-            cid: 'edapymes-logo'
-        });
-    }
+    // Correo para el administrador
+    const adminEmailContent = `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="UTF-8"></head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: #034AB0; color: white; padding: 20px; text-align: center;">
+                    <h2>📬 Nuevo Mensaje de Contacto</h2>
+                </div>
+                <div style="padding: 20px; background: #f5f5f5;">
+                    <p><strong>📅 Fecha:</strong> ${escapeHtml(fecha)}</p>
+                    <p><strong>👤 Nombre:</strong> ${escapeHtml(nombre)}</p>
+                    <p><strong>📧 Correo:</strong> ${escapeHtml(email)}</p>
+                    <p><strong>🔧 Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
+                    <p><strong>💬 Mensaje:</strong></p>
+                    <p style="background: white; padding: 15px; border-radius: 8px;">${escapeHtml(mensaje).replace(/\n/g, '<br>')}</p>
+                </div>
+                <div style="text-align: center; padding: 20px; font-size: 12px; color: #666;">
+                    <p>EDAPymes - Tecnología con Calidad y Calidez</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
 
-    const adminMailOptions = {
-        from: `"EDAPymes Contacto" <${emailUser}>`,
+    // Correo de confirmación para el usuario
+    const userEmailContent = `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="UTF-8"></head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: #034AB0; color: white; padding: 20px; text-align: center;">
+                    <h2>✨ ¡Hola ${escapeHtml(nombre)}!</h2>
+                </div>
+                <div style="padding: 20px; background: #f5f5f5;">
+                    <p>Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #034AB0;">
+                        <strong>📝 Tu mensaje:</strong><br>
+                        ${escapeHtml(mensaje)}
+                    </div>
+                    <p>Uno de nuestros asesores te responderá a la brevedad posible (normalmente en menos de 24 horas hábiles).</p>
+                    <p>Mientras tanto, te invitamos a:</p>
+                    <ul>
+                        <li>📱 Seguirnos en <a href="https://www.facebook.com/profile.php?id=61576401396435">Facebook</a></li>
+                        <li>💬 Contactarnos por <a href="https://wa.me/50583295424">WhatsApp</a> para consultas rápidas</li>
+                    </ul>
+                </div>
+                <div style="text-align: center; padding: 20px; font-size: 12px; color: #666;">
+                    <p>EDAPymes - Tecnología con Calidad y Calidez</p>
+                    <p>© ${new Date().getFullYear()} Todos los derechos reservados</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+
+    // Configurar los emails para SendGrid
+    const adminMsg = {
         to: emailUser,
+        from: emailUser,
         replyTo: email,
         subject: `📧 Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`,
-        html: `
-            <!DOCTYPE html>
-            <html>
-            <head><meta charset="UTF-8"></head>
-            <body style="font-family: Arial, sans-serif;">
-                <h2 style="color: #034AB0;">📬 Nuevo Mensaje de Contacto</h2>
-                <p><strong>📅 Fecha:</strong> ${escapeHtml(fecha)}</p>
-                <p><strong>👤 Nombre:</strong> ${escapeHtml(nombre)}</p>
-                <p><strong>📧 Correo:</strong> ${escapeHtml(email)}</p>
-                <p><strong>🔧 Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
-                <p><strong>💬 Mensaje:</strong></p>
-                <p>${escapeHtml(mensaje).replace(/\n/g, '<br>')}</p>
-                <hr>
-                <p style="color: #666;">EDAPymes - Tecnología con Calidad y Calidez</p>
-            </body>
-            </html>
-        `,
-        attachments: attachments
+        html: adminEmailContent
     };
 
-    const userMailOptions = {
-        from: `"EDAPymes" <${emailUser}>`,
+    const userMsg = {
         to: email,
+        from: emailUser,
         subject: `✅ Gracias por contactarnos ${nombre} - EDAPymes`,
-        html: `
-            <!DOCTYPE html>
-            <html>
-            <head><meta charset="UTF-8"></head>
-            <body style="font-family: Arial, sans-serif;">
-                <h2 style="color: #034AB0;">✨ ¡Hola ${escapeHtml(nombre)}!</h2>
-                <p>Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
-                <div style="background: #f5f5f5; padding: 15px; border-left: 4px solid #034AB0; margin: 15px 0;">
-                    <strong>📝 Tu mensaje:</strong><br>
-                    ${escapeHtml(mensaje)}
-                </div>
-                <p>Uno de nuestros asesores te responderá a la brevedad posible.</p>
-                <hr>
-                <p style="color: #666;">EDAPymes - Tecnología con Calidad y Calidez</p>
-            </body>
-            </html>
-        `,
-        attachments: attachments
+        html: userEmailContent
     };
+
+    // Agregar logo como adjunto si existe
+    if (logoBase64) {
+        adminMsg.attachments = [{
+            content: logoBase64,
+            filename: 'edapymes-logo.png',
+            type: 'image/png',
+            disposition: 'inline',
+            content_id: 'logo'
+        }];
+        userMsg.attachments = [{
+            content: logoBase64,
+            filename: 'edapymes-logo.png',
+            type: 'image/png',
+            disposition: 'inline',
+            content_id: 'logo'
+        }];
+    }
 
     try {
-        console.log('📤 Enviando correo al administrador...');
-        const adminResult = await transporter.sendMail(adminMailOptions);
-        console.log('✅ Correo a administrador enviado:', adminResult.messageId);
+        console.log('📤 Enviando correo al administrador via SendGrid...');
+        await sgMail.send(adminMsg);
+        console.log('✅ Correo a administrador enviado');
 
-        console.log('📤 Enviando correo de confirmación al usuario...');
-        const userResult = await transporter.sendMail(userMailOptions);
-        console.log('✅ Correo de confirmación enviado:', userResult.messageId);
+        console.log('📤 Enviando correo de confirmación al usuario via SendGrid...');
+        await sgMail.send(userMsg);
+        console.log('✅ Correo de confirmación enviado');
 
         res.json({
             success: true,
             message: "Correo enviado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error enviando correo:', error.message);
+        console.error('❌ Error enviando correo con SendGrid:', error.response?.body || error.message);
         res.status(500).json({
             error: "Error al enviar el correo",
-            details: error.message
+            details: error.response?.body?.errors?.[0]?.message || error.message
         });
     }
 });
@@ -739,54 +698,45 @@ app.post("/api/test-body", (req, res) => {
 });
 
 app.get("/api/diagnostico-email", async (req, res) => {
-    try {
-        await transporter.verify();
-        res.json({
-            status: "OK",
-            message: "Conexión SMTP exitosa",
-            emailUser: emailUser,
-            activeTransporter: transporterActive
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: "ERROR",
-            message: error.message
-        });
-    }
+    res.json({
+        status: "OK",
+        message: "SendGrid configurado",
+        emailUser: emailUser,
+        hasApiKey: !!sendgridApiKey
+    });
 });
 
 app.post("/api/test-email", async (req, res) => {
     const testEmail = req.body.email || emailUser;
 
-    const testOptions = {
-        from: `"EDAPymes Test" <${emailUser}>`,
+    const testMsg = {
         to: testEmail,
+        from: emailUser,
         subject: "🔧 Prueba de configuración de correo - EDAPymes",
         html: `
-            <h2>✅ Configuración de correo funcionando!</h2>
+            <h2>✅ Configuración de SendGrid funcionando!</h2>
             <p>Este es un correo de prueba enviado desde el servidor de EDAPymes.</p>
             <p>Fecha: ${new Date().toLocaleString()}</p>
             <hr>
             <p><strong>Configuración actual:</strong></p>
             <ul>
-                <li>Email user: ${emailUser}</li>
-                <li>Transporter activo: ${transporterActive}</li>
+                <li>Email remitente: ${emailUser}</li>
+                <li>Servicio: SendGrid</li>
             </ul>
         `
     };
 
     try {
-        const result = await transporter.sendMail(testOptions);
+        const result = await sgMail.send(testMsg);
         res.json({
             success: true,
-            message: "Correo de prueba enviado exitosamente",
-            messageId: result.messageId
+            message: "Correo de prueba enviado exitosamente"
         });
     } catch (error) {
-        console.error('Error en correo de prueba:', error);
+        console.error('Error en correo de prueba:', error.response?.body || error.message);
         res.status(500).json({
             success: false,
-            error: error.message
+            error: error.response?.body?.errors?.[0]?.message || error.message
         });
     }
 });
@@ -810,6 +760,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`📁 Directorio de uploads: ${uploadsDir}`);
     console.log(`💾 Base de datos: PostgreSQL`);
     console.log(`🖼️ ImageKit: Configurado`);
-    console.log(`📧 Email configurado con: ${emailUser}`);
-    console.log(`🔧 IPv4 forzado para conexiones SMTP`);
+    console.log(`📧 SendGrid configurado con: ${emailUser}`);
 });
