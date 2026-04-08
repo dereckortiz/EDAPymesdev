@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const pgSession = require('connect-pg-simple')(session);
 const ImageKit = require('imagekit');
-const sgMail = require('@sendgrid/mail');
+const brevo = require('@getbrevo/brevo');
 
 const app = express();
 
@@ -40,17 +40,19 @@ const imagekit = new ImageKit({
 console.log('✅ ImageKit configurado');
 
 /* ===============================
-   CONFIGURACION DE SENDGRID - SOLO VARIABLES DE ENTORNO
+   CONFIGURACION DE BREVO
 ================================ */
-const sendgridApiKey = process.env.SENDGRID_API_KEY;
-const emailUser = process.env.EMAIL_USER || 'derecksevi@gmail.com';
+const brevoApiKey = process.env.BREVO_API_KEY;
+const emailUser = process.env.EMAIL_USER || 'edapymestech@gmail.com';
 
-if (sendgridApiKey) {
-    sgMail.setApiKey(sendgridApiKey);
-    console.log('✅ SendGrid configurado correctamente');
+let brevoClient = null;
+if (brevoApiKey) {
+    brevoClient = new brevo.TransactionalEmailsApi();
+    brevoClient.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, brevoApiKey);
+    console.log('✅ Brevo configurado correctamente');
     console.log(`📧 Los correos se enviarán desde: ${emailUser}`);
 } else {
-    console.log('❌ SENDGRID_API_KEY no configurada en variables de entorno');
+    console.log('❌ BREVO_API_KEY no configurada en variables de entorno');
     console.log('⚠️ Los correos NO funcionarán hasta que la configures');
 }
 
@@ -526,7 +528,28 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON SENDGRID
+   FUNCION PARA CREAR HEADER CON LOGO
+================================ */
+function crearHeaderConLogo() {
+    return `
+        <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td style="width: 90px; vertical-align: middle;">
+                        <img src="cid:edapymes-logo" alt="EDAPymes" style="display: block; width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                    </td>
+                    <td style="vertical-align: middle; padding-left: 18px;">
+                        <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold;">EDAPymes</h1>
+                        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnologia con Calidad y Calidez</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    `;
+}
+
+/* ===============================
+   API DE ENVIO DE CORREOS CON BREVO
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -544,6 +567,11 @@ app.post("/api/enviar-correo", async (req, res) => {
         return res.status(400).json({ error: "Correo electrónico inválido" });
     }
 
+    if (!brevoClient) {
+        console.log('❌ Brevo no configurado');
+        return res.status(500).json({ error: "Servicio de correo no configurado" });
+    }
+
     const fecha = new Date().toLocaleString('es-ES', {
         timeZone: 'America/Managua',
         dateStyle: 'full',
@@ -559,9 +587,11 @@ app.post("/api/enviar-correo", async (req, res) => {
         path.join(__dirname, "public", "image", "logo.png")
     ];
 
+    let logoPath = null;
     let logoBase64 = null;
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
+            logoPath = ruta;
             logoBase64 = fs.readFileSync(ruta, { encoding: 'base64' });
             break;
         }
@@ -571,22 +601,37 @@ app.post("/api/enviar-correo", async (req, res) => {
     const adminEmailContent = `
         <!DOCTYPE html>
         <html>
-        <head><meta charset="UTF-8"></head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: #034AB0; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-                    <h2>📬 Nuevo Mensaje de Contacto</h2>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body { margin: 0; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4; }
+                .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                .content { padding: 30px; }
+                .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #034AB0; }
+                .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                ${crearHeaderConLogo()}
+                <div class="content">
+                    <h2 style="color: #034AB0; margin-top: 0;">Nuevo mensaje de contacto</h2>
+                    
+                    <div style="margin: 20px 0;">
+                        <p><strong>📅 Fecha:</strong> ${escapeHtml(fecha)}</p>
+                        <p><strong>👤 Nombre:</strong> ${escapeHtml(nombre)}</p>
+                        <p><strong>📧 Correo:</strong> ${escapeHtml(email)}</p>
+                        <p><strong>🔧 Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
+                    </div>
+                    
+                    <div class="info-box">
+                        <p style="margin: 0 0 10px;"><strong>💬 Mensaje:</strong></p>
+                        <p style="margin: 0; line-height: 1.6;">${escapeHtml(mensaje).replace(/\n/g, '<br>')}</p>
+                    </div>
                 </div>
-                <div style="padding: 20px; background: #f5f5f5;">
-                    <p><strong>📅 Fecha:</strong> ${escapeHtml(fecha)}</p>
-                    <p><strong>👤 Nombre:</strong> ${escapeHtml(nombre)}</p>
-                    <p><strong>📧 Correo:</strong> ${escapeHtml(email)}</p>
-                    <p><strong>🔧 Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
-                    <p><strong>💬 Mensaje:</strong></p>
-                    <p style="background: white; padding: 15px; border-radius: 8px;">${escapeHtml(mensaje).replace(/\n/g, '<br>')}</p>
-                </div>
-                <div style="text-align: center; padding: 20px; font-size: 12px; color: #666;">
-                    <p>EDAPymes - Tecnología con Calidad y Calidez</p>
+                <div class="footer">
+                    Este mensaje fue enviado desde el formulario de contacto de EDAPymes.
                 </div>
             </div>
         </body>
@@ -597,75 +642,81 @@ app.post("/api/enviar-correo", async (req, res) => {
     const userEmailContent = `
         <!DOCTYPE html>
         <html>
-        <head><meta charset="UTF-8"></head>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: #034AB0; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-                    <h2>✨ ¡Hola ${escapeHtml(nombre)}!</h2>
-                </div>
-                <div style="padding: 20px; background: #f5f5f5;">
-                    <p>Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
-                    <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #034AB0;">
-                        <strong>📝 Tu mensaje:</strong><br>
-                        ${escapeHtml(mensaje)}
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body { margin: 0; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f4; }
+                .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                .content { padding: 30px; }
+                .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0; }
+                .contact-box { background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%); padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center; }
+                .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                ${crearHeaderConLogo()}
+                <div class="content">
+                    <h2 style="color: #034AB0;">✨ ¡Hola ${escapeHtml(nombre)}!</h2>
+                    <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
+                    
+                    <div class="info-box">
+                        <p style="margin: 0 0 10px;"><strong>📝 Detalle de tu consulta:</strong></p>
+                        <p><strong>🔧 Servicio de interés:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
+                        <p><strong>💬 Mensaje:</strong></p>
+                        <p style="margin: 8px 0 0; color: #555;">${escapeHtml(mensaje)}</p>
                     </div>
-                    <p>Uno de nuestros asesores te responderá a la brevedad posible (normalmente en menos de 24 horas hábiles).</p>
-                    <p>Mientras tanto, te invitamos a:</p>
-                    <ul>
-                        <li>📱 Seguirnos en <a href="https://www.facebook.com/profile.php?id=61576401396435">Facebook</a></li>
-                        <li>💬 Contactarnos por <a href="https://wa.me/50583295424">WhatsApp</a> para consultas rápidas</li>
-                    </ul>
+                    
+                    <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las próximas 24 horas hábiles para brindarte la atención que mereces.</p>
+                    
+                    <div class="contact-box">
+                        <p style="margin: 0; color: #034AB0; font-weight: bold;">📱 ¿Necesitas ayuda inmediata?</p>
+                        <p style="margin: 10px 0 0;">Contáctanos al <strong>+505 8329 5424</strong><br>
+                        o escríbenos a <strong>edapymestech@gmail.com</strong></p>
+                    </div>
                 </div>
-                <div style="text-align: center; padding: 20px; font-size: 12px; color: #666;">
-                    <p>EDAPymes - Tecnología con Calidad y Calidez</p>
-                    <p>© ${new Date().getFullYear()} Todos los derechos reservados</p>
+                <div class="footer">
+                    Este es un mensaje automático, por favor no responder a este correo.<br>
+                    EDAPymes - Tecnología con Calidad y Calidez<br>
+                    Nicaragua
                 </div>
             </div>
         </body>
         </html>
     `;
 
-    // Configurar los emails para SendGrid
-    const adminMsg = {
-        to: emailUser,
-        from: emailUser,
-        replyTo: email,
-        subject: `📧 Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`,
-        html: adminEmailContent
-    };
+    // Configurar emails para Brevo
+    const adminEmail = new brevo.SendSmtpEmail();
+    adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
+    adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
+    adminEmail.replyTo = { email: email, name: nombre };
+    adminEmail.subject = `📧 Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
+    adminEmail.htmlContent = adminEmailContent;
 
-    const userMsg = {
-        to: email,
-        from: emailUser,
-        subject: `✅ Gracias por contactarnos ${nombre} - EDAPymes`,
-        html: userEmailContent
-    };
+    const userEmail = new brevo.SendSmtpEmail();
+    userEmail.to = [{ email: email, name: nombre }];
+    userEmail.sender = { email: emailUser, name: 'EDAPymes' };
+    userEmail.subject = `✅ Gracias por contactarnos ${nombre} - EDAPymes`;
+    userEmail.htmlContent = userEmailContent;
 
     // Agregar logo como adjunto si existe
     if (logoBase64) {
-        adminMsg.attachments = [{
+        const attachment = {
             content: logoBase64,
-            filename: 'edapymes-logo.png',
-            type: 'image/png',
-            disposition: 'inline',
-            content_id: 'logo'
-        }];
-        userMsg.attachments = [{
-            content: logoBase64,
-            filename: 'edapymes-logo.png',
-            type: 'image/png',
-            disposition: 'inline',
-            content_id: 'logo'
-        }];
+            name: 'edapymes-logo.png'
+        };
+        adminEmail.attachment = [attachment];
+        userEmail.attachment = [attachment];
     }
 
     try {
-        console.log('📤 Enviando correo al administrador via SendGrid...');
-        await sgMail.send(adminMsg);
+        console.log('📤 Enviando correo al administrador via Brevo...');
+        await brevoClient.sendTransacEmail(adminEmail);
         console.log('✅ Correo a administrador enviado');
 
-        console.log('📤 Enviando correo de confirmación al usuario via SendGrid...');
-        await sgMail.send(userMsg);
+        console.log('📤 Enviando correo de confirmación al usuario via Brevo...');
+        await brevoClient.sendTransacEmail(userEmail);
         console.log('✅ Correo de confirmación enviado');
 
         res.json({
@@ -673,10 +724,10 @@ app.post("/api/enviar-correo", async (req, res) => {
             message: "Correo enviado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error enviando correo con SendGrid:', error.response?.body || error.message);
+        console.error('❌ Error enviando correo con Brevo:', error.response?.body || error.message);
         res.status(500).json({
             error: "Error al enviar el correo",
-            details: error.response?.body?.errors?.[0]?.message || error.message
+            details: error.response?.body?.message || error.message
         });
     }
 });
@@ -699,35 +750,38 @@ app.post("/api/test-body", (req, res) => {
 app.get("/api/diagnostico-email", async (req, res) => {
     res.json({
         status: "OK",
-        message: "SendGrid configurado",
+        message: "Brevo configurado",
         emailUser: emailUser,
-        hasApiKey: !!sendgridApiKey
+        hasApiKey: !!brevoApiKey
     });
 });
 
 app.post("/api/test-email", async (req, res) => {
     const testEmail = req.body.email || emailUser;
 
-    const testMsg = {
-        to: testEmail,
-        from: emailUser,
-        subject: "🔧 Prueba de configuración de correo - EDAPymes",
-        html: `
-            <h2>✅ Configuración de SendGrid funcionando!</h2>
-            <p>Este es un correo de prueba enviado desde el servidor de EDAPymes.</p>
-            <p>Fecha: ${new Date().toLocaleString()}</p>
-            <hr>
-            <p><strong>Configuración actual:</strong></p>
-            <ul>
-                <li>Email remitente: ${emailUser}</li>
-                <li>Servicio: SendGrid</li>
-                <li>API Key configurada: ${!!sendgridApiKey ? '✅ Sí' : '❌ No'}</li>
-            </ul>
-        `
-    };
+    if (!brevoClient) {
+        return res.status(500).json({ error: "Brevo no configurado" });
+    }
+
+    const testMsg = new brevo.SendSmtpEmail();
+    testMsg.to = [{ email: testEmail }];
+    testMsg.sender = { email: emailUser, name: 'EDAPymes Test' };
+    testMsg.subject = "🔧 Prueba de configuración - EDAPymes";
+    testMsg.htmlContent = `
+        <h2>✅ Brevo funcionando correctamente!</h2>
+        <p>Este es un correo de prueba desde EDAPymes con Brevo.</p>
+        <p>Fecha: ${new Date().toLocaleString()}</p>
+        <hr>
+        <p><strong>Configuración actual:</strong></p>
+        <ul>
+            <li>Email remitente: ${emailUser}</li>
+            <li>Servicio: Brevo</li>
+            <li>API Key configurada: ${!!brevoApiKey ? '✅ Sí' : '❌ No'}</li>
+        </ul>
+    `;
 
     try {
-        await sgMail.send(testMsg);
+        await brevoClient.sendTransacEmail(testMsg);
         res.json({
             success: true,
             message: "Correo de prueba enviado exitosamente"
@@ -736,7 +790,7 @@ app.post("/api/test-email", async (req, res) => {
         console.error('Error en correo de prueba:', error.response?.body || error.message);
         res.status(500).json({
             success: false,
-            error: error.response?.body?.errors?.[0]?.message || error.message
+            error: error.response?.body?.message || error.message
         });
     }
 });
@@ -760,6 +814,6 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`📁 Directorio de uploads: ${uploadsDir}`);
     console.log(`💾 Base de datos: PostgreSQL`);
     console.log(`🖼️ ImageKit: Configurado`);
-    console.log(`📧 SendGrid: ${sendgridApiKey ? '✅ Configurado' : '❌ No configurado'}`);
+    console.log(`📧 Brevo: ${brevoApiKey ? '✅ Configurado' : '❌ No configurado'}`);
     console.log(`📧 Email remitente: ${emailUser}`);
 });
