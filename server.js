@@ -22,9 +22,9 @@ const pool = new Pool({
 
 pool.connect((err) => {
     if (err) {
-        console.error('❌ Error conectando a PostgreSQL:', err.message);
+        console.error('Error conectando a PostgreSQL:', err.message);
     } else {
-        console.log('✅ Conectado a PostgreSQL');
+        console.log('Conectado a PostgreSQL');
     }
 });
 
@@ -37,10 +37,10 @@ const imagekit = new ImageKit({
     urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
 });
 
-console.log('✅ ImageKit configurado');
+console.log('ImageKit configurado');
 
 /* ===============================
-   CONFIGURACION DE BREVO - VERSIÓN 1.0.1 CORREGIDA
+   CONFIGURACION DE BREVO - VERSION 1.0.1 CORREGIDA
 ================================ */
 const brevoApiKey = process.env.BREVO_API_KEY;
 const emailUser = process.env.EMAIL_USER || 'edapymestech@gmail.com';
@@ -48,21 +48,20 @@ const emailUser = process.env.EMAIL_USER || 'edapymestech@gmail.com';
 let brevoClient = null;
 if (brevoApiKey) {
     try {
-        // Configuración correcta para Brevo 1.0.1
         const defaultClient = brevo.ApiClient.instance;
         const apiKey = defaultClient.authentications['api-key'];
         apiKey.apiKey = brevoApiKey;
 
         brevoClient = new brevo.TransactionalEmailsApi();
-        console.log('✅ Brevo configurado correctamente');
-        console.log(`📧 Los correos se enviarán desde: ${emailUser}`);
+        console.log('Brevo configurado correctamente');
+        console.log('Los correos se enviaran desde:', emailUser);
     } catch (error) {
-        console.error('❌ Error configurando Brevo:', error.message);
+        console.error('Error configurando Brevo:', error.message);
         brevoClient = null;
     }
 } else {
-    console.log('❌ BREVO_API_KEY no configurada en variables de entorno');
-    console.log('⚠️ Los correos NO funcionarán hasta que la configures');
+    console.log('BREVO_API_KEY no configurada en variables de entorno');
+    console.log('Los correos NO funcionaran hasta que la configures');
 }
 
 /* ===============================
@@ -272,7 +271,7 @@ app.post("/api/login", async (req, res) => {
         console.log("Verificando contraseña...");
 
         const validPassword = await bcrypt.compare(password, user.password);
-        console.log(`Contraseña válida: ${validPassword}`);
+        console.log(`Contraseña valida: ${validPassword}`);
 
         if (!validPassword) {
             return res.status(401).json({ error: "Usuario o contrasena incorrectos" });
@@ -288,7 +287,7 @@ app.post("/api/login", async (req, res) => {
                 return res.status(500).json({ error: "Error al guardar sesión" });
             }
 
-            console.log("✅ Login exitoso - Sesión guardada");
+            console.log("Login exitoso - Sesion guardada");
             res.json({
                 success: true,
                 message: "Login exitoso",
@@ -312,7 +311,7 @@ app.post("/api/logout", (req, res) => {
 });
 
 app.get("/api/verify", (req, res) => {
-    console.log('Verificando sesión - SessionID:', req.sessionID);
+    console.log('Verificando sesion - SessionID:', req.sessionID);
     if (req.session && req.session.isAuthenticated) {
         res.json({
             authenticated: true,
@@ -349,7 +348,7 @@ app.get("/api/diagnostico-usuario", async (req, res) => {
             usuario_existe: true,
             username: user.username,
             password_valida: isValid,
-            mensaje: isValid ? "✅ Login funcionaría" : "❌ La contraseña no coincide"
+            mensaje: isValid ? "Login funcionaria" : "La contrasena no coincide"
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -440,7 +439,7 @@ app.post("/api/productos", requireAuth, (req, res) => {
                         isMain: i === 0,
                         order: i
                     });
-                    console.log(`✅ Imagen ${i + 1} subida: ${result.url}`);
+                    console.log(`Imagen ${i + 1} subida: ${result.url}`);
                 }
             }
             const imagenesJSON = JSON.stringify(imagenesData);
@@ -465,7 +464,7 @@ app.post("/api/productos", requireAuth, (req, res) => {
             });
         } catch (error) {
             console.error('Error al subir a ImageKit:', error);
-            res.status(500).json({ error: "Error al subir imágenes: " + error.message });
+            res.status(500).json({ error: "Error al subir imagenes: " + error.message });
         }
     });
 });
@@ -480,7 +479,7 @@ app.delete("/api/productos/:id", requireAuth, async (req, res) => {
                 for (const img of imagenes) {
                     if (img.fileId) {
                         await imagekit.deleteFile(img.fileId);
-                        console.log(`✅ Imagen eliminada de ImageKit: ${img.fileId}`);
+                        console.log(`Imagen eliminada de ImageKit: ${img.fileId}`);
                     }
                 }
             } catch (e) {
@@ -537,7 +536,7 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   FUNCION PARA CREAR HEADER CON LOGO
+   FUNCION PARA CREAR HEADER CON LOGO - CORREGIDA PARA BREVO
 ================================ */
 function crearHeaderConLogo() {
     return `
@@ -558,26 +557,26 @@ function crearHeaderConLogo() {
 }
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA
+   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA SIN EMOJIS Y CON LOGO CORRECTO
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
 
-    console.log('📨 Recibida solicitud de correo:', { nombre, email, servicio });
+    console.log('Recibida solicitud de correo:', { nombre, email, servicio });
 
     if (!nombre || !email || !mensaje) {
-        console.log('❌ Faltan campos requeridos');
+        console.log('Faltan campos requeridos');
         return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        console.log('❌ Email inválido:', email);
-        return res.status(400).json({ error: "Correo electrónico inválido" });
+        console.log('Email invalido:', email);
+        return res.status(400).json({ error: "Correo electronico invalido" });
     }
 
     if (!brevoClient) {
-        console.log('❌ Brevo no configurado');
+        console.log('Brevo no configurado');
         return res.status(500).json({ error: "Servicio de correo no configurado" });
     }
 
@@ -587,7 +586,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         timeStyle: 'short'
     });
 
-    // Buscar logo
+    // Buscar logo en diferentes rutas
     const posiblesLogos = [
         path.join(__dirname, "src", "image", "TU-LOGO.png"),
         path.join(__dirname, "src", "image", "redimension.png"),
@@ -600,11 +599,16 @@ app.post("/api/enviar-correo", async (req, res) => {
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
             logoBase64 = fs.readFileSync(ruta, { encoding: 'base64' });
+            console.log('Logo encontrado en:', ruta);
             break;
         }
     }
 
-    // Correo para el administrador
+    if (!logoBase64) {
+        console.log('No se encontro logo en ninguna ruta');
+    }
+
+    // Correo para el administrador (sin emojis)
     const adminEmailContent = `
         <!DOCTYPE html>
         <html>
@@ -626,14 +630,14 @@ app.post("/api/enviar-correo", async (req, res) => {
                     <h2 style="color: #034AB0; margin-top: 0;">Nuevo mensaje de contacto</h2>
                     
                     <div style="margin: 20px 0;">
-                        <p><strong>📅 Fecha:</strong> ${escapeHtml(fecha)}</p>
-                        <p><strong>👤 Nombre:</strong> ${escapeHtml(nombre)}</p>
-                        <p><strong>📧 Correo:</strong> ${escapeHtml(email)}</p>
-                        <p><strong>🔧 Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
+                        <p><strong>Fecha:</strong> ${escapeHtml(fecha)}</p>
+                        <p><strong>Nombre:</strong> ${escapeHtml(nombre)}</p>
+                        <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
+                        <p><strong>Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
                     </div>
                     
                     <div class="info-box">
-                        <p style="margin: 0 0 10px;"><strong>💬 Mensaje:</strong></p>
+                        <p style="margin: 0 0 10px;"><strong>Mensaje:</strong></p>
                         <p style="margin: 0; line-height: 1.6;">${escapeHtml(mensaje).replace(/\n/g, '<br>')}</p>
                     </div>
                 </div>
@@ -645,7 +649,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         </html>
     `;
 
-    // Correo de confirmación para el usuario
+    // Correo de confirmacion para el usuario (sin emojis)
     const userEmailContent = `
         <!DOCTYPE html>
         <html>
@@ -665,27 +669,27 @@ app.post("/api/enviar-correo", async (req, res) => {
             <div class="container">
                 ${crearHeaderConLogo()}
                 <div class="content">
-                    <h2 style="color: #034AB0;">✨ ¡Hola ${escapeHtml(nombre)}!</h2>
+                    <h2 style="color: #034AB0;">Hola ${escapeHtml(nombre)}!</h2>
                     <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
                     
                     <div class="info-box">
-                        <p style="margin: 0 0 10px;"><strong>📝 Detalle de tu consulta:</strong></p>
-                        <p><strong>🔧 Servicio de interés:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
-                        <p><strong>💬 Mensaje:</strong></p>
+                        <p style="margin: 0 0 10px;"><strong>Detalle de tu consulta:</strong></p>
+                        <p><strong>Servicio de interes:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
+                        <p><strong>Mensaje:</strong></p>
                         <p style="margin: 8px 0 0; color: #555;">${escapeHtml(mensaje)}</p>
                     </div>
                     
-                    <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las próximas 24 horas hábiles para brindarte la atención que mereces.</p>
+                    <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las proximas 24 horas habiles para brindarte la atencion que mereces.</p>
                     
                     <div class="contact-box">
-                        <p style="margin: 0; color: #034AB0; font-weight: bold;">📱 ¿Necesitas ayuda inmediata?</p>
-                        <p style="margin: 10px 0 0;">Contáctanos al <strong>+505 8329 5424</strong><br>
-                        o escríbenos a <strong>edapymestech@gmail.com</strong></p>
+                        <p style="margin: 0; color: #034AB0; font-weight: bold;">Necesitas ayuda inmediata?</p>
+                        <p style="margin: 10px 0 0;">Contactanos al <strong>+505 8329 5424</strong><br>
+                        o escribenos a <strong>edapymestech@gmail.com</strong></p>
                     </div>
                 </div>
                 <div class="footer">
-                    Este es un mensaje automático, por favor no responder a este correo.<br>
-                    EDAPymes - Tecnología con Calidad y Calidez<br>
+                    Este es un mensaje automatico, por favor no responder a este correo.<br>
+                    EDAPymes - Tecnologia con Calidad y Calidez<br>
                     Nicaragua
                 </div>
             </div>
@@ -698,16 +702,16 @@ app.post("/api/enviar-correo", async (req, res) => {
     adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
     adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
     adminEmail.replyTo = { email: email, name: nombre };
-    adminEmail.subject = `📧 Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
+    adminEmail.subject = `Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
     adminEmail.htmlContent = adminEmailContent;
 
     const userEmail = new brevo.SendSmtpEmail();
     userEmail.to = [{ email: email, name: nombre }];
     userEmail.sender = { email: emailUser, name: 'EDAPymes' };
-    userEmail.subject = `✅ Gracias por contactarnos ${nombre} - EDAPymes`;
+    userEmail.subject = `Gracias por contactarnos ${nombre} - EDAPymes`;
     userEmail.htmlContent = userEmailContent;
 
-    // Agregar logo como adjunto si existe
+    // Agregar logo como adjunto con el cid correcto
     if (logoBase64) {
         const attachment = {
             content: logoBase64,
@@ -715,23 +719,25 @@ app.post("/api/enviar-correo", async (req, res) => {
         };
         adminEmail.attachment = [attachment];
         userEmail.attachment = [attachment];
+    } else {
+        console.log('No se pudo adjuntar el logo');
     }
 
     try {
-        console.log('📤 Enviando correo al administrador via Brevo...');
+        console.log('Enviando correo al administrador via Brevo...');
         await brevoClient.sendTransacEmail(adminEmail);
-        console.log('✅ Correo a administrador enviado');
+        console.log('Correo a administrador enviado');
 
-        console.log('📤 Enviando correo de confirmación al usuario via Brevo...');
+        console.log('Enviando correo de confirmacion al usuario via Brevo...');
         await brevoClient.sendTransacEmail(userEmail);
-        console.log('✅ Correo de confirmación enviado');
+        console.log('Correo de confirmacion enviado');
 
         res.json({
             success: true,
             message: "Correo enviado exitosamente"
         });
     } catch (error) {
-        console.error('❌ Error enviando correo con Brevo:', error.response?.body || error.message);
+        console.error('Error enviando correo con Brevo:', error.response?.body || error.message);
         res.status(500).json({
             error: "Error al enviar el correo",
             details: error.response?.body?.message || error.message
@@ -773,17 +779,17 @@ app.post("/api/test-email", async (req, res) => {
     const testMsg = new brevo.SendSmtpEmail();
     testMsg.to = [{ email: testEmail }];
     testMsg.sender = { email: emailUser, name: 'EDAPymes Test' };
-    testMsg.subject = "🔧 Prueba de configuración - EDAPymes";
+    testMsg.subject = "Prueba de configuracion - EDAPymes";
     testMsg.htmlContent = `
-        <h2>✅ Brevo funcionando correctamente!</h2>
+        <h2>Brevo funcionando correctamente!</h2>
         <p>Este es un correo de prueba desde EDAPymes con Brevo.</p>
         <p>Fecha: ${new Date().toLocaleString()}</p>
         <hr>
-        <p><strong>Configuración actual:</strong></p>
+        <p><strong>Configuracion actual:</strong></p>
         <ul>
             <li>Email remitente: ${emailUser}</li>
             <li>Servicio: Brevo</li>
-            <li>API Key configurada: ${!!brevoApiKey ? '✅ Sí' : '❌ No'}</li>
+            <li>API Key configurada: ${!!brevoApiKey ? 'Si' : 'No'}</li>
         </ul>
     `;
 
@@ -816,11 +822,11 @@ app.use((err, req, res, next) => {
 ================================ */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-    console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`📁 Directorio de uploads: ${uploadsDir}`);
-    console.log(`💾 Base de datos: PostgreSQL`);
-    console.log(`🖼️ ImageKit: Configurado`);
-    console.log(`📧 Brevo: ${brevoApiKey ? '✅ Configurado' : '❌ No configurado'}`);
-    console.log(`📧 Email remitente: ${emailUser}`);
+    console.log(`Servidor corriendo en puerto ${PORT}`);
+    console.log(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Directorio de uploads: ${uploadsDir}`);
+    console.log(`Base de datos: PostgreSQL`);
+    console.log(`ImageKit: Configurado`);
+    console.log(`Brevo: ${brevoApiKey ? 'Configurado' : 'No configurado'}`);
+    console.log(`Email remitente: ${emailUser}`);
 });
