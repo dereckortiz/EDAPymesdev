@@ -1,48 +1,1617 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>EDAPymes - Tecnología con Calidad y Calidez</title>
-<link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23034AB0' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='42' font-weight='bold' font-family='Arial'%3EE%3C/text%3E%3C/svg%3E">
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}body{background-color:#f6f6f6;color:#2d2f2f;font-family:'Inter',sans-serif;overflow-x:hidden}.material-symbols-outlined{vertical-align:middle}.loading-spinner{display:inline-block;width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #0059b6;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.specs-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1000;animation:fadeIn 0.3s}.specs-content{background:white;border-radius:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.catalogo-layout{display:flex;min-height:100vh}.catalogo-sidebar{position:fixed;top:80px;left:0;height:calc(100vh - 80px);width:264px;overflow-y:auto;z-index:40;background-color:#f8fafc;border-right:1px solid #e2e8f0}.catalogo-main{margin-left:264px;flex:1;overflow-y:auto;height:calc(100vh - 80px);padding-top:0}.catalogo-main::-webkit-scrollbar{width:8px}.catalogo-main::-webkit-scrollbar-track{background:#f1f1f1}.catalogo-main::-webkit-scrollbar-thumb{background:#0059b6;border-radius:4px}.catalogo-main::-webkit-scrollbar-thumb:hover{background:#004090}.footer-hidden{display:none !important}.toast-notification{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:1000;padding:12px 24px;border-radius:8px;color:white;font-weight:bold;animation:slideUp 0.3s ease-out}@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}.whatsapp-float{position:fixed;bottom:30px;right:30px;z-index:100;background-color:#25D366;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:all 0.3s ease;cursor:pointer;border:none}.whatsapp-float:hover{transform:scale(1.1);background-color:#20b859;box-shadow:0 6px 20px rgba(0,0,0,0.25)}.whatsapp-float svg{width:32px;height:32px;fill:white}.mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:8px}.mobile-menu-btn span{display:block;width:25px;height:3px;background-color:#034AB0;margin:5px 0;transition:0.3s}@media(max-width:768px){.desktop-nav{display:none}.mobile-menu-btn{display:block}.mobile-nav.open{display:flex !important;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:white;padding:20px;gap:15px;border-bottom:1px solid #e2e8f0;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1)}.whatsapp-float{width:50px;height:50px;bottom:20px;right:20px}.whatsapp-float svg{width:28px;height:28px}}@media(max-width:480px){.whatsapp-float{width:45px;height:45px;bottom:15px;right:15px}.whatsapp-float svg{width:24px;height:24px}}.image-zoom-container{position:relative;overflow:hidden;cursor:crosshair}.image-zoom-container img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s ease}.thumbnail-detail{cursor:pointer;transition:all 0.2s ease;border:2px solid transparent}.thumbnail-detail:hover{transform:scale(1.05);border-color:#0059b6}.thumbnail-detail.active{border-color:#0059b6;transform:scale(1.02)}.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.producto-card{transition:all 0.25s cubic-bezier(0.2,0,0,1);cursor:pointer}.producto-card:hover{transform:translateY(-5px);box-shadow:0 20px 30px -12px rgba(0,89,182,0.15)}.card-img{transition:transform 0.5s ease}.group:hover .card-img{transform:scale(1.05)}.carousel-container{position:relative;width:100%;max-width:1800px;margin:0 auto;border-radius:40px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}.carousel-track{position:relative;width:100%;height:600px;overflow:hidden}.carousel-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity 0.8s cubic-bezier(0.4,0,0.2,1),visibility 0.8s cubic-bezier(0.4,0,0.2,1);will-change:opacity}.carousel-slide.active{opacity:1;visibility:visible;z-index:10}.carousel-slide img,.carousel-slide video{width:100%;height:100%;object-fit:cover}.carousel-slide video{object-fit:cover;background-color:#0a0a2a}.carousel-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.4) 50%,rgba(0,0,0,0.2) 100%);z-index:15}.carousel-content{position:absolute;inset:0;z-index:20;display:flex;align-items:center;opacity:0;transform:translateY(30px);transition:opacity 0.6s ease-out,transform 0.6s ease-out;pointer-events:none}.carousel-content.active{opacity:1;transform:translateY(0);pointer-events:auto}.carousel-content-inner{padding-left:3rem;max-width:650px}@media(min-width:768px){.carousel-content-inner{padding-left:6rem}}.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:30;background:rgba(255,255,255,0.2);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.3);border-radius:50%;width:52px;height:52px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s ease;color:white;opacity:0;visibility:hidden}.carousel-container:hover .carousel-btn{opacity:1;visibility:visible}@media(max-width:768px){.carousel-btn{opacity:0;visibility:hidden}.carousel-container.touch-active .carousel-btn{opacity:1;visibility:visible}}.carousel-btn:hover{background:rgba(255,255,255,0.35);transform:translateY(-50%) scale(1.1);border-color:rgba(255,255,255,0.6)}.carousel-btn.prev{left:20px}.carousel-btn.next{right:20px}.carousel-dots{position:absolute;bottom:30px;left:0;right:0;display:flex;justify-content:center;gap:12px;z-index:30}.carousel-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.3s ease}.carousel-dot.active{background:#034AB0;width:28px;border-radius:20px;box-shadow:0 0 8px rgba(7,105,210,0.6)}.carousel-action-buttons{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}.btn-primary-carousel{background:#034AB0;color:white;padding:0.875rem 2rem;border-radius:50px;font-weight:700;transition:all 0.3s ease;border:none;cursor:pointer;font-size:1rem;pointer-events:auto}.btn-primary-carousel:hover{background:#023a8a;transform:translateY(-2px)}.btn-secondary-carousel{background:transparent;border:1.5px solid rgba(255,255,255,0.6);color:white;padding:0.875rem 2rem;border-radius:50px;font-weight:700;transition:all 0.3s ease;cursor:pointer;font-size:1rem;pointer-events:auto}.btn-secondary-carousel:hover{background:rgba(255,255,255,0.15);border-color:white}.carousel-title{font-size:2.5rem;font-weight:800;line-height:1.2;color:white;text-shadow:0 2px 10px rgba(0,0,0,0.3)}.carousel-subtitle{color:rgba(255,255,255,0.9);margin-top:1rem;font-size:1rem;line-height:1.5}@media(min-width:768px){.carousel-title{font-size:3.5rem}.carousel-subtitle{font-size:1.125rem}}@media(min-width:1024px){.carousel-title{font-size:4.5rem}.carousel-subtitle{font-size:1.25rem}}.service-card{transition:all 0.3s ease;cursor:pointer}.service-card:hover{transform:translateY(-10px);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1)}.service-card.active{transform:scale(1.05);box-shadow:0 25px 30px -12px rgba(7,105,210,0.3)}.aurora-gradient{background:linear-gradient(135deg,#0b1120 0%,#0f172a 50%,#1e293b 100%)}.bg-team{background:linear-gradient(115deg,#0f172a 0%,#1e293b 100%);position:relative}.bg-efecto{position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(7,105,210,0.15) 0%,transparent 70%)}.bg-contacto{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);position:relative}.contacto-efecto{position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(7,105,210,0.2) 0%,transparent 70%)}.submit-btn{transition:all 0.3s ease;position:relative;overflow:hidden}.submit-btn.loading{background-color:#034AB0;pointer-events:none}.submit-btn.success{background-color:#10b981;pointer-events:none}.submit-btn .btn-text{transition:all 0.3s ease}.submit-btn .btn-icon{display:inline-flex;align-items:center;justify-content:center;transition:all 0.3s ease}.scroll-mt-24{scroll-margin-top:100px}.text-outline{-webkit-text-stroke:1px rgba(255,255,255,0.3);color:transparent}@media(max-width:768px){.text-outline{-webkit-text-stroke:0.5px rgba(255,255,255,0.3)}}.vertical-text{writing-mode:vertical-rl;transform:rotate(180deg)}
-</style>
-<script>tailwind.config={theme:{extend:{colors:{primary:'#034AB0','primary-hover':'#023a8a',cobalt:'#034AB0','navy-dark':'#001a3d','tech-gray':'#1e293b','slate-mid':'#e2e8f0','slate-light':'#f1f5f9',secondary:'#5985BD',background:'#FFFFFF','background-soft':'#F4F7FB',surface:'#FFFFFF','surface-variant':'#F8FAFC','on-primary':'#FFFFFF','on-surface':'#0C1F41','on-surface-variant':'#6B7280',outline:'#E5E7EB'},fontFamily:{headline:['Manrope','sans-serif'],body:['Inter','sans-serif']}}}}</script>
-</head>
-<body class="bg-white font-['Inter']">
-<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100"><div class="flex justify-between items-center px-8 py-5 max-w-7xl mx-auto"><div class="flex items-center gap-3"><img src="../src/image/TU-LOGO.png" class="h-12" alt="Logo" onerror="this.style.display='none'"><div class="text-2xl font-black text-gray-900">EDAPymes</div></div><div class="hidden md:flex items-center justify-center flex-1 mx-8" id="main-nav"><div class="flex items-center gap-8 relative"><a class="nav-link active text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('inicio',this)">Inicio</a><a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('servicios.html',this)">Servicios</a><a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Catalogo.html',this)">Catálogo</a><a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Nosotros.html',this)">Nosotros</a><a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" id="contactoNavBtn">Contacto</a><div id="nav-indicator" class="absolute -bottom-5 left-0 h-0.5 bg-primary transition-all duration-300"></div></div></div><button class="mobile-menu-btn md:hidden" id="mobileMenuBtn"><span></span><span></span><span></span></button><div class="hidden mobile-nav md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg" id="mobileNav"><a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('inicio',this);document.getElementById('mobileNav').classList.remove('open')">Inicio</a><a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('servicios.html',this);document.getElementById('mobileNav').classList.remove('open')">Servicios</a><a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Catalogo.html',this);document.getElementById('mobileNav').classList.remove('open')">Catálogo</a><a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Nosotros.html',this);document.getElementById('mobileNav').classList.remove('open')">Nosotros</a><a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" id="mobileContactoBtn">Contacto</a></div></div></nav>
-<main id="contenido" class="pt-20"></main>
-<footer id="mainFooter" class="relative bg-slate-50 text-gray-800 pt-20 pb-10 overflow-hidden border-t-4 border-[#034AB0]"><div class="max-w-7xl mx-auto px-8 relative z-10"><div class="grid md:grid-cols-4 gap-12 mb-12"><div class="space-y-4"><div class="flex items-center gap-3"><img src="../src/image/TU-LOGO.png" class="h-10" alt="Logo" onerror="this.style.display='none'"><span class="text-xl font-bold text-primary">EDAPymes</span></div><p class="text-gray-600 text-sm leading-relaxed">Impulsamos tu negocio con soluciones tecnológicas modernas y eficientes.</p></div><div><h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Enlaces</h4><ul class="space-y-3 text-gray-600 text-sm font-medium"><li><a href="#" onclick="cargarSeccion('inicio',document.querySelectorAll('.nav-link')[0])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span>Inicio</a></li><li><a href="#" onclick="cargarSeccion('servicios.html',document.querySelectorAll('.nav-link')[1])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span>Servicios</a></li></ul></div><div><h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Contacto</h4><div class="space-y-2"><p class="text-sm text-gray-600 flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">location_on</span>Nicaragua</p><p class="text-sm text-gray-600 flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">mail</span><a href="mailto:edapymestech@gmail.com" class="hover:text-primary transition-colors">edapymestech@gmail.com</a></p></div></div><div><h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Redes Sociales</h4><div class="flex gap-5"><a href="https://www.facebook.com/profile.php?id=61576401396435&mibextid=LQQJ4d" target="_blank" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg></a><a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all"><span class="material-symbols-outlined">photo_camera</span></a></div></div></div><div class="border-t-2 border-[#034AB0] pt-8 mt-8 text-center"><p class="text-gray-500 text-sm font-semibold">© 2026 <span class="text-[#034AB0]">EDAPymes</span>. Todos los derechos reservados.</p></div></div></footer>
-<a href="https://wa.me/50583295424?text=Hola%2C%20me%20interesa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20servicios%20y%20productos%20de%20EDAPymes" target="_blank" class="whatsapp-float" aria-label="Contactar por WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.1 13.9 10.9-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg></a>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+    <title>EDAPymes - Tecnología con Calidad y Calidez</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f6f6f6;
+            color: #2d2f2f;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            vertical-align: middle;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0059b6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .specs-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+        .specs-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .catalogo-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .catalogo-sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 264px;
+            overflow-y: auto;
+            z-index: 40;
+            background-color: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+        }
+        
+        .catalogo-main {
+            margin-left: 264px;
+            flex: 1;
+            overflow-y: auto;
+            height: calc(100vh - 80px);
+            padding-top: 0;
+        }
+        
+        .catalogo-main::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .catalogo-main::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .catalogo-main::-webkit-scrollbar-thumb {
+            background: #0059b6;
+            border-radius: 4px;
+        }
+        
+        .catalogo-main::-webkit-scrollbar-thumb:hover {
+            background: #004090;
+        }
+        
+        .footer-hidden {
+            display: none !important;
+        }
+        
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Botón de WhatsApp flotante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            background-color: #25D366;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #20b859;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .whatsapp-float svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #034AB0;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .mobile-nav.open {
+                display: flex !important;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 20px;
+                gap: 15px;
+                border-bottom: 1px solid #e2e8f0;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+            .whatsapp-float svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .whatsapp-float {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+            }
+            .whatsapp-float svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+        
+        /* Estilos para el modal de producto */
+        .image-zoom-container {
+            position: relative;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        .image-zoom-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .thumbnail-detail {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        .thumbnail-detail:hover {
+            transform: scale(1.05);
+            border-color: #0059b6;
+        }
+        .thumbnail-detail.active {
+            border-color: #0059b6;
+            transform: scale(1.02);
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .producto-card {
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+            cursor: pointer;
+        }
+        .producto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0,89,182,0.15);
+        }
+        .card-img {
+            transition: transform 0.5s ease;
+        }
+        .group:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        /* Estilos optimizados para el carrusel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+        
+        .carousel-slide img,
+        .carousel-slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Optimización para video - carga más rápida */
+        .carousel-slide video {
+            object-fit: cover;
+            background-color: #0a0a2a;
+        }
+        
+        .carousel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+            z-index: 15;
+        }
+        
+        .carousel-content {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            pointer-events: none;
+        }
+        
+        .carousel-content.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        .carousel-content-inner {
+            padding-left: 3rem;
+            max-width: 650px;
+        }
+        
+        @media (min-width: 768px) {
+            .carousel-content-inner {
+                padding-left: 6rem;
+            }
+        }
+        
+        /* Botones del carrusel - solo visibles en hover/click */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .carousel-container:hover .carousel-btn {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* En móvil, los botones aparecen al tocar la imagen */
+        @media (max-width: 768px) {
+            .carousel-btn {
+                opacity: 0;
+                visibility: hidden;
+            }
+            .carousel-container.touch-active .carousel-btn {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-50%) scale(1.1);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .carousel-btn.prev {
+            left: 20px;
+        }
+        
+        .carousel-btn.next {
+            right: 20px;
+        }
+        
+        .carousel-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            z-index: 30;
+        }
+        
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background: #034AB0;
+            width: 28px;
+            border-radius: 20px;
+            box-shadow: 0 0 8px rgba(7, 105, 210, 0.6);
+        }
+        
+        .carousel-action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary-carousel {
+            background: #034AB0;
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            pointer-events: auto;
+        }
+        
+        .btn-primary-carousel:hover {
+            background: #023a8a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary-carousel {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+            pointer-events: auto;
+        }
+        
+        .btn-secondary-carousel:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
+        }
+        
+        .carousel-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .carousel-subtitle {
+            color: rgba(255,255,255,0.9);
+            margin-top: 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        @media (min-width: 768px) {
+            .carousel-title { font-size: 3.5rem; }
+            .carousel-subtitle { font-size: 1.125rem; }
+        }
+        
+        @media (min-width: 1024px) {
+            .carousel-title { font-size: 4.5rem; }
+            .carousel-subtitle { font-size: 1.25rem; }
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card.active {
+            transform: scale(1.05);
+            box-shadow: 0 25px 30px -12px rgba(7, 105, 210, 0.3);
+        }
+        
+        .aurora-gradient { background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%); }
+        .bg-team { background: linear-gradient(115deg, #0f172a 0%, #1e293b 100%); position: relative; }
+        .bg-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(7,105,210,0.15) 0%, transparent 70%); }
+        .bg-contacto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
+        .contacto-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(7,105,210,0.2) 0%, transparent 70%); }
+
+        /* Estilo para el botón de envío con estado */
+        .submit-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn.loading {
+            background-color: #034AB0;
+            pointer-events: none;
+        }
+        .submit-btn.success {
+            background-color: #10b981;
+            pointer-events: none;
+        }
+        .submit-btn .btn-text {
+            transition: all 0.3s ease;
+        }
+        .submit-btn .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+    </style>
+
 <script>
-const mobileMenuBtn=document.getElementById('mobileMenuBtn'),mobileNav=document.getElementById('mobileNav');
-mobileMenuBtn.addEventListener('click',()=>{mobileNav.classList.toggle('open');const spans=mobileMenuBtn.querySelectorAll('span');if(mobileNav.classList.contains('open')){spans[0].style.transform='rotate(45deg) translate(5px,5px)';spans[1].style.opacity='0';spans[2].style.transform='rotate(-45deg) translate(7px,-6px)';}else{spans[0].style.transform='none';spans[1].style.opacity='1';spans[2].style.transform='none';}});
-let carruselActivo=false,intervaloAutoPlay=null,productosGlobales=[];
-function irAFormularioContacto(){const navInicio=document.querySelectorAll('.nav-link')[0];cargarSeccion('inicio',navInicio);setTimeout(()=>{const el=document.getElementById('contacto');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},200);}
-function irAServicioEspecifico(servicioId){const navServicios=document.querySelectorAll('.nav-link')[1];cargarSeccion('servicios.html',navServicios);setTimeout(()=>{const el=document.getElementById(servicioId);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},200);}
-async function enviarCorreo(e){e.preventDefault();const nombre=document.getElementById('contacto_nombre').value,email=document.getElementById('contacto_email').value,servicio=document.getElementById('contacto_servicio').value,mensaje=document.getElementById('contacto_mensaje').value;if(!nombre||!email||!mensaje)return;if(!email.includes('@')||!email.includes('.'))return;const submitBtn=document.getElementById('submitContactBtn'),originalHTML=submitBtn.innerHTML;submitBtn.classList.add('loading');submitBtn.innerHTML=`<div class="flex items-center justify-center gap-2"><svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Enviando...</span></div>`;submitBtn.disabled=true;try{const response=await fetch('/api/enviar-correo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,email,servicio,mensaje})});const textResponse=await response.text();let data;try{data=JSON.parse(textResponse);}catch(e){throw new Error('Respuesta inválida');}if(response.ok&&data.success){submitBtn.classList.remove('loading');submitBtn.classList.add('success');submitBtn.innerHTML=`<div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Enviado</span></div>`;e.target.reset();const servicioSelect=document.getElementById('contacto_servicio');if(servicioSelect)servicioSelect.value='';setTimeout(()=>{submitBtn.classList.remove('success');submitBtn.innerHTML=originalHTML;submitBtn.disabled=false;},2000);}else{throw new Error(data.error||'Error al enviar');}}catch(error){console.error(error);submitBtn.classList.remove('loading');submitBtn.innerHTML=originalHTML;submitBtn.disabled=false;}}
-function toggleFooter(pagina){const footer=document.getElementById('mainFooter');if(!footer)return;if(pagina==='Catalogo.html'||pagina==='catalogo.html')footer.classList.add('footer-hidden');else footer.classList.remove('footer-hidden');}
-function mostrarEspecificacionesModal(especificaciones){const modal=document.getElementById('specsModalGlobal'),specsList=document.getElementById('specsListGlobal');if(!modal)return;specsList.innerHTML='';if(especificaciones&&especificaciones.length>0){especificaciones.forEach(spec=>{if(spec.label&&spec.value){specsList.innerHTML+=`<div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"><span class="material-symbols-outlined text-primary">${spec.icono||'bolt'}</span><div class="flex-1"><p class="text-xs font-bold text-gray-500">${escapeHtmlGlobal(spec.label)}</p><p class="text-sm font-medium text-gray-800">${escapeHtmlGlobal(spec.value)}</p></div></div>`;}});}if(specsList.innerHTML==='')specsList.innerHTML='<p class="text-gray-500 text-center">No hay especificaciones técnicas disponibles</p>';modal.classList.remove('hidden');}
-function cerrarSpecsModalGlobal(){const modal=document.getElementById('specsModalGlobal');if(modal)modal.classList.add('hidden');}
-function escapeHtmlGlobal(text){if(!text)return '';const div=document.createElement('div');div.textContent=text;return div.innerHTML;}
-function moverIndicador(elemento){const indicador=document.getElementById("nav-indicator");if(elemento&&indicador&&window.innerWidth>=768){indicador.style.left=elemento.offsetLeft+"px";indicador.style.width=elemento.offsetWidth+"px";indicador.style.transition="all 0.3s ease";}}
-function activarAnimacionesScroll(){const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('opacity-100','translate-y-0');entry.target.classList.remove('opacity-0','translate-y-20');observer.unobserve(entry.target);}});},{threshold:0.1});const elementos=document.querySelectorAll('#contenido section, #contenido .py-32 > div, #contenido .group, #contenido .service-card');elementos.forEach(el=>{if(!el.classList.contains('opacity-100')){el.classList.add('transition-all','duration-1000','opacity-0','translate-y-20');observer.observe(el);}});}
-function cargarSeccion(pagina,linkElement){const contenedor=document.getElementById("contenido");contenedor.style.opacity="0";contenedor.style.transform="translateY(10px)";contenedor.style.transition="all 0.2s ease";if(intervaloAutoPlay){clearInterval(intervaloAutoPlay);intervaloAutoPlay=null;}carruselActivo=false;toggleFooter(pagina);setTimeout(()=>{if(pagina==='inicio'){contenedor.innerHTML=obtenerHTMLInicio();window.scrollTo(0,0);contenedor.style.opacity="1";contenedor.style.transform="translateY(0)";activarAnimacionesScroll();setTimeout(()=>{iniciarCarrusel();configurarCardsServicios();cargarProductosDestacados();},80);}else{fetch(pagina).then(response=>{if(!response.ok)throw new Error(`No se pudo cargar ${pagina}`);return response.text();}).then(html=>{let contenidoHTML=html;const bodyMatch=html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);if(bodyMatch)contenidoHTML=bodyMatch[1];contenedor.innerHTML=contenidoHTML;window.scrollTo(0,0);contenedor.style.opacity="1";contenedor.style.transform="translateY(0)";activarAnimacionesScroll();if(pagina==='Catalogo.html'||pagina==='catalogo.html'){setTimeout(()=>{if(typeof window.cargarProductos==='function'){window.cargarProductos();window.cargarCategorias();}},100);}}).catch(error=>{console.error("Error:",error);contenedor.innerHTML=`<div class='py-20 text-center text-red-500'>Error al cargar ${pagina}: ${error.message}</div>`;contenedor.style.opacity="1";});}if(linkElement){document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));linkElement.classList.add("active");moverIndicador(linkElement);}},150);}
-function configurarCardsServicios(){const cards=document.querySelectorAll('#contenido .service-card');cards.forEach(card=>{card.removeEventListener('click',card.clickHandler);card.clickHandler=()=>{cards.forEach(c=>c.classList.remove('active'));card.classList.add('active');cargarSeccion('servicios.html',document.querySelectorAll('.nav-link')[1]);};card.addEventListener('click',card.clickHandler);});}
-async function cargarProductosDestacados(){const contenedor=document.getElementById('productos-destacados-grid');if(!contenedor)return;contenedor.innerHTML=`<div class="col-span-full flex justify-center py-12"><div class="loading-spinner w-10 h-10 border-4"></div></div>`;try{const response=await fetch('https://edapymesdev.onrender.com/api/productos');if(!response.ok)throw new Error('Error al cargar productos');const productos=await response.json();productosGlobales=productos;const destacados=productos.slice(0,4);if(destacados.length===0){contenedor.innerHTML=`<div class="col-span-full text-center py-12 text-gray-500"><span class="material-symbols-outlined text-5xl">inventory</span><p class="mt-2">No hay productos disponibles</p></div>`;return;}contenedor.innerHTML='';destacados.forEach(producto=>{let imagenUrl='https://placehold.co/400x300/e2e8f0/475569?text=EDAPymes';if(producto.imagenes&&producto.imagenes.length>0)imagenUrl=producto.imagenes[0];const precio=typeof producto.precio==='number'?producto.precio.toFixed(2):producto.precio;const disponible=producto.disponible===true||producto.disponible===1;const card=document.createElement('div');card.className="producto-card group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all";card.onclick=()=>abrirModalProducto(producto);card.innerHTML=`<div class="relative h-64 overflow-hidden"><img class="card-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="${imagenUrl}" alt="${escapeHtmlGlobal(producto.nombre)}" onerror="this.src='https://placehold.co/400x300/e2e8f0/475569?text=Imagen'"><span class="absolute top-4 right-4 ${disponible?'bg-primary':'bg-gray-500'} text-white text-[10px] font-bold px-2 py-1 rounded-full">${disponible?'Disponible':'Agotado'}</span></div><div class="p-6"><span class="text-xs text-on-surface-variant">${escapeHtmlGlobal(producto.categoria||'Tecnología')}</span><h4 class="text-lg font-bold text-on-surface mt-1 mb-4">${escapeHtmlGlobal(producto.nombre)}</h4><div class="flex items-center justify-between"><span class="text-xl font-bold text-primary">${precio.includes('C$')?precio:'C$'+precio}</span><button onclick="event.stopPropagation();abrirModalProducto(${JSON.stringify(producto).replace(/"/g,'&quot;')})" class="bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-sm">shopping_cart</span>Cotizar</button></div></div>`;contenedor.appendChild(card);});}catch(error){console.error(error);contenedor.innerHTML=`<div class="col-span-full text-center py-12 text-red-500"><span class="material-symbols-outlined text-5xl">error</span><p class="mt-2">Error al cargar productos destacados</p></div>`;}}
-function abrirModalProducto(producto){const modal=document.getElementById('productModal');if(!modal)return;let imagenes=(producto.imagenes&&producto.imagenes.length>0)?producto.imagenes:['https://placehold.co/800x1000/e2e8f0/475569?text=Sin+Imagen'];const precio=typeof producto.precio==='number'?producto.precio.toFixed(2):producto.precio;const disponible=producto.disponible===true||producto.disponible===1;document.getElementById('modalProductoNombre').textContent=producto.nombre;document.getElementById('modalProductoPrecio').textContent=`C$${precio}`;document.getElementById('modalProductoCategoria').innerHTML=`<span class="material-symbols-outlined text-sm">devices</span> ${escapeHtmlGlobal(producto.categoria||'Tecnología')}`;document.getElementById('modalProductoDescripcion').textContent=producto.descripcion||'Producto tecnológico de alta calidad.';document.getElementById('modalProductoDisponible').textContent=disponible?'Disponible':'Agotado';document.getElementById('modalProductoDisponible').className=`text-sm font-semibold ${disponible?'text-green-600':'text-red-600'}`;const imgPrincipal=document.getElementById('modalImagenPrincipal');imgPrincipal.src=imagenes[0];const miniaturas=document.getElementById('modalMiniaturas');miniaturas.innerHTML='';imagenes.forEach((img,idx)=>{const miniatura=document.createElement('div');miniatura.className=`thumbnail-detail rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer ${idx===0?'active':''}`;miniatura.innerHTML=`<img src="${img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/e2e8f0/475569?text=Error'">`;miniatura.onclick=()=>{imgPrincipal.src=img;document.querySelectorAll('#modalMiniaturas .thumbnail-detail').forEach((thumb,i)=>{if(i===idx)thumb.classList.add('active');else thumb.classList.remove('active');});};miniaturas.appendChild(miniatura);});const specs=document.getElementById('modalEspecificaciones');if(producto.especificaciones&&producto.especificaciones.length>0){specs.innerHTML='';producto.especificaciones.forEach(spec=>{if(spec.label&&spec.value){specs.innerHTML+=`<div class="bg-gray-50 p-3 rounded-xl flex items-start gap-3"><span class="material-symbols-outlined text-primary">${spec.icono||'bolt'}</span><div><p class="text-xs font-bold text-gray-500">${escapeHtmlGlobal(spec.label)}</p><p class="text-sm font-medium text-gray-800">${escapeHtmlGlobal(spec.value)}</p></div></div>`;}});}else{specs.innerHTML='<div class="text-center text-gray-500 py-6 bg-gray-50 rounded-xl">No hay especificaciones técnicas disponibles</div>';}const btnWA=document.getElementById('modalWhatsAppBtn');const mensaje=`Hola, me gustaría recibir información sobre EDAPymes y el producto: ${producto.nombre} - Precio: C$${precio}`;btnWA.onclick=()=>{window.open(`https://wa.me/50583295424?text=${encodeURIComponent(mensaje)}`,'_blank');};modal.classList.remove('hidden');document.body.style.overflow='hidden';}
-function cerrarModalProducto(){const modal=document.getElementById('productModal');if(modal){modal.classList.add('hidden');document.body.style.overflow='';}}
-function crearModalProducto(){if(document.getElementById('productModal'))return;const modalHTML=`<div id="productModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[1000] p-4" onclick="if(event.target===this)cerrarModalProducto()"><div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto"><div class="sticky top-0 bg-white z-10 flex justify-end p-4 border-b"><button onclick="cerrarModalProducto()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"><span class="material-symbols-outlined">close</span></button></div><div class="p-6 md:p-8"><div class="grid md:grid-cols-2 gap-8"><div class="space-y-4"><div class="image-zoom-container bg-gray-100 rounded-xl overflow-hidden"><img id="modalImagenPrincipal" class="w-full aspect-[4/5] object-cover" src="" alt=""></div><div id="modalMiniaturas" class="grid grid-cols-4 gap-3"></div></div><div class="space-y-6"><div><h2 id="modalProductoNombre" class="text-2xl md:text-3xl font-bold text-gray-800"></h2><div class="flex items-center justify-between mt-4"><span id="modalProductoPrecio" class="text-3xl font-bold text-primary"></span><span id="modalProductoDisponible" class="text-sm font-semibold"></span></div></div><div class="border-t pt-4"><p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-2">Categoría</p><p id="modalProductoCategoria" class="text-gray-600 flex items-center gap-1"></p></div><div class="border-t pt-4"><p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-2">Descripción</p><p id="modalProductoDescripcion" class="text-gray-600 leading-relaxed"></p></div><div class="border-t pt-4"><p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-3">Especificaciones</p><div id="modalEspecificaciones" class="space-y-3"></div></div><button id="modalWhatsAppBtn" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-green-700 transition-all"><span class="material-symbols-outlined">chat</span>Contactar por WhatsApp</button></div></div></div></div></div>`;document.body.insertAdjacentHTML('beforeend',modalHTML);}
-function iniciarCarrusel(){if(intervaloAutoPlay)clearInterval(intervaloAutoPlay);const slides=[{type:'video',src:'/src/image/fondo de pantalla.mp4',poster:'/src/image/fondo-poster.jpg',title:'Impulsamos tu <span class="text-primary">negocio</span> con tecnología',subtitle:'Soluciones tecnológicas integrales diseñadas para la era digital.'},{type:'image',src:'/src/image/foto3.jpg',title:'Capacitaciones <span class="text-primary">Tecnológicas</span>',subtitle:'Aprende habilidades digitales con expertos.'},{type:'image',src:'/src/image/foto1.jpg',title:'Asesorías <span class="text-primary">Profesionales</span>',subtitle:'Impulsa tu negocio con tecnología.'},{type:'image',src:'/src/image/dirty-computer-attractive-young-man-wearing-protection-glasses-while-cleaning-inside-with-compressed-air-hardware-computer.jpg',title:'Reparación de <span class="text-primary">Computadoras</span>',subtitle:'Mantenimiento rápido y confiable.'},{type:'image',src:'/src/image/foto4.jpg',title:'Venta de <span class="text-primary">Laptops</span>',subtitle:'Equipos modernos y de alto rendimiento.'},{type:'image',src:'/src/image/foto5.jpg',title:'Cámaras de <span class="text-primary">Seguridad</span>',subtitle:'Protege tu hogar o negocio.'},{type:'image',src:'/src/image/foto8.jpg',title:'Accesorios para <span class="text-primary">Celulares</span>',subtitle:'Todo lo que necesitás para tu smartphone.'},{type:'image',src:'/src/image/foto9.jpg',title:'Préstamos <span class="text-primary">Prendatarios</span>',subtitle:'Soluciones rápidas de financiamiento.'},{type:'image',src:'/src/image/foto10.jpg',title:'Servicios de <span class="text-primary">Traducción</span>',subtitle:'Traducción profesional de inglés a español.'}];let currentIndex=0,videoElement=null,isTransitioning=false;const track=document.getElementById('carouselTrack'),dotsContainer=document.getElementById('carouselDots');let prevBtn=document.getElementById('carouselPrev'),nextBtn=document.getElementById('carouselNext');if(!track)return;track.innerHTML='';if(dotsContainer)dotsContainer.innerHTML='';slides.forEach((slide,idx)=>{const slideDiv=document.createElement('div');slideDiv.className='carousel-slide';slideDiv.setAttribute('data-index',idx);if(slide.type==='video'){const video=document.createElement('video');video.src=slide.src;video.autoplay=false;video.muted=true;video.playsInline=true;video.loop=false;video.preload=idx===0?'auto':'metadata';if(slide.poster)video.poster=slide.poster;video.className='w-full h-full object-cover';slideDiv.appendChild(video);}else{const img=document.createElement('img');img.src=slide.src;img.className='w-full h-full object-cover';img.loading=idx===0?'eager':'lazy';img.onerror=function(){this.src='https://placehold.co/1920x600/034AB0/white?text=EDAPymes';};slideDiv.appendChild(img);}const overlay=document.createElement('div');overlay.className='carousel-overlay';slideDiv.appendChild(overlay);const contentDiv=document.createElement('div');contentDiv.className='carousel-content';contentDiv.innerHTML=`<div class="carousel-content-inner"><h1 class="carousel-title">${slide.title}</h1><p class="carousel-subtitle">${slide.subtitle}</p><div class="carousel-action-buttons"><button class="btn-primary-carousel btn-catalogo-action">Explorar Catálogo</button><button class="btn-secondary-carousel btn-servicios-action">Nuestros Servicios</button></div></div>`;slideDiv.appendChild(contentDiv);track.appendChild(slideDiv);if(dotsContainer){const dot=document.createElement('div');dot.className='carousel-dot';dot.setAttribute('data-index',idx);dot.addEventListener('click',()=>goToSlide(idx));dotsContainer.appendChild(dot);}});function updateSlidesAndDots(){if(isTransitioning)return;isTransitioning=true;const slidesEl=document.querySelectorAll('.carousel-slide'),contents=document.querySelectorAll('.carousel-content'),dots=document.querySelectorAll('.carousel-dot');slidesEl.forEach((slide,idx)=>{if(idx===currentIndex){slide.classList.add('active');if(contents[idx])contents[idx].classList.add('active');}else{slide.classList.remove('active');if(contents[idx])contents[idx].classList.remove('active');}});dots.forEach((dot,idx)=>{if(idx===currentIndex)dot.classList.add('active');else dot.classList.remove('active');});const currentSlide=slidesEl[currentIndex];if(currentSlide){const video=currentSlide.querySelector('video');if(video){const allVideos=document.querySelectorAll('.carousel-slide video');allVideos.forEach(v=>{if(v!==video){v.pause();v.currentTime=0;}});videoElement=video;if(video.readyState>=2){video.currentTime=0;video.play().catch(e=>console.log('Autoplay:',e));}else{video.addEventListener('canplay',()=>{video.play().catch(e=>console.log('Autoplay delayed:',e));},{once:true});}video.removeEventListener('ended',handleVideoEnd);video.addEventListener('ended',handleVideoEnd);}else if(videoElement&&!videoElement.paused){videoElement.pause();}}setTimeout(()=>{isTransitioning=false;},800);}function handleVideoEnd(){if(!isTransitioning)nextSlide();}function nextSlide(){if(isTransitioning)return;currentIndex=(currentIndex+1)%slides.length;updateSlidesAndDots();resetAutoPlay();}function prevSlide(){if(isTransitioning)return;currentIndex=(currentIndex-1+slides.length)%slides.length;updateSlidesAndDots();resetAutoPlay();}function goToSlide(index){if(isTransitioning||index===currentIndex)return;currentIndex=index;updateSlidesAndDots();resetAutoPlay();}function startAutoPlay(){if(intervaloAutoPlay)clearInterval(intervaloAutoPlay);intervaloAutoPlay=setInterval(()=>{if(!isTransitioning){const slidesEl=document.querySelectorAll('.carousel-slide'),current=slidesEl[currentIndex],video=current?.querySelector('video');if(!video||video.paused||video.ended){nextSlide();}}},6000);}function resetAutoPlay(){if(intervaloAutoPlay){clearInterval(intervaloAutoPlay);intervaloAutoPlay=null;}startAutoPlay();}if(prevBtn){const newPrev=prevBtn.cloneNode(true);prevBtn.parentNode.replaceChild(newPrev,prevBtn);prevBtn=newPrev;prevBtn.addEventListener('click',()=>{prevSlide();resetAutoPlay();});}if(nextBtn){const newNext=nextBtn.cloneNode(true);nextBtn.parentNode.replaceChild(newNext,nextBtn);nextBtn=newNext;nextBtn.addEventListener('click',()=>{nextSlide();resetAutoPlay();});}document.querySelectorAll('.btn-catalogo-action').forEach(btn=>{btn.removeEventListener('click',btn._handler);btn._handler=()=>cargarSeccion('Catalogo.html',document.querySelectorAll('.nav-link')[2]);btn.addEventListener('click',btn._handler);});document.querySelectorAll('.btn-servicios-action').forEach(btn=>{btn.removeEventListener('click',btn._handler2);btn._handler2=()=>cargarSeccion('servicios.html',document.querySelectorAll('.nav-link')[1]);btn.addEventListener('click',btn._handler2);});const carouselContainer=document.querySelector('.carousel-container');if(carouselContainer){carouselContainer.addEventListener('touchstart',()=>{carouselContainer.classList.add('touch-active');setTimeout(()=>{carouselContainer.classList.remove('touch-active');},3000);});carouselContainer.removeEventListener('mouseenter',carouselContainer._enterHandler);carouselContainer.removeEventListener('mouseleave',carouselContainer._leaveHandler);carouselContainer._enterHandler=()=>{if(intervaloAutoPlay){clearInterval(intervaloAutoPlay);intervaloAutoPlay=null;}};carouselContainer._leaveHandler=()=>{startAutoPlay();};carouselContainer.addEventListener('mouseenter',carouselContainer._enterHandler);carouselContainer.addEventListener('mouseleave',carouselContainer._leaveHandler);}updateSlidesAndDots();startAutoPlay();carruselActivo=true;document.removeEventListener('visibilitychange',handleVisibilityChange);document.addEventListener('visibilitychange',handleVisibilityChange);}
-function handleVisibilityChange(){if(!document.hidden&&carruselActivo){setTimeout(()=>{const track=document.getElementById('carouselTrack');if(track&&track.children.length>0){if(intervaloAutoPlay){clearInterval(intervaloAutoPlay);intervaloAutoPlay=null;}const activeSlide=document.querySelector('.carousel-slide.active');if(activeSlide){const video=activeSlide.querySelector('video');if(video&&video.paused){video.play().catch(e=>console.log('Play reanudado:',e));}}intervaloAutoPlay=setInterval(()=>{const slides=document.querySelectorAll('.carousel-slide'),activeIdx=document.querySelector('.carousel-slide.active')?.getAttribute('data-index'),current=slides[activeIdx||0],video=current?.querySelector('video');if(!video||video.paused||video.ended){const nextBtn=document.getElementById('carouselNext');if(nextBtn)nextBtn.click();}},6000);}},100);}else if(document.hidden&&carruselActivo){const videos=document.querySelectorAll('.carousel-slide video');videos.forEach(v=>v.pause());}}
-function obtenerHTMLInicio(){return`<div id="specsModalGlobal" class="specs-modal hidden" onclick="cerrarSpecsModalGlobal(event)"><div class="specs-content p-6" onclick="event.stopPropagation()"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold">Especificaciones Técnicas</h3><button onclick="cerrarSpecsModalGlobal()" class="text-gray-500 hover:text-gray-700"><span class="material-symbols-outlined">close</span></button></div><div id="specsListGlobal" class="space-y-3"></div></div></div><div class="mt-0 px-4"><div class="carousel-container"><div class="carousel-track" id="carouselTrack"></div><button class="carousel-btn prev" id="carouselPrev"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button><button class="carousel-btn next" id="carouselNext"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button><div class="carousel-dots" id="carouselDots"></div></div></div><section class="py-24 bg-background-soft" id="services"><div class="max-w-7xl mx-auto px-8"><div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8"><div class="space-y-4"><h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface">Servicios de <span class="text-primary">Vanguardia</span></h2><p class="text-on-surface-variant max-w-xl">Curamos las mejores herramientas y servicios para que tu empresa nunca se detenga.</p></div><button onclick="cargarSeccion('servicios.html',document.querySelectorAll('.nav-link')[1])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todos los servicios <span class="material-symbols-outlined">east</span></button></div><div class="flex justify-center items-center gap-8 flex-wrap"><div onclick="irAServicioEspecifico('capacitaciones')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined service-icon text-4xl">school</span><h3 class="text-xl font-bold text-white">Capacitaciones</h3><p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p></div><div onclick="irAServicioEspecifico('asesorias')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined text-4xl mb-4">lightbulb</span><h3 class="text-2xl font-bold text-white">Asesorías</h3><p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p></div><div onclick="irAServicioEspecifico('seguridad')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined service-icon text-4xl">videocam</span><h3 class="text-xl font-bold text-white">Seguridad</h3><p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p></div><div onclick="irAServicioEspecifico('mantenimiento')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer"><span class="material-symbols-outlined text-4xl mb-4">build</span><h3 class="text-2xl font-bold text-white">Mantenimiento</h3><p class="text-white/80 text-sm mt-2">Soporte técnico preventivo y correctivo.</p></div></div></div></section><section class="relative py-32 overflow-hidden" id="vision-mission"><div class="absolute inset-0 aurora-gradient z-0"></div><div class="absolute inset-0 bg-black/10 z-10"></div><div class="relative z-20 max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-24 items-center"><div class="relative"><img alt="Team meeting" class="rounded-xl grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl w-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCivFyI9U0ch_lXTv2afdbSJd7yEC6ICDgX2pKEwWpuVX5lNRbN35768GUHdrzUEkq2BqpNn_0CzC9oRLAqy-EiT-Z-tpBYhR9s0e_yIOAsXm_nCfVlFFqRUYn4oMx127GGeOkDe8acXbZfJ4oQak6jy5zGJDCKyXOI884o9BXigCdn28otGU5SVDqbr1xXeC0TAMrQqTPytokSHoNzeaUSodzZH7SVgYKtpfG4j8KhbnZesuwnIwBfx5wPLR3lI8BScbR1A9jKm1oV"></div><div class="space-y-16"><div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">rocket_launch</span><h3 class="text-3xl font-headline font-bold text-white">Misión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-primary pl-6">"Brindar servicios con calidad y calidez, así como ofertar computadoras, accesorios para computadoras y para móviles con las mejores y más modernas especificaciones que satisfagan las necesidades de nuestros clientes"</p></div><div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">visibility</span><h3 class="text-3xl font-headline font-bold text-white">Visión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-white/40 pl-6">"Ser una empresa especializada en la atención a las necesidades de la pequeña y mediana empresa nacional."</p></div></div></div></section><section class="py-28 bg-background relative overflow-hidden"><div class="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div><div class="absolute -bottom-20 -right-20 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"></div><div class="max-w-7xl mx-auto px-8"><div class="grid lg:grid-cols-12 gap-20 items-center"><div class="lg:col-span-7 space-y-8"><span class="text-primary font-bold uppercase tracking-widest text-xs">Nuestra Trayectoria</span><h2 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tight leading-tight">Acerca de <span class="text-primary">nosotros</span></h2><p class="text-on-surface-variant text-lg leading-relaxed">Nacimos con la firme convicción de que la tecnología debe ser el motor de crecimiento para las empresas en desarrollo. En EDAPymes, no solo vendemos productos; curamos soluciones integrales que se adaptan a la realidad y desafíos de cada uno de nuestros clientes.</p><p class="text-on-surface-variant text-lg leading-relaxed">Nuestro equipo combina décadas de experiencia técnica con una visión humana, asegurando que cada implementación tecnológica tenga un impacto positivo directo en la productividad y bienestar de tu organización.</p><div class="pt-6"><button onclick="cargarSeccion('Nosotros.html',document.querySelectorAll('.nav-link')[3])" class="relative overflow-hidden border border-primary text-primary px-8 py-3 rounded-full font-bold transition-all duration-300 hover:text-white hover:bg-primary">Conoce nuestra historia</button></div></div><div class="lg:col-span-5"><div class="relative group"><div class="absolute inset-0 bg-primary/20 blur-2xl opacity-0 group-hover:opacity-100 transition-all"></div><div class="relative aspect-square bg-white rounded-2xl overflow-hidden border border-outline p-3 shadow-xl"><img class="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKdoUxNlx2Zygo0Wo5Ar2mDUJEaacdduxOxKuMI5iX3PmPIbEiT84zI8DiWdKEXwGpiVq04OmuMuT2rn_hhAGEi8p_qoIlBXjopAkIbysicb5JNUhkKaUizrwmluQ_256WiBadLPE1mldB9uXnknJ4PJkMW3j3RQTvOXgxrg7vJCGYKWE8w0ta7YNv-hsr40bb1MXlSvqkuk9qzPaakUc9xT9Fo4S93P-xLjio5_0SPuOR7vU8q9vo_ix1rektw5Uo2RyB1jeJSFDp" alt="Workspace"></div></div></div></div></div></section><section class="py-28 bg-background relative overflow-hidden"><div class="absolute top-0 left-0 w-72 h-72 bg-primary/10 blur-3xl rounded-full"></div><div class="absolute bottom-0 right-0 w-72 h-72 bg-secondary/10 blur-3xl rounded-full"></div><div class="max-w-7xl mx-auto px-8"><div class="flex items-center justify-between mb-16"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface">Catálogo <span class="text-primary">Destacado</span></h2><button onclick="cargarSeccion('Catalogo.html',document.querySelectorAll('.nav-link')[2])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todo <span class="material-symbols-outlined">east</span></button></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10" id="productos-destacados-grid"><div class="col-span-full flex justify-center py-12"><div class="loading-spinner w-10 h-10 border-4"></div></div></div></div></section><section class="py-24 relative overflow-hidden bg-team"><div class="bg-efecto"></div><div class="relative z-10 max-w-7xl mx-auto px-8"><div class="text-center mb-16 space-y-4"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">El Equipo <span class="text-primary">Detrás</span></h2><p class="text-white/70 max-w-2xl mx-auto">Expertos comprometidos con el éxito tecnológico de tu empresa.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12"><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/dereck.png" alt="Dereck Sevilla" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=DS'"></div><h4 class="text-xl font-headline font-bold text-white">Dereck Sevilla</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrollador Backend</p><p class="text-white/70 text-sm mt-4">BackEnd Junior con 4 años de experiencia en TICs.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/WhatsApp%20Image%202026-04-03%20at%206.18.21%20PM.jpeg" alt="Evelyn Espinoza" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=EE'"></div><h4 class="text-xl font-headline font-bold text-white">Evelyn Espinoza</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Project Manager & CEO</p><p class="text-white/70 text-sm mt-4">Máster en Computación con énfasis en Sistemas de Información con más de 28 años de experiencia brindando soluciones tecnológicas con calidad comprobada.</p></div><div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/ana.png" alt="Ana Fernanda Tapia" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=AFT'"></div><h4 class="text-xl font-headline font-bold text-white">Ana Fernanda Tapia</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrolladora Frontend</p><p class="text-white/70 text-sm mt-4">FrontEnd Junior con 4 años de experiencia en soluciones amigables, navegables y óptimas.</p></div></div></div></section><section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:edapymestech@gmail.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">edapymestech@gmail.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8329 5424 / +505 8599 8144</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10"><form id="contactoForm" onsubmit="enviarCorreo(event)" class="space-y-6"><div><label for="contacto_nombre" class="text-white/70 text-sm">Nombre</label><input type="text" id="contacto_nombre" name="nombre" required placeholder="Tu nombre" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div><div><label for="contacto_email" class="text-white/70 text-sm">Correo</label><input type="email" id="contacto_email" name="email" required placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div><div><label for="contacto_servicio" class="text-white/70 text-sm">Servicio de interés</label><select id="contacto_servicio" name="servicio" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-primary"><option value="" class="text-gray-900">Selecciona un servicio</option><option value="Capacitaciones" class="text-gray-900">📚 Capacitaciones</option><option value="Asesorías" class="text-gray-900">💡 Asesorías</option><option value="Seguridad Electrónica" class="text-gray-900">🎥 Seguridad Electrónica</option><option value="Mantenimiento y Reparación" class="text-gray-900">🔧 Mantenimiento y Reparación</option><option value="Venta de Tecnología" class="text-gray-900">💻 Venta de Tecnología</option><option value="Préstamos Prendatarios" class="text-gray-900">💰 Préstamos Prendatarios</option><option value="Traducción Profesional" class="text-gray-900">🌐 Traducción Profesional</option><option value="Otro" class="text-gray-900">📌 Otro</option></select></div><div><label for="contacto_mensaje" class="text-white/70 text-sm">Mensaje</label><textarea id="contacto_mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje..." class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></textarea></div><button type="submit" id="submitContactBtn" class="submit-btn w-full py-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover transition-all flex items-center justify-center gap-2"><span class="btn-text">Enviar mensaje</span></button></form></div></div></section>`;}
-window.addEventListener("DOMContentLoaded",()=>{crearModalProducto();const inicioLink=document.querySelector(".nav-link.active"),contenedor=document.getElementById("contenido");contenedor.innerHTML=obtenerHTMLInicio();window.scrollTo(0,0);activarAnimacionesScroll();if(inicioLink)moverIndicador(inicioLink);setTimeout(()=>{iniciarCarrusel();configurarCardsServicios();cargarProductosDestacados();},80);if(inicioLink){document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));inicioLink.classList.add("active");}const contactoBtn=document.getElementById('contactoNavBtn'),mobileContactoBtn=document.getElementById('mobileContactoBtn');if(contactoBtn)contactoBtn.addEventListener('click',()=>irAFormularioContacto());if(mobileContactoBtn)mobileContactoBtn.addEventListener('click',()=>{irAFormularioContacto();document.getElementById('mobileNav').classList.remove('open');});});
-window.addEventListener("resize",()=>{const activeLink=document.querySelector(".nav-link.active");if(activeLink)moverIndicador(activeLink);});
-window.cargarSeccion=cargarSeccion;window.irAServicioEspecifico=irAServicioEspecifico;window.irAFormularioContacto=irAFormularioContacto;window.enviarCorreo=enviarCorreo;window.configurarCardsServicios=configurarCardsServicios;window.activarAnimacionesScroll=activarAnimacionesScroll;window.moverIndicador=moverIndicador;window.mostrarEspecificacionesModal=mostrarEspecificacionesModal;window.cerrarSpecsModalGlobal=cerrarSpecsModalGlobal;window.escapeHtmlGlobal=escapeHtmlGlobal;window.cargarProductosDestacados=cargarProductosDestacados;window.abrirModalProducto=abrirModalProducto;window.cerrarModalProducto=cerrarModalProducto;
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#034AB0',
+                    'primary-hover': '#023a8a',
+                    'cobalt': '#034AB0',
+                    'navy-dark': '#001a3d',
+                    'tech-gray': '#1e293b',
+                    'slate-mid': '#e2e8f0',
+                    'slate-light': '#f1f5f9',
+                    'secondary': '#5985BD',
+                    'background': '#FFFFFF',
+                    'background-soft': '#F4F7FB',
+                    'surface': '#FFFFFF',
+                    'surface-variant': '#F8FAFC',
+                    'on-primary': '#FFFFFF',
+                    'on-surface': '#0C1F41',
+                    'on-surface-variant': '#6B7280',
+                    'outline': '#E5E7EB'
+                },
+                fontFamily: {
+                    'headline': ['Manrope', 'sans-serif'],
+                    'body': ['Inter', 'sans-serif'],
+                }
+            }
+        }
+    }
 </script>
+</head>
+
+<body class="bg-white font-['Inter']">
+
+<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+    <div class="flex justify-between items-center px-8 py-5 max-w-7xl mx-auto">
+        <div class="flex items-center gap-3">
+            <img src="../src/image/TU-LOGO.png" class="h-12" alt="Logo" onerror="this.style.display='none'">
+            <div class="text-2xl font-black text-gray-900">EDAPymes</div>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center justify-center flex-1 mx-8" id="main-nav">
+            <div class="flex items-center gap-8 relative">
+                <a class="nav-link active text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('inicio', this)">Inicio</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('servicios.html', this)">Servicios</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Catalogo.html', this)">Catálogo</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Nosotros.html', this)">Nosotros</a>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="(() => { const navInicio = document.querySelectorAll('.nav-link')[0]; cargarSeccion('inicio', navInicio); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500); })()">Contacto</a>
+                <div id="nav-indicator" class="absolute -bottom-5 left-0 h-0.5 bg-primary transition-all duration-300"></div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn md:hidden" id="mobileMenuBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Mobile Navigation -->
+        <div class="hidden mobile-nav md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg" id="mobileNav">
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('inicio', this); document.getElementById('mobileNav').classList.remove('open')">Inicio</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('servicios.html', this); document.getElementById('mobileNav').classList.remove('open')">Servicios</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Catalogo.html', this); document.getElementById('mobileNav').classList.remove('open')">Catálogo</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Nosotros.html', this); document.getElementById('mobileNav').classList.remove('open')">Nosotros</a>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="(() => { const navInicio = document.querySelectorAll('.nav-link')[0]; cargarSeccion('inicio', navInicio); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500); document.getElementById('mobileNav').classList.remove('open'); })()">Contacto</a>
+        </div>
+    </div>
+</nav>
+
+<main id="contenido" class="pt-20"></main>
+
+<footer id="mainFooter" class="relative bg-slate-50 text-gray-800 pt-20 pb-10 overflow-hidden border-t-4 border-[#034AB0]">
+    <div class="max-w-7xl mx-auto px-8 relative z-10">
+        <div class="grid md:grid-cols-4 gap-12 mb-12">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <img src="../src/image/TU-LOGO.png" class="h-10" alt="Logo" onerror="this.style.display='none'">
+                    <span class="text-xl font-bold text-primary">EDAPymes</span>
+                </div>
+                <p class="text-gray-600 text-sm leading-relaxed">Impulsamos tu negocio con soluciones tecnológicas modernas y eficientes.</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Enlaces</h4>
+                <ul class="space-y-3 text-gray-600 text-sm font-medium">
+                    <li><a href="#" onclick="cargarSeccion('inicio', document.querySelectorAll('.nav-link')[0])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span> Inicio</a></li>
+                    <li><a href="#" onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="hover:text-primary transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 bg-[#034AB0] rounded-full"></span> Servicios</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Contacto</h4>
+                <div class="space-y-2">
+                    <p class="text-sm text-gray-600 flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">location_on</span> Nicaragua</p>
+                    <p class="text-sm text-gray-600 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">mail</span>
+                        <a href="mailto:edapymestech@gmail.com" class="hover:text-primary transition-colors">edapymestech@gmail.com</a>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold mb-5 text-gray-900 border-b-2 border-[#034AB0] w-fit">Redes Sociales</h4>
+                <div class="flex gap-5">
+                    <a href="https://www.facebook.com/profile.php?id=61576401396435&mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full border-2 border-[#034AB0] flex items-center justify-center text-primary hover:bg-[#034AB0] hover:text-white transition-all"><span class="material-symbols-outlined">photo_camera</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t-2 border-[#034AB0] pt-8 mt-8 text-center"><p class="text-gray-500 text-sm font-semibold">© 2026 <span class="text-[#034AB0]">EDAPymes</span>. Todos los derechos reservados.</p></div>
+    </div>
+</footer>
+
+<!-- Botón de WhatsApp Flotante -->
+<a href="https://wa.me/50583295424?text=Hola%2C%20me%20interesa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20servicios%20y%20productos%20de%20EDAPymes" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   class="whatsapp-float"
+   aria-label="Contactar por WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.1 13.9 10.9-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+    </svg>
+</a>
+
+<script>
+// Mobile menu toggle
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileNav = document.getElementById('mobileNav');
+
+mobileMenuBtn.addEventListener('click', () => {
+    mobileNav.classList.toggle('open');
+    const spans = mobileMenuBtn.querySelectorAll('span');
+    if (mobileNav.classList.contains('open')) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+    } else {
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+});
+
+// Variables globales
+let carruselActivo = false;
+let intervaloAutoPlay = null;
+let productosGlobales = [];
+
+// Función para ir a un servicio específico en la página de servicios
+function irAServicioEspecifico(servicioId) {
+    const navServicios = document.querySelectorAll('.nav-link')[1];
+    cargarSeccion('servicios.html', navServicios);
+    setTimeout(() => {
+        const elementoDestino = document.getElementById(servicioId);
+        if (elementoDestino) {
+            elementoDestino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 600);
+}
+// Función para enviar correo - SIN NINGÚN MENSAJE
+async function enviarCorreo(e) {
+    e.preventDefault();
+    
+    const nombre = document.getElementById('contacto_nombre').value;
+    const email = document.getElementById('contacto_email').value;
+    const servicio = document.getElementById('contacto_servicio').value;
+    const mensaje = document.getElementById('contacto_mensaje').value;
+    
+    // Validaciones silenciosas - solo no envía si hay error
+    if (!nombre || !email || !mensaje) {
+        return;
+    }
+    
+    if (!email.includes('@') || !email.includes('.')) {
+        return;
+    }
+    
+    const submitBtn = document.getElementById('submitContactBtn');
+    const originalHTML = submitBtn.innerHTML;
+    
+    // Estado: loading
+    submitBtn.classList.add('loading');
+    submitBtn.innerHTML = `
+        <div class="flex items-center justify-center gap-2">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Enviando...</span>
+        </div>
+    `;
+    submitBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/api/enviar-correo', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nombre, email, servicio, mensaje })
+        });
+        
+        const textResponse = await response.text();
+        let data;
+        try {
+            data = JSON.parse(textResponse);
+        } catch(e) {
+            throw new Error('Respuesta inválida del servidor');
+        }
+        
+        if (response.ok && data.success) {
+            // Estado: success
+            submitBtn.classList.remove('loading');
+            submitBtn.classList.add('success');
+            submitBtn.innerHTML = `
+                <div class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Enviado</span>
+                </div>
+            `;
+            
+            // Limpiar el formulario
+            e.target.reset();
+            const servicioSelect = document.getElementById('contacto_servicio');
+            if (servicioSelect) servicioSelect.value = '';
+            
+            // Volver al estado normal después de 2 segundos
+            setTimeout(() => {
+                submitBtn.classList.remove('success');
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }, 2000);
+        } else {
+            throw new Error(data.error || data.details || 'Error al enviar');
+        }
+    } catch (error) {
+        console.error('Error detallado:', error);
+        submitBtn.classList.remove('loading');
+        submitBtn.innerHTML = originalHTML;
+        submitBtn.disabled = false;
+    }
+}
+
+function mostrarToast(mensaje, tipo) {
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${tipo === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+    toast.textContent = mensaje;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+function toggleFooter(pagina) {
+    const footer = document.getElementById('mainFooter');
+    if (!footer) return;
+    if (pagina === 'Catalogo.html' || pagina === 'catalogo.html') {
+        footer.classList.add('footer-hidden');
+    } else {
+        footer.classList.remove('footer-hidden');
+    }
+}
+
+function mostrarEspecificacionesModal(especificaciones) {
+    const modal = document.getElementById('specsModalGlobal');
+    const specsList = document.getElementById('specsListGlobal');
+    if (!modal) return;
+    specsList.innerHTML = '';
+    if (especificaciones && especificaciones.length > 0) {
+        especificaciones.forEach(spec => {
+            if (spec.label && spec.value) {
+                specsList.innerHTML += `
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                        <span class="material-symbols-outlined text-primary">${spec.icono || 'bolt'}</span>
+                        <div class="flex-1">
+                            <p class="text-xs font-bold text-gray-500">${escapeHtmlGlobal(spec.label)}</p>
+                            <p class="text-sm font-medium text-gray-800">${escapeHtmlGlobal(spec.value)}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
+    if (specsList.innerHTML === '') {
+        specsList.innerHTML = '<p class="text-gray-500 text-center">No hay especificaciones técnicas disponibles</p>';
+    }
+    modal.classList.remove('hidden');
+}
+
+function cerrarSpecsModalGlobal() {
+    const modal = document.getElementById('specsModalGlobal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function escapeHtmlGlobal(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function moverIndicador(elemento) {
+    const indicador = document.getElementById("nav-indicator");
+    if (elemento && indicador && window.innerWidth >= 768) {
+        indicador.style.left = elemento.offsetLeft + "px";
+        indicador.style.width = elemento.offsetWidth + "px";
+        indicador.style.transition = "all 0.3s ease";
+    }
+}
+
+function activarAnimacionesScroll() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-20');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    const elementosParaAnimar = document.querySelectorAll('#contenido section, #contenido .py-32 > div, #contenido .group, #contenido .service-card');
+    elementosParaAnimar.forEach(el => {
+        if (!el.classList.contains('opacity-100')) {
+            el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-20');
+            observer.observe(el);
+        }
+    });
+}
+
+function cargarSeccion(pagina, linkElement) {
+    const contenedor = document.getElementById("contenido");
+    contenedor.style.opacity = "0";
+    contenedor.style.transform = "translateY(10px)";
+    contenedor.style.transition = "all 0.3s ease";
+    
+    if (intervaloAutoPlay) {
+        clearInterval(intervaloAutoPlay);
+        intervaloAutoPlay = null;
+    }
+    carruselActivo = false;
+    toggleFooter(pagina);
+
+    setTimeout(() => {
+        if (pagina === 'inicio') {
+            contenedor.innerHTML = obtenerHTMLInicio();
+            window.scrollTo(0, 0);
+            contenedor.style.opacity = "1";
+            contenedor.style.transform = "translateY(0)";
+            activarAnimacionesScroll();
+            setTimeout(() => {
+                iniciarCarrusel();
+                configurarCardsServicios();
+                cargarProductosDestacados();
+            }, 150);
+        } else {
+            fetch(pagina)
+                .then(response => {
+                    if (!response.ok) throw new Error(`No se pudo cargar ${pagina}`);
+                    return response.text();
+                })
+                .then(html => {
+                    let contenidoHTML = html;
+                    const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+                    if (bodyMatch) {
+                        contenidoHTML = bodyMatch[1];
+                    }
+                    contenedor.innerHTML = contenidoHTML;
+                    window.scrollTo(0, 0);
+                    contenedor.style.opacity = "1";
+                    contenedor.style.transform = "translateY(0)";
+                    activarAnimacionesScroll();
+                    if (pagina === 'Catalogo.html' || pagina === 'catalogo.html') {
+                        setTimeout(() => {
+                            if (typeof window.iniciarCatalogo === 'function') {
+                                window.iniciarCatalogo();
+                            } else {
+                                const scripts = contenedor.querySelectorAll('script');
+                                scripts.forEach(script => {
+                                    if (script.textContent && !script.src) {
+                                        try { eval(script.textContent); } catch(e) {}
+                                    }
+                                });
+                                if (typeof window.cargarProductos === 'function') {
+                                    window.cargarProductos();
+                                    window.cargarCategorias();
+                                }
+                            }
+                        }, 200);
+                    }
+                    if (typeof iniciarTodo === "function") iniciarTodo();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    contenedor.innerHTML = `<div class='py-20 text-center text-red-500'>Error al cargar ${pagina}: ${error.message}</div>`;
+                    contenedor.style.opacity = "1";
+                });
+        }
+        if(linkElement) {
+            document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+            linkElement.classList.add("active");
+            moverIndicador(linkElement);
+        }
+    }, 300);
+}
+
+function configurarCardsServicios() {
+    const cards = document.querySelectorAll('#contenido .service-card');
+    cards.forEach(card => {
+        card.removeEventListener('click', card.clickHandler);
+        card.clickHandler = () => {
+            cards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            if (typeof cargarSeccion === 'function') {
+                cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]);
+            }
+        };
+        card.addEventListener('click', card.clickHandler);
+    });
+}
+
+// Función para cargar productos destacados desde el backend
+async function cargarProductosDestacados() {
+    const contenedorDestacados = document.getElementById('productos-destacados-grid');
+    if (!contenedorDestacados) return;
+    
+    contenedorDestacados.innerHTML = `
+        <div class="col-span-full flex justify-center py-12">
+            <div class="loading-spinner w-10 h-10 border-4"></div>
+        </div>
+    `;
+    
+    try {
+        const response = await fetch('https://edapymesdev.onrender.com/api/productos');
+        if (!response.ok) throw new Error('Error al cargar productos');
+        
+        const productos = await response.json();
+        productosGlobales = productos;
+        const destacados = productos.slice(0, 4);
+        
+        if (destacados.length === 0) {
+            contenedorDestacados.innerHTML = `
+                <div class="col-span-full text-center py-12 text-gray-500">
+                    <span class="material-symbols-outlined text-5xl">inventory</span>
+                    <p class="mt-2">No hay productos disponibles</p>
+                </div>
+            `;
+            return;
+        }
+        
+        contenedorDestacados.innerHTML = '';
+        
+        destacados.forEach(producto => {
+            let imagenUrl = 'https://placehold.co/400x300/e2e8f0/475569?text=EDAPymes';
+            if (producto.imagenes && producto.imagenes.length > 0) {
+                imagenUrl = producto.imagenes[0];
+            }
+            
+            const precioFormateado = typeof producto.precio === 'number' ? producto.precio.toFixed(2) : producto.precio;
+            const disponible = producto.disponible === true || producto.disponible === 1;
+            
+            const card = document.createElement('div');
+            card.className = "producto-card group bg-white rounded-2xl overflow-hidden border border-outline shadow-md hover:shadow-xl transition-all";
+            card.onclick = () => abrirModalProducto(producto);
+            card.innerHTML = `
+                <div class="relative h-64 overflow-hidden">
+                    <img class="card-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="${imagenUrl}" alt="${escapeHtmlGlobal(producto.nombre)}" onerror="this.src='https://placehold.co/400x300/e2e8f0/475569?text=Imagen'">
+                    <span class="absolute top-4 right-4 ${disponible ? 'bg-primary' : 'bg-gray-500'} text-white text-[10px] font-bold px-2 py-1 rounded-full">${disponible ? 'Disponible' : 'Agotado'}</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs text-on-surface-variant">${escapeHtmlGlobal(producto.categoria || 'Tecnología')}</span>
+                    <h4 class="text-lg font-bold text-on-surface mt-1 mb-4">${escapeHtmlGlobal(producto.nombre)}</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-primary">${precioFormateado.includes('C$') ? precioFormateado : 'C$' + precioFormateado}</span>
+                        <button onclick="event.stopPropagation(); abrirModalProducto(${JSON.stringify(producto).replace(/"/g, '&quot;')})" class="bg-primary/10 hover:bg-primary text-primary hover:text-white transition-all px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">shopping_cart</span>
+                            Cotizar
+                        </button>
+                    </div>
+                </div>
+            `;
+            contenedorDestacados.appendChild(card);
+        });
+        
+    } catch (error) {
+        console.error('Error cargando productos destacados:', error);
+        contenedorDestacados.innerHTML = `
+            <div class="col-span-full text-center py-12 text-red-500">
+                <span class="material-symbols-outlined text-5xl">error</span>
+                <p class="mt-2">Error al cargar productos destacados</p>
+            </div>
+        `;
+    }
+}
+
+// Función para abrir modal de producto
+function abrirModalProducto(producto) {
+    const modal = document.getElementById('productModal');
+    if (!modal) return;
+    
+    let imagenes = [];
+    if (producto.imagenes && producto.imagenes.length > 0) {
+        imagenes = producto.imagenes;
+    } else {
+        imagenes = ['https://placehold.co/800x1000/e2e8f0/475569?text=Sin+Imagen'];
+    }
+    
+    const precioFormateado = typeof producto.precio === 'number' ? producto.precio.toFixed(2) : producto.precio;
+    const disponible = producto.disponible === true || producto.disponible === 1;
+    
+    document.getElementById('modalProductoNombre').textContent = producto.nombre;
+    document.getElementById('modalProductoPrecio').textContent = `C$${precioFormateado}`;
+    document.getElementById('modalProductoCategoria').innerHTML = `<span class="material-symbols-outlined text-sm">devices</span> ${escapeHtmlGlobal(producto.categoria || 'Tecnología')}`;
+    document.getElementById('modalProductoDescripcion').textContent = producto.descripcion || 'Producto tecnológico de alta calidad. Consulta con nuestros asesores para obtener más información.';
+    document.getElementById('modalProductoDisponible').textContent = disponible ? 'Disponible' : 'Agotado';
+    document.getElementById('modalProductoDisponible').className = `text-sm font-semibold ${disponible ? 'text-green-600' : 'text-red-600'}`;
+    
+    const imgPrincipal = document.getElementById('modalImagenPrincipal');
+    imgPrincipal.src = imagenes[0];
+    
+    const miniaturasContainer = document.getElementById('modalMiniaturas');
+    miniaturasContainer.innerHTML = '';
+    imagenes.forEach((img, idx) => {
+        const miniatura = document.createElement('div');
+        miniatura.className = `thumbnail-detail rounded-xl overflow-hidden aspect-square bg-gray-100 cursor-pointer ${idx === 0 ? 'active' : ''}`;
+        miniatura.innerHTML = `<img src="${img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/e2e8f0/475569?text=Error'">`;
+        miniatura.onclick = () => {
+            imgPrincipal.src = img;
+            document.querySelectorAll('#modalMiniaturas .thumbnail-detail').forEach((thumb, i) => {
+                if (i === idx) thumb.classList.add('active');
+                else thumb.classList.remove('active');
+            });
+        };
+        miniaturasContainer.appendChild(miniatura);
+    });
+    
+    const specsContainer = document.getElementById('modalEspecificaciones');
+    if (producto.especificaciones && producto.especificaciones.length > 0) {
+        specsContainer.innerHTML = '';
+        producto.especificaciones.forEach(spec => {
+            if (spec.label && spec.value) {
+                specsContainer.innerHTML += `
+                    <div class="bg-gray-50 p-3 rounded-xl flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary">${spec.icono || 'bolt'}</span>
+                        <div>
+                            <p class="text-xs font-bold text-gray-500">${escapeHtmlGlobal(spec.label)}</p>
+                            <p class="text-sm font-medium text-gray-800">${escapeHtmlGlobal(spec.value)}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    } else {
+        specsContainer.innerHTML = '<div class="text-center text-gray-500 py-6 bg-gray-50 rounded-xl">No hay especificaciones técnicas disponibles</div>';
+    }
+    
+    const btnWhatsApp = document.getElementById('modalWhatsAppBtn');
+    const mensaje = `Hola, me gustaría recibir información sobre EDAPymes y el producto: ${producto.nombre} - Precio: C$${precioFormateado}`;
+    btnWhatsApp.onclick = () => {
+        window.open(`https://wa.me/50583295424?text=${encodeURIComponent(mensaje)}`, '_blank');
+    };
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalProducto() {
+    const modal = document.getElementById('productModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+function crearModalProducto() {
+    let modalExistente = document.getElementById('productModal');
+    if (modalExistente) return;
+    
+    const modalHTML = `
+        <div id="productModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[1000] p-4" onclick="if(event.target === this) cerrarModalProducto()">
+            <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white z-10 flex justify-end p-4 border-b">
+                    <button onclick="cerrarModalProducto()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div class="image-zoom-container bg-gray-100 rounded-xl overflow-hidden">
+                                <img id="modalImagenPrincipal" class="w-full aspect-[4/5] object-cover" src="" alt="">
+                            </div>
+                            <div id="modalMiniaturas" class="grid grid-cols-4 gap-3"></div>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <h2 id="modalProductoNombre" class="text-2xl md:text-3xl font-bold text-gray-800"></h2>
+                                <div class="flex items-center justify-between mt-4">
+                                    <span id="modalProductoPrecio" class="text-3xl font-bold text-primary"></span>
+                                    <span id="modalProductoDisponible" class="text-sm font-semibold"></span>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-2">Categoría</p>
+                                <p id="modalProductoCategoria" class="text-gray-600 flex items-center gap-1"></p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-2">Descripción</p>
+                                <p id="modalProductoDescripcion" class="text-gray-600 leading-relaxed"></p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold mb-3">Especificaciones</p>
+                                <div id="modalEspecificaciones" class="space-y-3"></div>
+                            </div>
+                            <button id="modalWhatsAppBtn" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-green-700 transition-all">
+                                <span class="material-symbols-outlined">chat</span>
+                                Contactar por WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+// Función optimizada para el carrusel con carga rápida de video
+function iniciarCarrusel() {
+    if (intervaloAutoPlay) clearInterval(intervaloAutoPlay);
+    
+    const slidesData = [
+      { type: 'video', src: '/src/image/fondo de pantalla.mp4', poster: '/src/image/fondo-poster.jpg', title: 'Impulsamos tu <span class="text-primary">negocio</span> con tecnología', subtitle: 'Soluciones tecnológicas integrales diseñadas para la era digital.' },
+      { type: 'image', src: '/src/image/foto3.jpg', title: 'Capacitaciones <span class="text-primary">Tecnológicas</span>', subtitle: 'Aprende habilidades digitales con expertos.' },
+      { type: 'image', src: '/src/image/foto1.jpg', title: 'Asesorías <span class="text-primary">Profesionales</span>', subtitle: 'Impulsa tu negocio con tecnología.' },
+      { type: 'image', src: '/src/image/dirty-computer-attractive-young-man-wearing-protection-glasses-while-cleaning-inside-with-compressed-air-hardware-computer.jpg', title: 'Reparación de <span class="text-primary">Computadoras</span>', subtitle: 'Mantenimiento rápido y confiable.' },
+      { type: 'image', src: '/src/image/foto4.jpg', title: 'Venta de <span class="text-primary">Laptops</span>', subtitle: 'Equipos modernos y de alto rendimiento.' },
+      { type: 'image', src: '/src/image/foto5.jpg', title: 'Cámaras de <span class="text-primary">Seguridad</span>', subtitle: 'Protege tu hogar o negocio.' },
+      { type: 'image', src: '/src/image/foto8.jpg', title: 'Accesorios para <span class="text-primary">Celulares</span>', subtitle: 'Todo lo que necesitás para tu smartphone.' },
+      { type: 'image', src: '/src/image/foto9.jpg', title: 'Préstamos <span class="text-primary">Prendatarios</span>', subtitle: 'Soluciones rápidas de financiamiento.' },
+      { type: 'image', src: '/src/image/foto10.jpg', title: 'Servicios de <span class="text-primary">Traducción</span>', subtitle: 'Traducción profesional de inglés a español.' }
+    ];
+    
+    let currentIndex = 0;
+    let videoElement = null;
+    let isTransitioning = false;
+    
+    const track = document.getElementById('carouselTrack');
+    const dotsContainer = document.getElementById('carouselDots');
+    let prevBtn = document.getElementById('carouselPrev');
+    let nextBtn = document.getElementById('carouselNext');
+    
+    if (!track) return;
+    track.innerHTML = '';
+    if (dotsContainer) dotsContainer.innerHTML = '';
+    
+    // Pre-cargar la primera imagen/video
+    const preloadFirst = () => {
+        const firstSlide = slidesData[0];
+        if (firstSlide.type === 'image') {
+            const img = new Image();
+            img.src = firstSlide.src;
+        }
+    };
+    preloadFirst();
+    
+    slidesData.forEach((slide, idx) => {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'carousel-slide';
+        slideDiv.setAttribute('data-index', idx);
+        
+        if (slide.type === 'video') {
+            const video = document.createElement('video');
+            video.src = slide.src;
+            video.autoplay = false;
+            video.muted = true;
+            video.playsInline = true;
+            video.loop = false;
+            video.preload = idx === 0 ? 'auto' : 'metadata';
+            if (slide.poster) video.poster = slide.poster;
+            video.className = 'w-full h-full object-cover';
+            video.style.backgroundColor = '#0a0a2a';
+            slideDiv.appendChild(video);
+        } else {
+            const img = document.createElement('img');
+            img.src = slide.src;
+            img.className = 'w-full h-full object-cover';
+            img.alt = `Slide ${idx + 1}`;
+            img.loading = idx === 0 ? 'eager' : 'lazy';
+            img.onerror = function() { this.src = 'https://placehold.co/1920x600/034AB0/white?text=EDAPymes'; };
+            slideDiv.appendChild(img);
+        }
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'carousel-overlay';
+        slideDiv.appendChild(overlay);
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'carousel-content';
+        contentDiv.innerHTML = `<div class="carousel-content-inner"><h1 class="carousel-title">${slide.title}</h1><p class="carousel-subtitle">${slide.subtitle}</p><div class="carousel-action-buttons"><button class="btn-primary-carousel btn-catalogo-action">Explorar Catálogo</button><button class="btn-secondary-carousel btn-servicios-action">Nuestros Servicios</button></div></div>`;
+        slideDiv.appendChild(contentDiv);
+        track.appendChild(slideDiv);
+        
+        if (dotsContainer) {
+            const dot = document.createElement('div');
+            dot.className = 'carousel-dot';
+            dot.setAttribute('data-index', idx);
+            dot.addEventListener('click', () => goToSlide(idx));
+            dotsContainer.appendChild(dot);
+        }
+    });
+    
+    function updateSlidesAndDots() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        
+        const slides = document.querySelectorAll('.carousel-slide');
+        const contents = document.querySelectorAll('.carousel-content');
+        const dots = document.querySelectorAll('.carousel-dot');
+        
+        slides.forEach((slide, idx) => {
+            if (idx === currentIndex) { 
+                slide.classList.add('active'); 
+                if (contents[idx]) contents[idx].classList.add('active'); 
+            } else { 
+                slide.classList.remove('active'); 
+                if (contents[idx]) contents[idx].classList.remove('active'); 
+            }
+        });
+        
+        dots.forEach((dot, idx) => { 
+            if (idx === currentIndex) dot.classList.add('active'); 
+            else dot.classList.remove('active'); 
+        });
+        
+        const currentSlide = slides[currentIndex];
+        if (currentSlide) {
+            const video = currentSlide.querySelector('video');
+            if (video) {
+                const allVideos = document.querySelectorAll('.carousel-slide video');
+                allVideos.forEach(v => { if (v !== video) { v.pause(); v.currentTime = 0; } });
+                videoElement = video;
+                if (video.readyState >= 2) {
+                    video.currentTime = 0;
+                    video.play().catch(e => console.log('Autoplay:', e));
+                } else {
+                    video.addEventListener('canplay', () => {
+                        video.play().catch(e => console.log('Autoplay delayed:', e));
+                    }, { once: true });
+                }
+                video.removeEventListener('ended', handleVideoEnd);
+                video.addEventListener('ended', handleVideoEnd);
+            } else if (videoElement && !videoElement.paused) { 
+                videoElement.pause(); 
+            }
+        }
+        
+        setTimeout(() => { isTransitioning = false; }, 800);
+    }
+    
+    function handleVideoEnd() { 
+        if (!isTransitioning) nextSlide(); 
+    }
+    
+    function nextSlide() { 
+        if (isTransitioning) return;
+        currentIndex = (currentIndex + 1) % slidesData.length; 
+        updateSlidesAndDots(); 
+        resetAutoPlay(); 
+    }
+    
+    function prevSlide() { 
+        if (isTransitioning) return;
+        currentIndex = (currentIndex - 1 + slidesData.length) % slidesData.length; 
+        updateSlidesAndDots(); 
+        resetAutoPlay(); 
+    }
+    
+    function goToSlide(index) { 
+        if (isTransitioning || index === currentIndex) return;
+        currentIndex = index; 
+        updateSlidesAndDots(); 
+        resetAutoPlay(); 
+    }
+    
+    function startAutoPlay() { 
+        if (intervaloAutoPlay) clearInterval(intervaloAutoPlay); 
+        intervaloAutoPlay = setInterval(() => { 
+            if (!isTransitioning) {
+                const slides = document.querySelectorAll('.carousel-slide'); 
+                const current = slides[currentIndex]; 
+                const video = current?.querySelector('video'); 
+                if (!video || video.paused || video.ended) { 
+                    nextSlide(); 
+                }
+            }
+        }, 7000); 
+    }
+    
+    function resetAutoPlay() { 
+        if (intervaloAutoPlay) { 
+            clearInterval(intervaloAutoPlay); 
+            intervaloAutoPlay = null; 
+        } 
+        startAutoPlay(); 
+    }
+    
+    // Configurar botones
+    if (prevBtn) { 
+        const newPrev = prevBtn.cloneNode(true); 
+        prevBtn.parentNode.replaceChild(newPrev, prevBtn); 
+        prevBtn = newPrev; 
+        prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); }); 
+    }
+    if (nextBtn) { 
+        const newNext = nextBtn.cloneNode(true); 
+        nextBtn.parentNode.replaceChild(newNext, nextBtn); 
+        nextBtn = newNext; 
+        nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); }); 
+    }
+    
+    // Configurar botones de acción
+    document.querySelectorAll('.btn-catalogo-action').forEach(btn => { 
+        btn.removeEventListener('click', btn._handler); 
+        btn._handler = () => cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2]); 
+        btn.addEventListener('click', btn._handler); 
+    });
+    document.querySelectorAll('.btn-servicios-action').forEach(btn => { 
+        btn.removeEventListener('click', btn._handler2); 
+        btn._handler2 = () => cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]); 
+        btn.addEventListener('click', btn._handler2); 
+    });
+    
+    // Manejo de touch para móviles
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (carouselContainer) {
+        carouselContainer.addEventListener('touchstart', () => {
+            carouselContainer.classList.add('touch-active');
+            setTimeout(() => {
+                carouselContainer.classList.remove('touch-active');
+            }, 3000);
+        });
+        
+        carouselContainer.removeEventListener('mouseenter', carouselContainer._enterHandler);
+        carouselContainer.removeEventListener('mouseleave', carouselContainer._leaveHandler);
+        carouselContainer._enterHandler = () => { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } };
+        carouselContainer._leaveHandler = () => { startAutoPlay(); };
+        carouselContainer.addEventListener('mouseenter', carouselContainer._enterHandler);
+        carouselContainer.addEventListener('mouseleave', carouselContainer._leaveHandler);
+    }
+    
+    updateSlidesAndDots();
+    startAutoPlay();
+    carruselActivo = true;
+    
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+function handleVisibilityChange() {
+    if (!document.hidden && carruselActivo) {
+        setTimeout(() => {
+            const track = document.getElementById('carouselTrack');
+            if (track && track.children.length > 0) {
+                if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; }
+                const activeSlide = document.querySelector('.carousel-slide.active');
+                if (activeSlide) {
+                    const video = activeSlide.querySelector('video');
+                    if (video && video.paused) { video.play().catch(e => console.log('Play reanudado:', e)); }
+                }
+                intervaloAutoPlay = setInterval(() => {
+                    const slides = document.querySelectorAll('.carousel-slide');
+                    const activeIdx = document.querySelector('.carousel-slide.active')?.getAttribute('data-index');
+                    const current = slides[activeIdx || 0];
+                    const video = current?.querySelector('video');
+                    if (!video || video.paused || video.ended) {
+                        const nextBtn = document.getElementById('carouselNext');
+                        if (nextBtn) nextBtn.click();
+                    }
+                }, 7000);
+            }
+        }, 100);
+    } else if (document.hidden && carruselActivo) {
+        const videos = document.querySelectorAll('.carousel-slide video');
+        videos.forEach(v => v.pause());
+    }
+}
+
+function iniciarTodo() { configurarCardsServicios(); }
+
+function obtenerHTMLInicio() {
+    return `
+<div id="specsModalGlobal" class="specs-modal hidden" onclick="cerrarSpecsModalGlobal(event)">
+  <div class="specs-content p-6" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold">Especificaciones Técnicas</h3>
+      <button onclick="cerrarSpecsModalGlobal()" class="text-gray-500 hover:text-gray-700">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div id="specsListGlobal" class="space-y-3"></div>
+  </div>
+</div>
+
+<div class="mt-24 px-4">
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack"></div>
+    <button class="carousel-btn prev" id="carouselPrev"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+    <button class="carousel-btn next" id="carouselNext"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</div>
+
+<section class="py-24 bg-background-soft" id="services">
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div class="space-y-4">
+        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface">Servicios de <span class="text-primary">Vanguardia</span></h2>
+        <p class="text-on-surface-variant max-w-xl">Curamos las mejores herramientas y servicios para que tu empresa nunca se detenga.</p>
+      </div>
+      <button onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todos los servicios <span class="material-symbols-outlined">east</span></button>
+    </div>
+    <div class="flex justify-center items-center gap-8 flex-wrap">
+      <div onclick="irAServicioEspecifico('capacitaciones')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined service-icon text-4xl">school</span>
+        <h3 class="text-xl font-bold text-white">Capacitaciones</h3>
+        <p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p>
+      </div>
+      <div onclick="irAServicioEspecifico('asesorias')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined text-4xl mb-4">lightbulb</span>
+        <h3 class="text-2xl font-bold text-white">Asesorías</h3>
+        <p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p>
+      </div>
+      <div onclick="irAServicioEspecifico('seguridad')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined service-icon text-4xl">videocam</span>
+        <h3 class="text-xl font-bold text-white">Seguridad</h3>
+        <p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p>
+      </div>
+      <div onclick="irAServicioEspecifico('mantenimiento')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
+        <span class="material-symbols-outlined text-4xl mb-4">build</span>
+        <h3 class="text-2xl font-bold text-white">Mantenimiento</h3>
+        <p class="text-white/80 text-sm mt-2">Soporte técnico preventivo y correctivo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="relative py-32 overflow-hidden" id="vision-mission">
+  <div class="absolute inset-0 aurora-gradient z-0"></div>
+  <div class="absolute inset-0 bg-black/10 z-10"></div>
+  <div class="relative z-20 max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-24 items-center">
+    <div class="relative"><img alt="Team meeting" class="rounded-xl grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl w-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCivFyI9U0ch_lXTv2afdbSJd7yEC6ICDgX2pKEwWpuVX5lNRbN35768GUHdrzUEkq2BqpNn_0CzC9oRLAqy-EiT-Z-tpBYhR9s0e_yIOAsXm_nCfVlFFqRUYn4oMx127GGeOkDe8acXbZfJ4oQak6jy5zGJDCKyXOI884o9BXigCdn28otGU5SVDqbr1xXeC0TAMrQqTPytokSHoNzeaUSodzZH7SVgYKtpfG4j8KhbnZesuwnIwBfx5wPLR3lI8BScbR1A9jKm1oV"></div>
+    <div class="space-y-16">
+      <div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">rocket_launch</span><h3 class="text-3xl font-headline font-bold text-white">Misión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-primary pl-6">"Brindar servicios con calidad y calidez, así como ofertar computadoras, accesorios para computadoras y para móviles con las mejores y más modernas especificaciones que satisfagan las necesidades de nuestros clientes"</p></div>
+      <div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">visibility</span><h3 class="text-3xl font-headline font-bold text-white">Visión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-white/40 pl-6">"Ser una empresa especializada en la atención a las necesidades de la pequeña y mediana empresa nacional."</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="py-28 bg-background relative overflow-hidden">
+  <div class="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+  <div class="absolute -bottom-20 -right-20 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"></div>
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="grid lg:grid-cols-12 gap-20 items-center">
+      <div class="lg:col-span-7 space-y-8"><span class="text-primary font-bold uppercase tracking-widest text-xs">Nuestra Trayectoria</span><h2 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tight leading-tight">Acerca de <span class="text-primary">nosotros</span></h2><p class="text-on-surface-variant text-lg leading-relaxed">Nacimos con la firme convicción de que la tecnología debe ser el motor de crecimiento para las empresas en desarrollo. En EDAPymes, no solo vendemos productos; curamos soluciones integrales que se adaptan a la realidad y desafíos de cada uno de nuestros clientes.</p><p class="text-on-surface-variant text-lg leading-relaxed">Nuestro equipo combina décadas de experiencia técnica con una visión humana, asegurando que cada implementación tecnológica tenga un impacto positivo directo en la productividad y bienestar de tu organización.</p><div class="pt-6"><button onclick="cargarSeccion('Nosotros.html', document.querySelectorAll('.nav-link')[3])" class="relative overflow-hidden border border-primary text-primary px-8 py-3 rounded-full font-bold transition-all duration-300 hover:text-white hover:bg-primary">Conoce nuestra historia</button></div></div>
+      <div class="lg:col-span-5"><div class="relative group"><div class="absolute inset-0 bg-primary/20 blur-2xl opacity-0 group-hover:opacity-100 transition-all"></div><div class="relative aspect-square bg-white rounded-2xl overflow-hidden border border-outline p-3 shadow-xl"><img class="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKdoUxNlx2Zygo0Wo5Ar2mDUJEaacdduxOxKuMI5iX3PmPIbEiT84zI8DiWdKEXwGpiVq04OmuMuT2rn_hhAGEi8p_qoIlBXjopAkIbysicb5JNUhkKaUizrwmluQ_256WiBadLPE1mldB9uXnknJ4PJkMW3j3RQTvOXgxrg7vJCGYKWE8w0ta7YNv-hsr40bb1MXlSvqkuk9qzPaakUc9xT9Fo4S93P-xLjio5_0SPuOR7vU8q9vo_ix1rektw5Uo2RyB1jeJSFDp" alt="Workspace"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="py-28 bg-background relative overflow-hidden">
+  <div class="absolute top-0 left-0 w-72 h-72 bg-primary/10 blur-3xl rounded-full"></div>
+  <div class="absolute bottom-0 right-0 w-72 h-72 bg-secondary/10 blur-3xl rounded-full"></div>
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="flex items-center justify-between mb-16"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface">Catálogo <span class="text-primary">Destacado</span></h2><button onclick="cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todo <span class="material-symbols-outlined">east</span></button></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10" id="productos-destacados-grid">
+      <div class="col-span-full flex justify-center py-12">
+        <div class="loading-spinner w-10 h-10 border-4"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-24 relative overflow-hidden bg-team"><div class="bg-efecto"></div><div class="relative z-10 max-w-7xl mx-auto px-8"><div class="text-center mb-16 space-y-4"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">El Equipo <span class="text-primary">Detrás</span></h2><p class="text-white/70 max-w-2xl mx-auto">Expertos comprometidos con el éxito tecnológico de tu empresa.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+  
+  <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/dereck.png" alt="Dereck Sevilla" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=DS'"></div><h4 class="text-xl font-headline font-bold text-white">Dereck Sevilla</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrollador Backend</p><p class="text-white/70 text-sm mt-4">BackEnd Junior con 4 años de experiencia en TICs.</p></div>
+
+  <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/WhatsApp%20Image%202026-04-03%20at%206.18.21%20PM.jpeg" alt="Evelyn Espinoza" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=EE'"></div><h4 class="text-xl font-headline font-bold text-white">Evelyn Espinoza</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Project Manager & CEO</p><p class="text-white/70 text-sm mt-4">Máster en Computación con énfasis en Sistemas de Información con más de 28 años de experiencia brindando soluciones tecnológicas con calidad comprobada.</p></div>
+
+  <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/ana.png" alt="Ana Fernanda Tapia" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=AFT'"></div><h4 class="text-xl font-headline font-bold text-white">Ana Fernanda Tapia</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrolladora Frontend</p><p class="text-white/70 text-sm mt-4">FrontEnd Junior con 4 años de experiencia en soluciones amigables, navegables y óptimas.</p></div>
+
+</div></div></section>
+
+<section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:edapymestech@gmail.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">edapymestech@gmail.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8329 5424 / +505 8599 8144</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
+<form id="contactoForm" onsubmit="enviarCorreo(event)" class="space-y-6">
+  <div><label for="contacto_nombre" class="text-white/70 text-sm">Nombre</label><input type="text" id="contacto_nombre" name="nombre" required placeholder="Tu nombre" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div>
+  <div><label for="contacto_email" class="text-white/70 text-sm">Correo</label><input type="email" id="contacto_email" name="email" required placeholder="tu@email.com" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div>
+  <div><label for="contacto_servicio" class="text-white/70 text-sm">Servicio de interés</label>
+    <select id="contacto_servicio" name="servicio" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-primary">
+      <option value="" class="text-gray-900">Selecciona un servicio</option>
+      <option value="Capacitaciones" class="text-gray-900">📚 Capacitaciones</option>
+      <option value="Asesorías" class="text-gray-900">💡 Asesorías</option>
+      <option value="Seguridad Electrónica" class="text-gray-900">🎥 Seguridad Electrónica</option>
+      <option value="Mantenimiento y Reparación" class="text-gray-900">🔧 Mantenimiento y Reparación</option>
+      <option value="Venta de Tecnología" class="text-gray-900">💻 Venta de Tecnología</option>
+      <option value="Préstamos Prendatarios" class="text-gray-900">💰 Préstamos Prendatarios</option>
+      <option value="Traducción Profesional" class="text-gray-900">🌐 Traducción Profesional</option>
+      <option value="Otro" class="text-gray-900">📌 Otro</option>
+    </select>
+  </div>
+  <div><label for="contacto_mensaje" class="text-white/70 text-sm">Mensaje</label><textarea id="contacto_mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje..." class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></textarea></div>
+  <button type="submit" id="submitContactBtn" class="submit-btn w-full py-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover transition-all flex items-center justify-center gap-2">
+    <span class="btn-text">Enviar mensaje</span>
+  </button>
+</form>
+</div></div></section>
+    `;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    crearModalProducto();
+    const inicioLink = document.querySelector(".nav-link.active");
+    const contenedor = document.getElementById("contenido");
+    contenedor.innerHTML = obtenerHTMLInicio();
+    window.scrollTo(0, 0);
+    activarAnimacionesScroll();
+    if (inicioLink) moverIndicador(inicioLink);
+    setTimeout(() => { 
+        iniciarCarrusel(); 
+        configurarCardsServicios();
+        cargarProductosDestacados();
+    }, 150);
+    if(inicioLink) { document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active")); inicioLink.classList.add("active"); }
+});
+
+window.addEventListener("resize", () => {
+    const activeLink = document.querySelector(".nav-link.active");
+    if (activeLink) moverIndicador(activeLink);
+});
+
+window.cargarSeccion = cargarSeccion;
+window.irAServicioEspecifico = irAServicioEspecifico;
+window.enviarCorreo = enviarCorreo;
+window.configurarCardsServicios = configurarCardsServicios;
+window.activarAnimacionesScroll = activarAnimacionesScroll;
+window.moverIndicador = moverIndicador;
+window.mostrarEspecificacionesModal = mostrarEspecificacionesModal;
+window.cerrarSpecsModalGlobal = cerrarSpecsModalGlobal;
+window.escapeHtmlGlobal = escapeHtmlGlobal;
+window.cargarProductosDestacados = cargarProductosDestacados;
+window.abrirModalProducto = abrirModalProducto;
+window.cerrarModalProducto = cerrarModalProducto;
+</script>
+
 </body>
 </html>
