@@ -219,30 +219,6 @@ function escapeHtml(text) {
         .replace(/'/g, '&#39;');
 }
 
-// Función para optimizar y redimensionar el logo
-function optimizarLogo(bufferOriginal) {
-    // Si el buffer es menor a 200KB, no lo redimensionamos
-    if (bufferOriginal.length < 200 * 1024) {
-        console.log('Logo ya es pequeño, no se redimensiona');
-        return bufferOriginal;
-    }
-
-    try {
-        // Redimensionar usando canvas simple (sin sharp)
-        // Como no tenemos sharp, vamos a usar un enfoque diferente
-        // Convertimos el buffer a base64 y creamos una imagen con tamaño controlado via CSS
-        console.log(`Logo original: ${(bufferOriginal.length / 1024).toFixed(2)} KB`);
-
-        // En lugar de redimensionar realmente, solo registramos el tamaño
-        // La solución real está en el CSS que fuerza el tamaño de la imagen
-        console.log('Se aplicará CSS para controlar el tamaño de la imagen');
-        return bufferOriginal;
-    } catch (error) {
-        console.error('Error optimizando logo:', error);
-        return bufferOriginal;
-    }
-}
-
 /* ===============================
    CONFIGURACION DE MULTER
 ================================ */
@@ -560,7 +536,7 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA CON CSS OPTIMIZADO
+   API DE ENVIO DE CORREOS CON BREVO - USANDO URL DE IMAGEKIT
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -589,56 +565,26 @@ app.post("/api/enviar-correo", async (req, res) => {
         timeStyle: 'short'
     });
 
-    // Buscar logo en diferentes rutas
-    const posiblesLogos = [
-        path.join(__dirname, "src", "image", "TU-LOGO.png"),
-        path.join(__dirname, "src", "image", "redimension.png"),
-        path.join(__dirname, "src", "image", "logo.png"),
-        path.join(__dirname, "static", "image", "logo.png"),
-        path.join(__dirname, "public", "image", "logo.png")
-    ];
+    // URL del logo en ImageKit
+    const LOGO_URL = 'https://ik.imagekit.io/y52skklsrw/edapymes/TU-LOGO.png';
+    console.log('Usando logo desde:', LOGO_URL);
 
-    let logoBase64 = null;
-    let logoTamañoKB = 0;
-    for (const ruta of posiblesLogos) {
-        if (fs.existsSync(ruta)) {
-            const bufferOriginal = fs.readFileSync(ruta);
-            logoTamañoKB = (bufferOriginal.length / 1024).toFixed(2);
-            console.log(`Logo encontrado en: ${ruta} (${logoTamañoKB} KB)`);
-
-            // Optimizar el logo si es muy grande
-            const bufferOptimizado = optimizarLogo(bufferOriginal);
-            logoBase64 = bufferOptimizado.toString('base64');
-            break;
-        }
-    }
-
-    if (!logoBase64) {
-        console.log('No se encontro logo en ninguna ruta');
-    }
-
-    const logoCid = 'edapymes-logo';
-
-    // HEADER CORREGIDO - CON CSS QUE CONTROLA EL TAMAÑO DE LA IMAGEN
+    // HEADER con URL pública de ImageKit
     const crearHeaderConLogo = () => `
         <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 20px 15px; border-radius: 12px 12px 0 0;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; table-layout: fixed;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
                 <tr>
                     <td style="width: 60px; vertical-align: middle; padding: 0;">
-                        <img src="cid:${logoCid}" 
+                        <img src="${LOGO_URL}" 
                              alt="EDAPymes" 
                              width="50" 
                              height="50"
                              style="display: block; 
-                                    width: 50px !important; 
-                                    height: 50px !important; 
-                                    max-width: 50px !important;
-                                    min-width: 50px !important;
+                                    width: 50px; 
+                                    height: 50px; 
                                     border-radius: 10px; 
                                     object-fit: cover;
-                                    border: none;
-                                    margin: 0;
-                                    padding: 0;">
+                                    border: none;">
                     </td>
                     <td style="vertical-align: middle; padding-left: 15px;">
                         <div style="color: white; line-height: 1.2;">
@@ -650,34 +596,6 @@ app.post("/api/enviar-correo", async (req, res) => {
             </table>
         </div>
     `;
-
-    // Versión alternativa para clientes que no soportan CSS moderno
-    const crearHeaderAlternativo = () => `
-        <div style="background: #034AB0; padding: 15px;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                    <td width="50" align="center" valign="middle">
-                        <img src="cid:${logoCid}" width="40" height="40" style="display: block;" alt="EDAPymes">
-                    </td>
-                    <td valign="middle">
-                        <font color="white" size="5" face="Arial"><strong>EDAPymes</strong></font><br>
-                        <font color="white" size="2" face="Arial">Tecnologia con Calidad y Calidez</font>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    `;
-
-    // Preparar attachments con CID
-    const attachments = [];
-    if (logoBase64) {
-        attachments.push({
-            content: logoBase64,
-            name: 'edapymes-logo.png',
-            cid: logoCid
-        });
-        console.log(`Logo adjuntado con CID: ${logoCid}, tamaño: ${logoTamañoKB} KB`);
-    }
 
     // Escapar mensaje para HTML
     const mensajeHtml = mensaje.replace(/\n/g, '<br>');
@@ -779,25 +697,19 @@ app.post("/api/enviar-correo", async (req, res) => {
         </html>
     `;
 
-    // Crear los emails con attachments
+    // Crear los emails (SIN attachments porque usamos URL pública)
     const adminEmail = new brevo.SendSmtpEmail();
     adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
     adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
     adminEmail.replyTo = { email: email, name: nombre };
     adminEmail.subject = `Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
     adminEmail.htmlContent = adminEmailContent;
-    if (attachments.length > 0) {
-        adminEmail.attachment = attachments;
-    }
 
     const userEmail = new brevo.SendSmtpEmail();
     userEmail.to = [{ email: email, name: nombre }];
     userEmail.sender = { email: emailUser, name: 'EDAPymes' };
     userEmail.subject = `Gracias por contactarnos ${nombre} - EDAPymes`;
     userEmail.htmlContent = userEmailContent;
-    if (attachments.length > 0) {
-        userEmail.attachment = attachments;
-    }
 
     try {
         console.log('Enviando correo al administrador via Brevo...');

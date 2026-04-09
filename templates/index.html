@@ -780,28 +780,6 @@ async function enviarCorreo(e) {
                     <span>Enviado</span>
                 </div>
             `;
-            
-            mostrarToast('✅ Mensaje enviado exitosamente. Te contactaremos pronto.', 'success');
-            e.target.reset();
-            const servicioSelect = document.getElementById('contacto_servicio');
-            if (servicioSelect) servicioSelect.value = '';
-            
-            // Volver al estado normal después de 2 segundos
-            setTimeout(() => {
-                submitBtn.classList.remove('success');
-                submitBtn.innerHTML = originalHTML;
-                submitBtn.disabled = false;
-            }, 2000);
-        } else {
-            throw new Error(data.error || data.details || 'Error al enviar');
-        }
-    } catch (error) {
-        console.error('Error detallado:', error);
-        submitBtn.classList.remove('loading');
-        submitBtn.innerHTML = originalHTML;
-        submitBtn.disabled = false;
-        mostrarToast('❌ Error al enviar el mensaje: ' + error.message, 'error');
-    }
 }
 
 function mostrarToast(mensaje, tipo) {
