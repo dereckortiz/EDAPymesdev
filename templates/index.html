@@ -273,6 +273,284 @@
         .group:hover .card-img {
             transform: scale(1.05);
         }
+
+        /* Estilos optimizados para el carrusel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+        
+        .carousel-slide img,
+        .carousel-slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Optimización para video - carga más rápida */
+        .carousel-slide video {
+            object-fit: cover;
+            background-color: #0a0a2a;
+        }
+        
+        .carousel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+            z-index: 15;
+        }
+        
+        .carousel-content {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            pointer-events: none;
+        }
+        
+        .carousel-content.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        .carousel-content-inner {
+            padding-left: 3rem;
+            max-width: 650px;
+        }
+        
+        @media (min-width: 768px) {
+            .carousel-content-inner {
+                padding-left: 6rem;
+            }
+        }
+        
+        /* Botones del carrusel - solo visibles en hover/click */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .carousel-container:hover .carousel-btn {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* En móvil, los botones aparecen al tocar la imagen */
+        @media (max-width: 768px) {
+            .carousel-btn {
+                opacity: 0;
+                visibility: hidden;
+            }
+            .carousel-container.touch-active .carousel-btn {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-50%) scale(1.1);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .carousel-btn.prev {
+            left: 20px;
+        }
+        
+        .carousel-btn.next {
+            right: 20px;
+        }
+        
+        .carousel-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            z-index: 30;
+        }
+        
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background: #034AB0;
+            width: 28px;
+            border-radius: 20px;
+            box-shadow: 0 0 8px rgba(7, 105, 210, 0.6);
+        }
+        
+        .carousel-action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary-carousel {
+            background: #034AB0;
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            pointer-events: auto;
+        }
+        
+        .btn-primary-carousel:hover {
+            background: #023a8a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary-carousel {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+            pointer-events: auto;
+        }
+        
+        .btn-secondary-carousel:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
+        }
+        
+        .carousel-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .carousel-subtitle {
+            color: rgba(255,255,255,0.9);
+            margin-top: 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        @media (min-width: 768px) {
+            .carousel-title { font-size: 3.5rem; }
+            .carousel-subtitle { font-size: 1.125rem; }
+        }
+        
+        @media (min-width: 1024px) {
+            .carousel-title { font-size: 4.5rem; }
+            .carousel-subtitle { font-size: 1.25rem; }
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card.active {
+            transform: scale(1.05);
+            box-shadow: 0 25px 30px -12px rgba(7, 105, 210, 0.3);
+        }
+        
+        .aurora-gradient { background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%); }
+        .bg-team { background: linear-gradient(115deg, #0f172a 0%, #1e293b 100%); position: relative; }
+        .bg-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(7,105,210,0.15) 0%, transparent 70%); }
+        .bg-contacto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
+        .contacto-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(7,105,210,0.2) 0%, transparent 70%); }
+
+        /* Estilo para el botón de envío con estado */
+        .submit-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn.loading {
+            background-color: #034AB0;
+            pointer-events: none;
+        }
+        .submit-btn.success {
+            background-color: #10b981;
+            pointer-events: none;
+        }
+        .submit-btn .btn-text {
+            transition: all 0.3s ease;
+        }
+        .submit-btn .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
     </style>
 
 <script>
@@ -305,227 +583,6 @@
         }
     }
 </script>
-
-<style>
-  .carousel-container {
-    position: relative;
-    width: 100%;
-    max-width: 1800px;
-    margin: 0 auto;
-    border-radius: 40px;
-    overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
-  
-  .carousel-track {
-    position: relative;
-    width: 100%;
-    height: 600px;
-    overflow: hidden;
-  }
-  
-  .carousel-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: opacity;
-  }
-  
-  .carousel-slide.active {
-    opacity: 1;
-    visibility: visible;
-    z-index: 10;
-  }
-  
-  .carousel-slide img,
-  .carousel-slide video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .carousel-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
-    z-index: 15;
-  }
-  
-  .carousel-content {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  }
-  
-  .carousel-content.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  .carousel-content-inner {
-    padding-left: 3rem;
-    max-width: 650px;
-  }
-  
-  @media (min-width: 768px) {
-    .carousel-content-inner {
-      padding-left: 6rem;
-    }
-  }
-  
-  .carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 30;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    width: 52px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: white;
-  }
-  
-  .carousel-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-    transform: translateY(-50%) scale(1.1);
-    border-color: rgba(255, 255, 255, 0.6);
-  }
-  
-  .carousel-btn.prev {
-    left: 20px;
-  }
-  
-  .carousel-btn.next {
-    right: 20px;
-  }
-  
-  .carousel-dots {
-    position: absolute;
-    bottom: 30px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    z-index: 30;
-  }
-  
-  .carousel-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .carousel-dot.active {
-    background: #034AB0;
-    width: 28px;
-    border-radius: 20px;
-    box-shadow: 0 0 8px rgba(7, 105, 210, 0.6);
-  }
-  
-  .carousel-action-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-  }
-  
-  .btn-primary-carousel {
-    background: #034AB0;
-    color: white;
-    padding: 0.875rem 2rem;
-    border-radius: 50px;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  .btn-primary-carousel:hover {
-    background: #023a8a;
-    transform: translateY(-2px);
-  }
-  
-  .btn-secondary-carousel {
-    background: transparent;
-    border: 1.5px solid rgba(255, 255, 255, 0.6);
-    color: white;
-    padding: 0.875rem 2rem;
-    border-radius: 50px;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  .btn-secondary-carousel:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: white;
-  }
-  
-  .carousel-title {
-    font-size: 3rem;
-    font-weight: 800;
-    line-height: 1.2;
-    color: white;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  
-  .carousel-subtitle {
-    color: rgba(255,255,255,0.9);
-    margin-top: 1rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-  }
-  
-  @media (min-width: 768px) {
-    .carousel-title { font-size: 4.5rem; }
-    .carousel-subtitle { font-size: 1.25rem; }
-  }
-  
-  .service-card {
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .service-card.active {
-    transform: scale(1.05);
-    box-shadow: 0 25px 30px -12px rgba(7, 105, 210, 0.3);
-  }
-  
-  .aurora-gradient { background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%); }
-  .bg-team { background: linear-gradient(115deg, #0f172a 0%, #1e293b 100%); position: relative; }
-  .bg-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(7,105,210,0.15) 0%, transparent 70%); }
-  .bg-contacto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
-  .contacto-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(7,105,210,0.2) 0%, transparent 70%); }
-
-</style>
 </head>
 
 <body class="bg-white font-['Inter']">
@@ -658,7 +715,8 @@ function irAServicioEspecifico(servicioId) {
         }
     }, 600);
 }
-// Función para enviar correo - VERSIÓN CORREGIDA
+
+// Función para enviar correo - VERSIÓN CON BOTÓN MEJORADO
 async function enviarCorreo(e) {
     e.preventDefault();
     
@@ -677,13 +735,23 @@ async function enviarCorreo(e) {
         return;
     }
     
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<div class="loading-spinner w-5 h-5 border-2 border-white border-t-transparent inline-block"></div> Enviando...';
+    const submitBtn = document.getElementById('submitContactBtn');
+    const originalHTML = submitBtn.innerHTML;
+    
+    // Estado: loading
+    submitBtn.classList.add('loading');
+    submitBtn.innerHTML = `
+        <div class="flex items-center justify-center gap-2">
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Enviando...</span>
+        </div>
+    `;
     submitBtn.disabled = true;
     
     try {
-        // Usar URL relativa (más seguro)
         const response = await fetch('/api/enviar-correo', {
             method: 'POST',
             headers: { 
@@ -692,34 +760,47 @@ async function enviarCorreo(e) {
             body: JSON.stringify({ nombre, email, servicio, mensaje })
         });
         
-        console.log('Status:', response.status);
-        
-        // Intentar obtener el texto de respuesta primero
         const textResponse = await response.text();
-        console.log('Respuesta raw:', textResponse);
-        
         let data;
         try {
             data = JSON.parse(textResponse);
         } catch(e) {
-            console.error('Error parsing JSON:', e);
-            throw new Error('Respuesta inválida del servidor: ' + textResponse);
+            throw new Error('Respuesta inválida del servidor');
         }
         
         if (response.ok && data.success) {
+            // Estado: success
+            submitBtn.classList.remove('loading');
+            submitBtn.classList.add('success');
+            submitBtn.innerHTML = `
+                <div class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Enviado</span>
+                </div>
+            `;
+            
             mostrarToast('✅ Mensaje enviado exitosamente. Te contactaremos pronto.', 'success');
             e.target.reset();
             const servicioSelect = document.getElementById('contacto_servicio');
             if (servicioSelect) servicioSelect.value = '';
+            
+            // Volver al estado normal después de 2 segundos
+            setTimeout(() => {
+                submitBtn.classList.remove('success');
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }, 2000);
         } else {
             throw new Error(data.error || data.details || 'Error al enviar');
         }
     } catch (error) {
         console.error('Error detallado:', error);
-        mostrarToast('❌ Error al enviar el mensaje: ' + error.message, 'error');
-    } finally {
-        submitBtn.innerHTML = originalText;
+        submitBtn.classList.remove('loading');
+        submitBtn.innerHTML = originalHTML;
         submitBtn.disabled = false;
+        mostrarToast('❌ Error al enviar el mensaje: ' + error.message, 'error');
     }
 }
 
@@ -902,7 +983,7 @@ function configurarCardsServicios() {
     });
 }
 
-// Función para cargar productos destacados desde el backend (CORREGIDA)
+// Función para cargar productos destacados desde el backend
 async function cargarProductosDestacados() {
     const contenedorDestacados = document.getElementById('productos-destacados-grid');
     if (!contenedorDestacados) return;
@@ -919,7 +1000,6 @@ async function cargarProductosDestacados() {
         
         const productos = await response.json();
         productosGlobales = productos;
-        // Tomar los últimos 4 productos agregados (más recientes)
         const destacados = productos.slice(0, 4);
         
         if (destacados.length === 0) {
@@ -972,7 +1052,6 @@ async function cargarProductosDestacados() {
             <div class="col-span-full text-center py-12 text-red-500">
                 <span class="material-symbols-outlined text-5xl">error</span>
                 <p class="mt-2">Error al cargar productos destacados</p>
-                <p class="text-sm text-gray-400">Asegúrate que el servidor backend esté corriendo en https://edapymesdev.onrender.com</p>
             </div>
         `;
     }
@@ -1019,7 +1098,6 @@ function abrirModalProducto(producto) {
         miniaturasContainer.appendChild(miniatura);
     });
     
-    // Especificaciones
     const specsContainer = document.getElementById('modalEspecificaciones');
     if (producto.especificaciones && producto.especificaciones.length > 0) {
         specsContainer.innerHTML = '';
@@ -1040,7 +1118,6 @@ function abrirModalProducto(producto) {
         specsContainer.innerHTML = '<div class="text-center text-gray-500 py-6 bg-gray-50 rounded-xl">No hay especificaciones técnicas disponibles</div>';
     }
     
-    // Botón WhatsApp
     const btnWhatsApp = document.getElementById('modalWhatsAppBtn');
     const mensaje = `Hola, me gustaría recibir información sobre EDAPymes y el producto: ${producto.nombre} - Precio: C$${precioFormateado}`;
     btnWhatsApp.onclick = () => {
@@ -1059,7 +1136,6 @@ function cerrarModalProducto() {
     }
 }
 
-// Modal de producto (se agrega al body dinámicamente)
 function crearModalProducto() {
     let modalExistente = document.getElementById('productModal');
     if (modalExistente) return;
@@ -1112,6 +1188,269 @@ function crearModalProducto() {
     `;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
+
+// Función optimizada para el carrusel con carga rápida de video
+function iniciarCarrusel() {
+    if (intervaloAutoPlay) clearInterval(intervaloAutoPlay);
+    
+    const slidesData = [
+      { type: 'video', src: '/src/image/fondo de pantalla.mp4', poster: '/src/image/fondo-poster.jpg', title: 'Impulsamos tu <span class="text-primary">negocio</span> con tecnología', subtitle: 'Soluciones tecnológicas integrales diseñadas para la era digital.' },
+      { type: 'image', src: '/src/image/foto3.jpg', title: 'Capacitaciones <span class="text-primary">Tecnológicas</span>', subtitle: 'Aprende habilidades digitales con expertos.' },
+      { type: 'image', src: '/src/image/foto1.jpg', title: 'Asesorías <span class="text-primary">Profesionales</span>', subtitle: 'Impulsa tu negocio con tecnología.' },
+      { type: 'image', src: '/src/image/dirty-computer-attractive-young-man-wearing-protection-glasses-while-cleaning-inside-with-compressed-air-hardware-computer.jpg', title: 'Reparación de <span class="text-primary">Computadoras</span>', subtitle: 'Mantenimiento rápido y confiable.' },
+      { type: 'image', src: '/src/image/foto4.jpg', title: 'Venta de <span class="text-primary">Laptops</span>', subtitle: 'Equipos modernos y de alto rendimiento.' },
+      { type: 'image', src: '/src/image/foto5.jpg', title: 'Cámaras de <span class="text-primary">Seguridad</span>', subtitle: 'Protege tu hogar o negocio.' },
+      { type: 'image', src: '/src/image/foto8.jpg', title: 'Accesorios para <span class="text-primary">Celulares</span>', subtitle: 'Todo lo que necesitás para tu smartphone.' },
+      { type: 'image', src: '/src/image/foto9.jpg', title: 'Préstamos <span class="text-primary">Prendatarios</span>', subtitle: 'Soluciones rápidas de financiamiento.' },
+      { type: 'image', src: '/src/image/foto10.jpg', title: 'Servicios de <span class="text-primary">Traducción</span>', subtitle: 'Traducción profesional de inglés a español.' }
+    ];
+    
+    let currentIndex = 0;
+    let videoElement = null;
+    let isTransitioning = false;
+    
+    const track = document.getElementById('carouselTrack');
+    const dotsContainer = document.getElementById('carouselDots');
+    let prevBtn = document.getElementById('carouselPrev');
+    let nextBtn = document.getElementById('carouselNext');
+    
+    if (!track) return;
+    track.innerHTML = '';
+    if (dotsContainer) dotsContainer.innerHTML = '';
+    
+    // Pre-cargar la primera imagen/video
+    const preloadFirst = () => {
+        const firstSlide = slidesData[0];
+        if (firstSlide.type === 'image') {
+            const img = new Image();
+            img.src = firstSlide.src;
+        }
+    };
+    preloadFirst();
+    
+    slidesData.forEach((slide, idx) => {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'carousel-slide';
+        slideDiv.setAttribute('data-index', idx);
+        
+        if (slide.type === 'video') {
+            const video = document.createElement('video');
+            video.src = slide.src;
+            video.autoplay = false;
+            video.muted = true;
+            video.playsInline = true;
+            video.loop = false;
+            video.preload = idx === 0 ? 'auto' : 'metadata';
+            if (slide.poster) video.poster = slide.poster;
+            video.className = 'w-full h-full object-cover';
+            video.style.backgroundColor = '#0a0a2a';
+            slideDiv.appendChild(video);
+        } else {
+            const img = document.createElement('img');
+            img.src = slide.src;
+            img.className = 'w-full h-full object-cover';
+            img.alt = `Slide ${idx + 1}`;
+            img.loading = idx === 0 ? 'eager' : 'lazy';
+            img.onerror = function() { this.src = 'https://placehold.co/1920x600/034AB0/white?text=EDAPymes'; };
+            slideDiv.appendChild(img);
+        }
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'carousel-overlay';
+        slideDiv.appendChild(overlay);
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'carousel-content';
+        contentDiv.innerHTML = `<div class="carousel-content-inner"><h1 class="carousel-title">${slide.title}</h1><p class="carousel-subtitle">${slide.subtitle}</p><div class="carousel-action-buttons"><button class="btn-primary-carousel btn-catalogo-action">Explorar Catálogo</button><button class="btn-secondary-carousel btn-servicios-action">Nuestros Servicios</button></div></div>`;
+        slideDiv.appendChild(contentDiv);
+        track.appendChild(slideDiv);
+        
+        if (dotsContainer) {
+            const dot = document.createElement('div');
+            dot.className = 'carousel-dot';
+            dot.setAttribute('data-index', idx);
+            dot.addEventListener('click', () => goToSlide(idx));
+            dotsContainer.appendChild(dot);
+        }
+    });
+    
+    function updateSlidesAndDots() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        
+        const slides = document.querySelectorAll('.carousel-slide');
+        const contents = document.querySelectorAll('.carousel-content');
+        const dots = document.querySelectorAll('.carousel-dot');
+        
+        slides.forEach((slide, idx) => {
+            if (idx === currentIndex) { 
+                slide.classList.add('active'); 
+                if (contents[idx]) contents[idx].classList.add('active'); 
+            } else { 
+                slide.classList.remove('active'); 
+                if (contents[idx]) contents[idx].classList.remove('active'); 
+            }
+        });
+        
+        dots.forEach((dot, idx) => { 
+            if (idx === currentIndex) dot.classList.add('active'); 
+            else dot.classList.remove('active'); 
+        });
+        
+        const currentSlide = slides[currentIndex];
+        if (currentSlide) {
+            const video = currentSlide.querySelector('video');
+            if (video) {
+                const allVideos = document.querySelectorAll('.carousel-slide video');
+                allVideos.forEach(v => { if (v !== video) { v.pause(); v.currentTime = 0; } });
+                videoElement = video;
+                if (video.readyState >= 2) {
+                    video.currentTime = 0;
+                    video.play().catch(e => console.log('Autoplay:', e));
+                } else {
+                    video.addEventListener('canplay', () => {
+                        video.play().catch(e => console.log('Autoplay delayed:', e));
+                    }, { once: true });
+                }
+                video.removeEventListener('ended', handleVideoEnd);
+                video.addEventListener('ended', handleVideoEnd);
+            } else if (videoElement && !videoElement.paused) { 
+                videoElement.pause(); 
+            }
+        }
+        
+        setTimeout(() => { isTransitioning = false; }, 800);
+    }
+    
+    function handleVideoEnd() { 
+        if (!isTransitioning) nextSlide(); 
+    }
+    
+    function nextSlide() { 
+        if (isTransitioning) return;
+        currentIndex = (currentIndex + 1) % slidesData.length; 
+        updateSlidesAndDots(); 
+        resetAutoPlay(); 
+    }
+    
+    function prevSlide() { 
+        if (isTransitioning) return;
+        currentIndex = (currentIndex - 1 + slidesData.length) % slidesData.length; 
+        updateSlidesAndDots(); 
+        resetAutoPlay(); 
+    }
+    
+    function goToSlide(index) { 
+        if (isTransitioning || index === currentIndex) return;
+        currentIndex = index; 
+        updateSlidesAndDots(); 
+        resetAutoPlay(); 
+    }
+    
+    function startAutoPlay() { 
+        if (intervaloAutoPlay) clearInterval(intervaloAutoPlay); 
+        intervaloAutoPlay = setInterval(() => { 
+            if (!isTransitioning) {
+                const slides = document.querySelectorAll('.carousel-slide'); 
+                const current = slides[currentIndex]; 
+                const video = current?.querySelector('video'); 
+                if (!video || video.paused || video.ended) { 
+                    nextSlide(); 
+                }
+            }
+        }, 7000); 
+    }
+    
+    function resetAutoPlay() { 
+        if (intervaloAutoPlay) { 
+            clearInterval(intervaloAutoPlay); 
+            intervaloAutoPlay = null; 
+        } 
+        startAutoPlay(); 
+    }
+    
+    // Configurar botones
+    if (prevBtn) { 
+        const newPrev = prevBtn.cloneNode(true); 
+        prevBtn.parentNode.replaceChild(newPrev, prevBtn); 
+        prevBtn = newPrev; 
+        prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); }); 
+    }
+    if (nextBtn) { 
+        const newNext = nextBtn.cloneNode(true); 
+        nextBtn.parentNode.replaceChild(newNext, nextBtn); 
+        nextBtn = newNext; 
+        nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); }); 
+    }
+    
+    // Configurar botones de acción
+    document.querySelectorAll('.btn-catalogo-action').forEach(btn => { 
+        btn.removeEventListener('click', btn._handler); 
+        btn._handler = () => cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2]); 
+        btn.addEventListener('click', btn._handler); 
+    });
+    document.querySelectorAll('.btn-servicios-action').forEach(btn => { 
+        btn.removeEventListener('click', btn._handler2); 
+        btn._handler2 = () => cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]); 
+        btn.addEventListener('click', btn._handler2); 
+    });
+    
+    // Manejo de touch para móviles
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (carouselContainer) {
+        carouselContainer.addEventListener('touchstart', () => {
+            carouselContainer.classList.add('touch-active');
+            setTimeout(() => {
+                carouselContainer.classList.remove('touch-active');
+            }, 3000);
+        });
+        
+        carouselContainer.removeEventListener('mouseenter', carouselContainer._enterHandler);
+        carouselContainer.removeEventListener('mouseleave', carouselContainer._leaveHandler);
+        carouselContainer._enterHandler = () => { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } };
+        carouselContainer._leaveHandler = () => { startAutoPlay(); };
+        carouselContainer.addEventListener('mouseenter', carouselContainer._enterHandler);
+        carouselContainer.addEventListener('mouseleave', carouselContainer._leaveHandler);
+    }
+    
+    updateSlidesAndDots();
+    startAutoPlay();
+    carruselActivo = true;
+    
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+function handleVisibilityChange() {
+    if (!document.hidden && carruselActivo) {
+        setTimeout(() => {
+            const track = document.getElementById('carouselTrack');
+            if (track && track.children.length > 0) {
+                if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; }
+                const activeSlide = document.querySelector('.carousel-slide.active');
+                if (activeSlide) {
+                    const video = activeSlide.querySelector('video');
+                    if (video && video.paused) { video.play().catch(e => console.log('Play reanudado:', e)); }
+                }
+                intervaloAutoPlay = setInterval(() => {
+                    const slides = document.querySelectorAll('.carousel-slide');
+                    const activeIdx = document.querySelector('.carousel-slide.active')?.getAttribute('data-index');
+                    const current = slides[activeIdx || 0];
+                    const video = current?.querySelector('video');
+                    if (!video || video.paused || video.ended) {
+                        const nextBtn = document.getElementById('carouselNext');
+                        if (nextBtn) nextBtn.click();
+                    }
+                }, 7000);
+            }
+        }, 100);
+    } else if (document.hidden && carruselActivo) {
+        const videos = document.querySelectorAll('.carousel-slide video');
+        videos.forEach(v => v.pause());
+    }
+}
+
+function iniciarTodo() { configurarCardsServicios(); }
 
 function obtenerHTMLInicio() {
     return `
@@ -1208,15 +1547,14 @@ function obtenerHTMLInicio() {
 
 <section class="py-24 relative overflow-hidden bg-team"><div class="bg-efecto"></div><div class="relative z-10 max-w-7xl mx-auto px-8"><div class="text-center mb-16 space-y-4"><h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">El Equipo <span class="text-primary">Detrás</span></h2><p class="text-white/70 max-w-2xl mx-auto">Expertos comprometidos con el éxito tecnológico de tu empresa.</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12">
   
-<!-- Dereck Sevilla - Desarrollador Backend -->
   <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/dereck.png" alt="Dereck Sevilla" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=DS'"></div><h4 class="text-xl font-headline font-bold text-white">Dereck Sevilla</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrollador Backend</p><p class="text-white/70 text-sm mt-4">BackEnd Junior con 4 años de experiencia en TICs.</p></div>
 
-  <!-- Evelyn Espinoza - Project Manager & CEO -->
   <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/WhatsApp%20Image%202026-04-03%20at%206.18.21%20PM.jpeg" alt="Evelyn Espinoza" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=EE'"></div><h4 class="text-xl font-headline font-bold text-white">Evelyn Espinoza</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Project Manager & CEO</p><p class="text-white/70 text-sm mt-4">Máster en Computación con énfasis en Sistemas de Información con más de 28 años de experiencia brindando soluciones tecnológicas con calidad comprobada.</p></div>
-  <!-- Ana Fernanda Tapia - Desarrolladora Frontend -->
+
   <div class="text-center group"><div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 bg-primary rounded-full scale-105 opacity-0 group-hover:opacity-20 transition-all blur-xl"></div><img class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 border-4 border-white/20" src="/src/image/ana.png" alt="Ana Fernanda Tapia" onerror="this.src='https://placehold.co/200x200/1e293b/white?text=AFT'"></div><h4 class="text-xl font-headline font-bold text-white">Ana Fernanda Tapia</h4><p class="text-primary text-sm font-medium uppercase tracking-widest mt-1">Desarrolladora Frontend</p><p class="text-white/70 text-sm mt-4">FrontEnd Junior con 4 años de experiencia en soluciones amigables, navegables y óptimas.</p></div>
 
 </div></div></section>
+
 <section id="contacto" class="py-24 relative overflow-hidden bg-contacto scroll-mt-24"><div class="contacto-efecto"></div><div class="relative z-10 max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center"><div class="space-y-8 text-white"><h2 class="text-4xl font-headline font-extrabold">Contáctanos</h2><p class="text-white/70 leading-relaxed">Estamos listos para ayudarte a impulsar tu negocio con soluciones tecnológicas. Escríbenos o llámanos y te responderemos lo antes posible.</p><a href="mailto:edapymestech@gmail.com" class="flex items-center gap-4 group w-fit"><span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span><span class="text-white/80 group-hover:text-primary transition-colors">edapymestech@gmail.com</span></a><div class="flex items-center gap-4"><span class="material-symbols-outlined text-primary">phone</span><span class="text-white/80">+505 8329 5424 / +505 8599 8144</span></div></div><div class="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
 <form id="contactoForm" onsubmit="enviarCorreo(event)" class="space-y-6">
   <div><label for="contacto_nombre" class="text-white/70 text-sm">Nombre</label><input type="text" id="contacto_nombre" name="nombre" required placeholder="Tu nombre" class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></div>
@@ -1235,145 +1573,13 @@ function obtenerHTMLInicio() {
     </select>
   </div>
   <div><label for="contacto_mensaje" class="text-white/70 text-sm">Mensaje</label><textarea id="contacto_mensaje" name="mensaje" rows="4" required placeholder="Escribe tu mensaje..." class="w-full mt-2 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"></textarea></div>
-  <button type="submit" class="w-full py-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover transition-all">Enviar mensaje</button>
+  <button type="submit" id="submitContactBtn" class="submit-btn w-full py-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-hover transition-all flex items-center justify-center gap-2">
+    <span class="btn-text">Enviar mensaje</span>
+  </button>
 </form>
 </div></div></section>
     `;
 }
-
-function iniciarCarrusel() {
-    if (intervaloAutoPlay) clearInterval(intervaloAutoPlay);
-    const slidesData = [
-      { type: 'video', src: '/src/image/fondo de pantalla.mp4', title: 'Impulsamos tu <span class="text-primary">negocio</span> con tecnología', subtitle: 'Soluciones tecnológicas integrales diseñadas para la era digital.' },
-      { type: 'image', src: '/src/image/foto3.jpg', title: 'Capacitaciones <span class="text-primary">Tecnológicas</span>', subtitle: 'Aprende habilidades digitales con expertos.' },
-      { type: 'image', src: '/src/image/foto1.jpg', title: 'Asesorías <span class="text-primary">Profesionales</span>', subtitle: 'Impulsa tu negocio con tecnología.' },
-      { type: 'image', src: '/src/image/dirty-computer-attractive-young-man-wearing-protection-glasses-while-cleaning-inside-with-compressed-air-hardware-computer.jpg', title: 'Reparación de <span class="text-primary">Computadoras</span>', subtitle: 'Mantenimiento rápido y confiable.' },
-      { type: 'image', src: '/src/image/foto4.jpg', title: 'Venta de <span class="text-primary">Laptops</span>', subtitle: 'Equipos modernos y de alto rendimiento.' },
-      { type: 'image', src: '/src/image/foto5.jpg', title: 'Cámaras de <span class="text-primary">Seguridad</span>', subtitle: 'Protege tu hogar o negocio.' },
-      { type: 'image', src: '/src/image/foto8.jpg', title: 'Accesorios para <span class="text-primary">Celulares</span>', subtitle: 'Todo lo que necesitás para tu smartphone.' },
-      { type: 'image', src: '/src/image/foto9.jpg', title: 'Préstamos <span class="text-primary">Prendatarios</span>', subtitle: 'Soluciones rápidas de financiamiento.' },
-      { type: 'image', src: '/src/image/foto10.jpg', title: 'Servicios de <span class="text-primary">Traducción</span>', subtitle: 'Traducción profesional de inglés a español.' }
-    ];
-    let currentIndex = 0, videoElement = null;
-    const track = document.getElementById('carouselTrack'), dotsContainer = document.getElementById('carouselDots');
-    let prevBtn = document.getElementById('carouselPrev'), nextBtn = document.getElementById('carouselNext');
-    if (!track) return;
-    track.innerHTML = '';
-    if (dotsContainer) dotsContainer.innerHTML = '';
-    slidesData.forEach((slide, idx) => {
-        const slideDiv = document.createElement('div');
-        slideDiv.className = 'carousel-slide';
-        slideDiv.setAttribute('data-index', idx);
-        if (slide.type === 'video') {
-            const video = document.createElement('video');
-            video.src = slide.src;
-            video.autoplay = false;
-            video.muted = true;
-            video.playsInline = true;
-            video.loop = false;
-            video.className = 'w-full h-full object-cover';
-            slideDiv.appendChild(video);
-        } else {
-            const img = document.createElement('img');
-            img.src = slide.src;
-            img.className = 'w-full h-full object-cover';
-            img.alt = `Slide ${idx + 1}`;
-            img.onerror = function() { this.src = 'https://placehold.co/1920x600?text=EDAPymes'; };
-            slideDiv.appendChild(img);
-        }
-        const overlay = document.createElement('div');
-        overlay.className = 'carousel-overlay';
-        slideDiv.appendChild(overlay);
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'carousel-content';
-        contentDiv.innerHTML = `<div class="carousel-content-inner"><h1 class="carousel-title">${slide.title}</h1><p class="carousel-subtitle">${slide.subtitle}</p><div class="carousel-action-buttons"><button class="btn-primary-carousel btn-catalogo-action">Explorar Catálogo</button><button class="btn-secondary-carousel btn-servicios-action">Nuestros Servicios</button></div></div>`;
-        slideDiv.appendChild(contentDiv);
-        track.appendChild(slideDiv);
-        if (dotsContainer) {
-            const dot = document.createElement('div');
-            dot.className = 'carousel-dot';
-            dot.setAttribute('data-index', idx);
-            dot.addEventListener('click', () => goToSlide(idx));
-            dotsContainer.appendChild(dot);
-        }
-    });
-    function updateSlidesAndDots() {
-        const slides = document.querySelectorAll('.carousel-slide'), contents = document.querySelectorAll('.carousel-content'), dots = document.querySelectorAll('.carousel-dot');
-        slides.forEach((slide, idx) => {
-            if (idx === currentIndex) { slide.classList.add('active'); if (contents[idx]) contents[idx].classList.add('active'); }
-            else { slide.classList.remove('active'); if (contents[idx]) contents[idx].classList.remove('active'); }
-        });
-        dots.forEach((dot, idx) => { if (idx === currentIndex) dot.classList.add('active'); else dot.classList.remove('active'); });
-        const currentSlide = slides[currentIndex];
-        if (currentSlide) {
-            const video = currentSlide.querySelector('video');
-            if (video) {
-                const allVideos = document.querySelectorAll('.carousel-slide video');
-                allVideos.forEach(v => { if (v !== video) v.pause(); });
-                videoElement = video;
-                video.currentTime = 0;
-                video.play().catch(e => console.log('Autoplay:', e));
-                video.removeEventListener('ended', handleVideoEnd);
-                video.addEventListener('ended', handleVideoEnd);
-            } else if (videoElement && !videoElement.paused) { videoElement.pause(); }
-        }
-    }
-    function handleVideoEnd() { nextSlide(); }
-    function nextSlide() { currentIndex = (currentIndex + 1) % slidesData.length; updateSlidesAndDots(); resetAutoPlay(); }
-    function prevSlide() { currentIndex = (currentIndex - 1 + slidesData.length) % slidesData.length; updateSlidesAndDots(); resetAutoPlay(); }
-    function goToSlide(index) { currentIndex = index; updateSlidesAndDots(); resetAutoPlay(); }
-    function startAutoPlay() { if (intervaloAutoPlay) clearInterval(intervaloAutoPlay); intervaloAutoPlay = setInterval(() => { const slides = document.querySelectorAll('.carousel-slide'); const current = slides[currentIndex]; const video = current?.querySelector('video'); if (!video || video.paused || video.ended) { nextSlide(); } }, 6000); }
-    function resetAutoPlay() { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } startAutoPlay(); }
-    if (prevBtn) { const newPrev = prevBtn.cloneNode(true); prevBtn.parentNode.replaceChild(newPrev, prevBtn); prevBtn = newPrev; prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); }); }
-    if (nextBtn) { const newNext = nextBtn.cloneNode(true); nextBtn.parentNode.replaceChild(newNext, nextBtn); nextBtn = newNext; nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); }); }
-    document.querySelectorAll('.btn-catalogo-action').forEach(btn => { btn.removeEventListener('click', btn._handler); btn._handler = () => cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2]); btn.addEventListener('click', btn._handler); });
-    document.querySelectorAll('.btn-servicios-action').forEach(btn => { btn.removeEventListener('click', btn._handler2); btn._handler2 = () => cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]); btn.addEventListener('click', btn._handler2); });
-    updateSlidesAndDots();
-    const container = document.querySelector('.carousel-container');
-    if (container) {
-        container.removeEventListener('mouseenter', container._enterHandler);
-        container.removeEventListener('mouseleave', container._leaveHandler);
-        container._enterHandler = () => { if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; } };
-        container._leaveHandler = () => { startAutoPlay(); };
-        container.addEventListener('mouseenter', container._enterHandler);
-        container.addEventListener('mouseleave', container._leaveHandler);
-    }
-    startAutoPlay();
-    carruselActivo = true;
-    document.removeEventListener('visibilitychange', handleVisibilityChange);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-}
-
-function handleVisibilityChange() {
-    if (!document.hidden && carruselActivo) {
-        setTimeout(() => {
-            const track = document.getElementById('carouselTrack');
-            if (track && track.children.length > 0) {
-                if (intervaloAutoPlay) { clearInterval(intervaloAutoPlay); intervaloAutoPlay = null; }
-                const activeSlide = document.querySelector('.carousel-slide.active');
-                if (activeSlide) {
-                    const video = activeSlide.querySelector('video');
-                    if (video && video.paused) { video.play().catch(e => console.log('Play reanudado:', e)); }
-                }
-                intervaloAutoPlay = setInterval(() => {
-                    const slides = document.querySelectorAll('.carousel-slide');
-                    const activeIdx = document.querySelector('.carousel-slide.active')?.getAttribute('data-index');
-                    const current = slides[activeIdx || 0];
-                    const video = current?.querySelector('video');
-                    if (!video || video.paused || video.ended) {
-                        const nextBtn = document.getElementById('carouselNext');
-                        if (nextBtn) nextBtn.click();
-                    }
-                }, 6000);
-            }
-        }, 100);
-    } else if (document.hidden && carruselActivo) {
-        const videos = document.querySelectorAll('.carousel-slide video');
-        videos.forEach(v => v.pause());
-    }
-}
-
-function iniciarTodo() { configurarCardsServicios(); }
 
 window.addEventListener("DOMContentLoaded", () => {
     crearModalProducto();
