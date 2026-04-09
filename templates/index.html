@@ -647,16 +647,27 @@ let carruselActivo = false;
 let intervaloAutoPlay = null;
 let productosGlobales = [];
 
-// Función para ir a un servicio específico en la página de servicios
+// Funcion para ir a un servicio especifico en la pagina de servicios
 function irAServicioEspecifico(servicioId) {
+    // Obtener el enlace de Servicios en el nav
     const navServicios = document.querySelectorAll('.nav-link')[1];
+    
+    // Cargar la pagina de servicios
     cargarSeccion('servicios.html', navServicios);
+    
+    // Esperar a que cargue y luego hacer scroll al elemento
     setTimeout(() => {
-        const elementoDestino = document.getElementById(servicioId);
-        if (elementoDestino) {
-            elementoDestino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Buscar el elemento dentro del contenido cargado
+        const contenido = document.getElementById('contenido');
+        if (contenido) {
+            const elementoDestino = contenido.querySelector(`#${servicioId}`);
+            if (elementoDestino) {
+                elementoDestino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                console.log('Elemento no encontrado:', servicioId);
+            }
         }
-    }, 600);
+    }, 800); // Aumentar el tiempo de espera para asegurar que el contenido cargue
 }
 // Función para enviar correo - VERSIÓN CORREGIDA
 async function enviarCorreo(e) {

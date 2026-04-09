@@ -1,4 +1,40 @@
-<div class="bg-navy-dark text-slate-light font-body selection:bg-cobalt selection:text-white overflow-x-hidden">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios - EDAPymes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .text-outline { 
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3); 
+            color: transparent; 
+        }
+        .vertical-text { 
+            writing-mode: vertical-rl; 
+            transform: rotate(180deg); 
+        }
+        .scroll-mt-24 { 
+            scroll-margin-top: 80px; 
+        }
+        @media (min-width: 768px) {
+            .scroll-mt-24 { 
+                scroll-margin-top: 100px; 
+            }
+        }
+        .service-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-navy-dark text-slate-light font-body selection:bg-cobalt selection:text-white overflow-x-hidden">
     <main>
         <section class="relative min-h-screen flex items-center overflow-hidden py-20 md:py-0">
             <div class="absolute inset-0 bg-navy-dark">
@@ -36,24 +72,24 @@
                 <h2 class="font-headline text-3xl md:text-5xl lg:text-7xl font-bold text-white relative z-10 pt-8 md:pt-16 text-center md:text-left">Ecosistema Profesional</h2>
             </div>
 
-            <!-- SECCIÓN DE CAPACITACIONES Y ASESORÍAS - ID: capacitaciones -->
+            <!-- SECCION DE CAPACITACIONES Y ASESORIAS - ID: capacitaciones -->
             <div id="capacitaciones" class="py-16 md:py-32 bg-tech-gray/50 scroll-mt-24">
                 <div class="container mx-auto px-4 md:px-6">
                     <div class="group relative overflow-hidden rounded-2xl md:rounded-[3rem] min-h-[400px] md:min-h-[600px] shadow-2xl">
-                        <img alt="Formación" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                        <img alt="Formacion" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                              src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=2070&auto=format&fit=crop"/>
                         <div class="absolute inset-0 bg-gradient-to-r from-navy-dark via-navy-dark/40 to-transparent"></div>
                         <div class="absolute inset-0 flex items-center">
                             <div class="p-6 md:p-12 lg:p-20 max-w-2xl">
                                 <div class="flex items-center gap-2 md:gap-4 mb-4 md:mb-6">
                                     <span class="material-symbols-outlined text-cobalt text-3xl md:text-5xl">model_training</span>
-                                    <span class="text-xs md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-cobalt">Estrategia & Crecimiento</span>
+                                    <span class="text-xs md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-cobalt">Estrategia y Crecimiento</span>
                                 </div>
-                                <h3 class="font-headline text-3xl md:text-5xl lg:text-7xl font-bold mb-6 md:mb-8 text-white leading-tight">Capacitaciones y <br/>Asesorías</h3>
+                                <h3 class="font-headline text-3xl md:text-5xl lg:text-7xl font-bold mb-6 md:mb-8 text-white leading-tight">Capacitaciones y <br/>Asesorias</h3>
                                 <ul class="text-slate-mid text-base md:text-xl space-y-2 md:space-y-4 border-l-2 md:border-l-4 border-cobalt pl-4 md:pl-8">
-                                    <li>• Transformación digital integral.</li>
-                                    <li>• Optimización de procesos para Pymes.</li>
-                                    <li>• Liderazgo tecnológico y metodologías ágiles.</li>
+                                    <li>• Transformacion digital integral.</li>
+                                    <li>• Optimizacion de procesos para Pymes.</li>
+                                    <li>• Liderazgo tecnologico y metodologias agiles.</li>
                                 </ul>
                             </div>
                         </div>
@@ -61,7 +97,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN DE MANTENIMIENTO Y REPARACIÓN - ID: mantenimiento -->
+            <!-- SECCION DE MANTENIMIENTO Y REPARACION - ID: mantenimiento -->
             <div id="mantenimiento" class="py-16 md:py-32 scroll-mt-24">
                 <div class="container mx-auto px-4 md:px-6">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -69,36 +105,36 @@
                             <span class="absolute -right-10 -top-10 material-symbols-outlined text-[8rem] md:text-[15rem] text-white/10 group-hover:rotate-12 transition-transform duration-700">build_circle</span>
                             <div class="relative z-10">
                                 <span class="material-symbols-outlined text-5xl md:text-7xl text-white mb-4 md:mb-8">engineering</span>
-                                <h3 class="font-headline text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 md:mb-10">Mantenimiento y Reparación</h3>
+                                <h3 class="font-headline text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 md:mb-10">Mantenimiento y Reparacion</h3>
                                 <div class="space-y-4 md:space-y-6">
                                     <div class="flex items-start gap-3 md:gap-4">
                                         <span class="material-symbols-outlined text-white text-xl md:text-2xl mt-1">check_circle</span>
                                         <div>
                                             <h4 class="text-white font-bold text-lg md:text-xl mb-1">Cuidado de Hardware</h4>
-                                            <p class="text-white/70 text-sm md:text-lg leading-relaxed">Limpieza profunda preventiva y correctiva para prolongar la vida útil.</p>
+                                            <p class="text-white/70 text-sm md:text-lg leading-relaxed">Limpieza profunda preventiva y correctiva para prolongar la vida util.</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3 md:gap-4">
                                         <span class="material-symbols-outlined text-white text-xl md:text-2xl mt-1">check_circle</span>
                                         <div>
-                                            <h4 class="text-white font-bold text-lg md:text-xl mb-1">Diagnóstico Experto</h4>
-                                            <p class="text-white/70 text-sm md:text-lg leading-relaxed">Identificación precisa de fallas críticas en componentes.</p>
+                                            <h4 class="text-white font-bold text-lg md:text-xl mb-1">Diagnostico Experto</h4>
+                                            <p class="text-white/70 text-sm md:text-lg leading-relaxed">Identificacion precisa de fallas criticas en componentes.</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3 md:gap-4">
                                         <span class="material-symbols-outlined text-white text-xl md:text-2xl mt-1">check_circle</span>
                                         <div>
-                                            <h4 class="text-white font-bold text-lg md:text-xl mb-1">Optimización de Sistemas</h4>
-                                            <p class="text-white/70 text-sm md:text-lg leading-relaxed">Ajustes de software y SO para un rendimiento máximo.</p>
+                                            <h4 class="text-white font-bold text-lg md:text-xl mb-1">Optimizacion de Sistemas</h4>
+                                            <p class="text-white/70 text-sm md:text-lg leading-relaxed">Ajustes de software y SO para un rendimiento maximo.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="px-4 md:px-12 text-center md:text-left">
-                            <h4 class="font-headline text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">Excelencia Técnica Constante</h4>
+                            <h4 class="font-headline text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">Excelencia Tecnica Constante</h4>
                             <p class="text-slate-mid text-base md:text-xl leading-relaxed mb-6 md:mb-8">
-                                Entendemos que su infraestructura es el motor de su negocio. Nuestro servicio técnico combina precisión quirúrgica con rapidez operativa.
+                                Entendemos que su infraestructura es el motor de su negocio. Nuestro servicio tecnico combina precision quirurgica con rapidez operativa.
                             </p>
                             <div class="w-24 h-1 bg-cobalt mx-auto md:mx-0"></div>
                         </div>
@@ -106,13 +142,13 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN DE VENTA DE TECNOLOGÍA -->
+            <!-- SECCION DE VENTA DE TECNOLOGIA -->
             <div class="py-16 md:py-32 bg-slate-light/5">
                 <div class="container mx-auto px-4 md:px-6">
                     <div class="bg-white rounded-2xl md:rounded-[3rem] p-6 md:p-12 lg:p-20 flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 group overflow-hidden relative shadow-2xl">
                         <div class="lg:w-1/2 relative z-10 text-center lg:text-left">
-                            <h3 class="font-headline text-3xl md:text-4xl lg:text-6xl font-bold text-navy-dark mb-4 md:mb-8">Venta de Tecnología <br/><span class="text-cobalt">High-End</span></h3>
-                            <p class="text-slate-600 text-base md:text-xl mb-6 md:mb-10">Equipamos a su equipo con las herramientas que definen el éxito en la era digital.</p>
+                            <h3 class="font-headline text-3xl md:text-4xl lg:text-6xl font-bold text-navy-dark mb-4 md:mb-8">Venta de Tecnologia <br/><span class="text-cobalt">High-End</span></h3>
+                            <p class="text-slate-600 text-base md:text-xl mb-6 md:mb-10">Equipamos a su equipo con las herramientas que definen el exito en la era digital.</p>
                             <ul class="space-y-2 md:space-y-4 mb-8 md:mb-12">
                                 <li class="flex items-center gap-2 md:gap-3 text-navy-dark font-semibold text-base md:text-lg justify-center lg:justify-start">
                                     <span class="w-2 h-2 md:w-3 md:h-3 bg-cobalt rounded-full"></span> Laptops de alto rendimiento empresarial.
@@ -122,9 +158,9 @@
                                 </li>
                             </ul>
                             <button 
-                                onclick="cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2])" 
-                                class="btn-catalogo px-6 md:px-10 py-3 md:py-5 bg-[#0769D2] text-white font-black text-base md:text-lg rounded-full hover:bg-[#133C6F] transition-all transform hover:-translate-y-1 shadow-lg shadow-blue-500/20">
-                                EXPLORAR CATÁLOGO
+                                onclick="window.parent.cargarSeccion('Catalogo.html', document.querySelectorAll('.nav-link')[2])" 
+                                class="px-6 md:px-10 py-3 md:py-5 bg-[#0769D2] text-white font-black text-base md:text-lg rounded-full hover:bg-[#133C6F] transition-all transform hover:-translate-y-1 shadow-lg shadow-blue-500/20">
+                                EXPLORAR CATALOGO
                             </button>
                         </div>
                         <div class="lg:w-1/2 relative flex justify-center mt-8 lg:mt-0">
@@ -135,7 +171,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN DE SEGURIDAD - ID: seguridad -->
+            <!-- SECCION DE SEGURIDAD - ID: seguridad -->
             <div id="seguridad" class="py-16 md:py-32 scroll-mt-24">
                 <div class="container mx-auto px-4 md:px-6">
                     <div class="group relative rounded-2xl md:rounded-[3rem] overflow-hidden min-h-[500px] md:min-h-[700px] shadow-2xl">
@@ -147,23 +183,23 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                                 <div class="bg-navy-dark/80 p-4 md:p-8 rounded-xl md:rounded-2xl backdrop-blur-md border border-white/10 hover:border-cobalt/50 transition-colors">
                                     <span class="material-symbols-outlined text-cobalt mb-2 md:mb-4 text-2xl md:text-3xl">videocam</span>
-                                    <p class="text-white text-base md:text-lg font-medium">• Cámaras IP 4K de alta resolución.</p>
-                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">Monitoreo cristalino en cualquier condición de luz.</p>
+                                    <p class="text-white text-base md:text-lg font-medium">• Camaras IP 4K de alta resolucion.</p>
+                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">Monitoreo cristalino en cualquier condicion de luz.</p>
                                 </div>
                                 <div class="bg-navy-dark/80 p-4 md:p-8 rounded-xl md:rounded-2xl backdrop-blur-md border border-white/10 hover:border-cobalt/50 transition-colors">
                                     <span class="material-symbols-outlined text-cobalt mb-2 md:mb-4 text-2xl md:text-3xl">sensors</span>
                                     <p class="text-white text-base md:text-lg font-medium">• Monitoreo remoto 24/7.</p>
-                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">Acceso instantáneo desde cualquier dispositivo.</p>
+                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">Acceso instantaneo desde cualquier dispositivo.</p>
                                 </div>
                                 <div class="bg-navy-dark/80 p-4 md:p-8 rounded-xl md:rounded-2xl backdrop-blur-md border border-white/10 hover:border-cobalt/50 transition-colors">
                                     <span class="material-symbols-outlined text-cobalt mb-2 md:mb-4 text-2xl md:text-3xl">psychology</span>
-                                    <p class="text-white text-base md:text-lg font-medium">• Analítica de video avanzada.</p>
-                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">Detección inteligente de patrones y alertas.</p>
+                                    <p class="text-white text-base md:text-lg font-medium">• Analitica de video avanzada.</p>
+                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">Deteccion inteligente de patrones y alertas.</p>
                                 </div>
                                 <div class="bg-navy-dark/80 p-4 md:p-8 rounded-xl md:rounded-2xl backdrop-blur-md border border-white/10 hover:border-cobalt/50 transition-colors">
                                     <span class="material-symbols-outlined text-cobalt mb-2 md:mb-4 text-2xl md:text-3xl">shield</span>
-                                    <p class="text-white text-base md:text-lg font-medium">• Calidez y protección total.</p>
-                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">La seguridad técnica con el trato humano de EDAPymes.</p>
+                                    <p class="text-white text-base md:text-lg font-medium">• Calidez y proteccion total.</p>
+                                    <p class="text-white/60 text-xs md:text-sm mt-1 md:mt-2">La seguridad tecnica con el trato humano de EDAPymes.</p>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +207,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN DE PRÉSTAMOS PRENDATARIOS Y TRADUCCIÓN - ID: asesorias -->
+            <!-- SECCION DE PRESTAMOS PRENDATARIOS Y TRADUCCION - ID: asesorias -->
             <div id="asesorias" class="py-16 md:py-32 bg-tech-gray scroll-mt-24">
                 <div class="container mx-auto px-4 md:px-6">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
@@ -179,40 +215,33 @@
                             <div>
                                 <h3 class="font-headline text-2xl md:text-4xl font-bold text-white mb-4 md:mb-8 flex items-center gap-2 md:gap-4">
                                     <span class="material-symbols-outlined text-cobalt text-3xl md:text-5xl">payments</span>
-                                    Préstamos Prendatarios
+                                    Prestamos Prendatarios
                                 </h3>
                                 <p class="text-slate-mid text-base md:text-xl leading-relaxed mb-6 md:mb-10">
-                                    Proporcionamos liquidez inmediata para su negocio. Entendemos las urgencias de una Pyme y respondemos con procesos ágiles y humanos.
+                                    Proporcionamos liquidez inmediata para su negocio. Entendemos las urgencias de una Pyme y respondemos con procesos agiles y humanos.
                                 </p>
                                 <div class="space-y-3 md:space-y-6 mb-8 md:mb-12">
                                     <div class="flex items-center gap-2 md:gap-4 text-xs md:text-sm font-black tracking-widest text-cobalt uppercase bg-cobalt/10 p-3 md:p-4 rounded-xl">
                                         <span class="material-symbols-outlined text-xl md:text-2xl">trending_down</span> Tasas Altamente Competitivas
                                     </div>
                                     <div class="flex items-center gap-2 md:gap-4 text-xs md:text-sm font-black tracking-widest text-cobalt uppercase bg-cobalt/10 p-3 md:p-4 rounded-xl">
-                                        <span class="material-symbols-outlined text-xl md:text-2xl">bolt</span> Liquidez en el mismo día
+                                        <span class="material-symbols-outlined text-xl md:text-2xl">bolt</span> Liquidez en el mismo dia
                                     </div>
                                 </div>
                             </div>
                             <button 
-                                onclick="(() => {
-                                    const navInicio = document.querySelectorAll('.nav-link')[0];
-                                    cargarSeccion('inicio', navInicio);
-                                    setTimeout(() => { 
-                                        const el = document.getElementById('contacto');
-                                        if(el) el.scrollIntoView({ behavior: 'smooth' }); 
-                                    }, 500);
-                                })()"
+                                onclick="window.parent.cargarSeccion('inicio', null); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500)"
                                 class="w-full py-4 md:py-6 border-2 border-primary text-white font-bold rounded-xl md:rounded-2xl hover:bg-primary-hover transition-all duration-300 uppercase tracking-widest text-sm md:text-base active:scale-[0.98] shadow-lg hover:shadow-primary/20">
-                                SOLICITAR INFORMACIÓN
+                                SOLICITAR INFORMACION
                             </button>
                         </div>
                         <div class="bg-white text-navy-dark rounded-2xl md:rounded-[3rem] p-6 md:p-16 shadow-2xl relative overflow-hidden flex flex-col justify-between">
                             <div class="relative z-10">
-                                <h3 class="font-headline text-2xl md:text-4xl font-bold mb-4 md:mb-8">Traducción Profesional Certificada</h3>
-                                <p class="text-slate-600 text-base md:text-xl leading-relaxed mb-6 md:mb-10">Elimine las barreras del lenguaje con certificaciones oficiales (Inglés ↔ Español) para sus documentos críticos.</p>
+                                <h3 class="font-headline text-2xl md:text-4xl font-bold mb-4 md:mb-8">Traduccion Profesional Certificada</h3>
+                                <p class="text-slate-600 text-base md:text-xl leading-relaxed mb-6 md:mb-10">Elimine las barreras del lenguaje con certificaciones oficiales (Ingles <-> Español) para sus documentos criticos.</p>
                                 <div class="grid grid-cols-1 gap-2 md:gap-4">
                                     <div class="p-3 md:p-4 border-b border-slate-200 flex justify-between items-center">
-                                        <span class="font-bold text-xs md:text-sm tracking-widest uppercase">Documentación Técnica</span>
+                                        <span class="font-bold text-xs md:text-sm tracking-widest uppercase">Documentacion Tecnica</span>
                                         <span class="material-symbols-outlined text-cobalt text-xl md:text-2xl">description</span>
                                     </div>
                                     <div class="p-3 md:p-4 border-b border-slate-200 flex justify-between items-center">
@@ -220,13 +249,13 @@
                                         <span class="material-symbols-outlined text-cobalt text-xl md:text-2xl">gavel</span>
                                     </div>
                                     <div class="p-3 md:p-4 flex justify-between items-center">
-                                        <span class="font-bold text-xs md:text-sm tracking-widest uppercase">Trámites Legales</span>
+                                        <span class="font-bold text-xs md:text-sm tracking-widest uppercase">Tramites Legales</span>
                                         <span class="material-symbols-outlined text-cobalt text-xl md:text-2xl">verified</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="flex gap-3 md:gap-4 mt-8 md:mt-12 relative z-10">
-                                <span class="bg-navy-dark text-white px-4 md:px-6 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold">ESPAÑOL</span>
+                                <span class="bg-navy-dark text-white px-4 md:px-6 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold">ESPANOL</span>
                                 <span class="bg-cobalt text-white px-4 md:px-6 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold">ENGLISH</span>
                             </div>
                             <span class="absolute right-[-10%] bottom-[-10%] material-symbols-outlined text-[8rem] md:text-[15rem] text-navy-dark/5">translate</span>
@@ -248,7 +277,7 @@
                         Donde la <span class="text-cobalt italic">Excelencia</span> se vuelve <span class="text-cobalt italic">Humana</span>.
                     </h2>
                     <p class="text-xl md:text-2xl lg:text-3xl text-slate-mid font-medium border-l-4 md:border-l-8 border-cobalt pl-4 md:pl-10 leading-relaxed">
-                        No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercanía, <span class="text-cobalt font-bold">calidad y calidez</span> que su visión merece.
+                        No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercania, <span class="text-cobalt font-bold">calidad y calidez</span> que su vision merece.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 md:gap-8 pt-4 md:pt-8 justify-center lg:justify-start">
                         <button class="px-6 md:px-10 lg:px-14 py-4 md:py-6 lg:py-7 bg-cobalt text-white font-black text-lg md:text-xl lg:text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-transform flex items-center gap-2 md:gap-4 justify-center">
@@ -256,18 +285,9 @@
                             <span class="material-symbols-outlined text-xl md:text-2xl">arrow_forward</span>
                         </button>
                         <button 
-                            onclick="(() => {
-                                const navInicio = document.querySelectorAll('.nav-link')[0];
-                                if (typeof cargarSeccion === 'function') {
-                                    cargarSeccion('inicio', navInicio);
-                                }
-                                setTimeout(() => { 
-                                    const el = document.getElementById('contacto');
-                                    if(el) el.scrollIntoView({ behavior: 'smooth' }); 
-                                }, 500);
-                            })()"
+                            onclick="window.parent.cargarSeccion('inicio', null); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500)"
                             class="px-6 md:px-10 lg:px-14 py-4 md:py-6 lg:py-7 border-2 md:border-4 border-slate-mid text-slate-mid font-black text-lg md:text-xl lg:text-2xl rounded-full hover:bg-slate-mid hover:text-navy-dark transition-all active:scale-95 shadow-xl text-center">
-                            CONTÁCTANOS
+                            CONTACTANOS
                         </button>
                     </div>
                 </div>
@@ -275,28 +295,12 @@
             <span class="absolute bottom-5 md:bottom-10 right-[-20%] md:right-[-10%] text-[10rem] sm:text-[20rem] md:text-[25rem] lg:text-[30rem] font-black text-white opacity-[0.02] whitespace-nowrap select-none pointer-events-none uppercase">EDAPYMES</span>
         </section>
     </main>
-</div>
-
-<style>
-    .text-outline { 
-        -webkit-text-stroke: 1px rgba(255,255,255,0.3); 
-        color: transparent; 
-    }
-    @media (max-width: 768px) {
-        .text-outline { 
-            -webkit-text-stroke: 0.5px rgba(255,255,255,0.3); 
+    <style>
+        @media (max-width: 768px) {
+            .text-outline { 
+                -webkit-text-stroke: 0.5px rgba(255,255,255,0.3); 
+            }
         }
-    }
-    .vertical-text { 
-        writing-mode: vertical-rl; 
-        transform: rotate(180deg); 
-    }
-    .scroll-mt-24 { 
-        scroll-margin-top: 80px; 
-    }
-    @media (min-width: 768px) {
-        .scroll-mt-24 { 
-            scroll-margin-top: 100px; 
-        }
-    }
-</style>
+    </style>
+</body>
+</html>

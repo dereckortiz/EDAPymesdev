@@ -673,7 +673,7 @@ app.post("/api/enviar-correo", async (req, res) => {
                     <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
                     
                     <div class="info-box">
-                        <p style="margin: 0 0 10px;"><strong>Detalle de tu consulta:</strong></p>
+                        <p style="margin: 0 0 10px;"><strong>Detalles de tu consulta:</strong></p>
                         <p><strong>Servicio de interes:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
                         <p><strong>Mensaje:</strong></p>
                         <p style="margin: 8px 0 0; color: #555;">${escapeHtml(mensaje)}</p>
