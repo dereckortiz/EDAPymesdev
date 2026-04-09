@@ -40,7 +40,7 @@ const imagekit = new ImageKit({
 console.log('ImageKit configurado');
 
 /* ===============================
-   CONFIGURACION DE BREVO - VERSION 1.0.1 CORREGIDA
+   CONFIGURACION DE BREVO
 ================================ */
 const brevoApiKey = process.env.BREVO_API_KEY;
 const emailUser = process.env.EMAIL_USER || 'edapymestech@gmail.com';
@@ -217,66 +217,6 @@ function escapeHtml(text) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-}
-
-// Función para cargar y preparar el logo
-function cargarLogoBase64() {
-    const posiblesLogos = [
-        path.join(__dirname, "src", "image", "TU-LOGO.png"),
-        path.join(__dirname, "src", "image", "redimension.png"),
-        path.join(__dirname, "src", "image", "logo.png"),
-        path.join(__dirname, "static", "image", "logo.png"),
-        path.join(__dirname, "public", "image", "logo.png"),
-        path.join(__dirname, "src", "image", "logo-edapymes.png"),
-        path.join(__dirname, "static", "img", "logo.png")
-    ];
-
-    for (const ruta of posiblesLogos) {
-        if (fs.existsSync(ruta)) {
-            const logoBuffer = fs.readFileSync(ruta);
-            const logoBase64 = logoBuffer.toString('base64');
-            const mimeType = path.extname(ruta).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
-            console.log('Logo encontrado en:', ruta);
-            return {
-                base64: logoBase64,
-                mimeType: mimeType,
-                nombre: path.basename(ruta)
-            };
-        }
-    }
-
-    console.log('No se encontro logo en ninguna ruta');
-    return null;
-}
-
-// Función para crear header con logo inline (funciona en todos los clientes)
-function crearHeaderConLogoInline(logoData) {
-    if (logoData && logoData.base64) {
-        const logoImgSrc = `data:${logoData.mimeType};base64,${logoData.base64}`;
-        return `
-            <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
-                <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                        <td style="width: 90px; vertical-align: middle;">
-                            <img src="${logoImgSrc}" alt="EDAPymes" style="display: block; width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                        </td>
-                        <td style="vertical-align: middle; padding-left: 18px;">
-                            <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold;">EDAPymes</h1>
-                            <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnologia con Calidad y Calidez</p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        `;
-    } else {
-        // Header sin logo (solo texto)
-        return `
-            <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
-                <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold; text-align: center;">EDAPymes</h1>
-                <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500; text-align: center;">Tecnologia con Calidad y Calidez</p>
-            </div>
-        `;
-    }
 }
 
 /* ===============================
@@ -596,7 +536,7 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA CON LOGO INLINE
+   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA (CON CID)
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -619,19 +559,69 @@ app.post("/api/enviar-correo", async (req, res) => {
         return res.status(500).json({ error: "Servicio de correo no configurado" });
     }
 
-    // Cargar el logo
-    const logoData = cargarLogoBase64();
-
     const fecha = new Date().toLocaleString('es-ES', {
         timeZone: 'America/Managua',
         dateStyle: 'full',
         timeStyle: 'short'
     });
 
-    // Crear el header con el logo (inline para que se vea siempre)
-    const headerHTML = crearHeaderConLogoInline(logoData);
+    // Buscar logo en diferentes rutas
+    const posiblesLogos = [
+        path.join(__dirname, "src", "image", "TU-LOGO.png"),
+        path.join(__dirname, "src", "image", "redimension.png"),
+        path.join(__dirname, "src", "image", "logo.png"),
+        path.join(__dirname, "static", "image", "logo.png"),
+        path.join(__dirname, "public", "image", "logo.png")
+    ];
 
-    // Correo para el administrador (con logo inline)
+    let logoBase64 = null;
+    let logoPath = null;
+    for (const ruta of posiblesLogos) {
+        if (fs.existsSync(ruta)) {
+            logoPath = ruta;
+            logoBase64 = fs.readFileSync(ruta, { encoding: 'base64' });
+            console.log('Logo encontrado en:', ruta);
+            break;
+        }
+    }
+
+    if (!logoBase64) {
+        console.log('No se encontro logo en ninguna ruta');
+    }
+
+    const logoCid = 'edapymes-logo';
+
+    // Función para crear header con CID (igual que funcionaba en Nodemailer)
+    const crearHeaderConLogo = () => `
+        <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td style="width: 90px; vertical-align: middle;">
+                        <img src="cid:${logoCid}" alt="EDAPymes" style="display: block; width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                    </td>
+                    <td style="vertical-align: middle; padding-left: 18px;">
+                        <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold;">EDAPymes</h1>
+                        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnologia con Calidad y Calidez</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    `;
+
+    // Preparar attachments con CID (esta es la parte CORREGIDA)
+    const attachments = [];
+    if (logoBase64) {
+        attachments.push({
+            content: logoBase64,
+            name: 'edapymes-logo.png',
+            cid: logoCid  // ← ESTO ES LO QUE FALTABA - el CID que referencia el HTML
+        });
+    }
+
+    // Escapar mensaje para HTML
+    const mensajeHtml = mensaje.replace(/\n/g, '<br>');
+
+    // Correo para el administrador
     const adminEmailContent = `
         <!DOCTYPE html>
         <html>
@@ -644,39 +634,35 @@ app.post("/api/enviar-correo", async (req, res) => {
                 .content { padding: 30px; }
                 .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #034AB0; }
                 .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
-                .message-text { background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-top: 10px; }
             </style>
         </head>
         <body>
             <div class="container">
-                ${headerHTML}
+                ${crearHeaderConLogo()}
                 <div class="content">
                     <h2 style="color: #034AB0; margin-top: 0;">Nuevo mensaje de contacto</h2>
                     
                     <div style="margin: 20px 0;">
-                        <p><strong>📅 Fecha:</strong> ${escapeHtml(fecha)}</p>
-                        <p><strong>👤 Nombre:</strong> ${escapeHtml(nombre)}</p>
-                        <p><strong>📧 Correo:</strong> ${escapeHtml(email)}</p>
-                        <p><strong>🎯 Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
+                        <p><strong>Fecha:</strong> ${escapeHtml(fecha)}</p>
+                        <p><strong>Nombre:</strong> ${escapeHtml(nombre)}</p>
+                        <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
+                        <p><strong>Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
                     </div>
                     
                     <div class="info-box">
-                        <p style="margin: 0 0 10px;"><strong>💬 Mensaje:</strong></p>
-                        <div class="message-text">
-                            ${escapeHtml(mensaje).replace(/\n/g, '<br>')}
-                        </div>
+                        <p style="margin: 0 0 10px;"><strong>Mensaje:</strong></p>
+                        <p style="margin: 0; line-height: 1.6;">${escapeHtml(mensajeHtml)}</p>
                     </div>
                 </div>
                 <div class="footer">
-                    Este mensaje fue enviado desde el formulario de contacto de EDAPymes.<br>
-                    Responder a este correo para contactar al cliente: ${escapeHtml(email)}
+                    Este mensaje fue enviado desde el formulario de contacto de EDAPymes.
                 </div>
             </div>
         </body>
         </html>
     `;
 
-    // Correo de confirmacion para el usuario (con logo inline)
+    // Correo de confirmacion para el usuario
     const userEmailContent = `
         <!DOCTYPE html>
         <html>
@@ -690,37 +676,33 @@ app.post("/api/enviar-correo", async (req, res) => {
                 .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0; }
                 .contact-box { background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%); padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center; }
                 .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
-                .message-box { background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-top: 10px; }
-                .highlight { color: #034AB0; font-weight: bold; }
             </style>
         </head>
         <body>
             <div class="container">
-                ${headerHTML}
+                ${crearHeaderConLogo()}
                 <div class="content">
-                    <h2 style="color: #034AB0;">¡Hola ${escapeHtml(nombre)}!</h2>
-                    <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong class="highlight">EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
+                    <h2 style="color: #034AB0;">Hola ${escapeHtml(nombre)}!</h2>
+                    <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
                     
                     <div class="info-box">
-                        <p style="margin: 0 0 10px;"><strong>📋 Detalles de tu consulta:</strong></p>
-                        <p><strong>🎯 Servicio de interés:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
-                        <p><strong>💬 Mensaje:</strong></p>
-                        <div class="message-box">
-                            ${escapeHtml(mensaje).replace(/\n/g, '<br>')}
-                        </div>
+                        <p style="margin: 0 0 10px;"><strong>Detalles de tu consulta:</strong></p>
+                        <p><strong>Servicio de interes:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
+                        <p><strong>Mensaje:</strong></p>
+                        <p style="margin: 8px 0 0; color: #555;">${escapeHtml(mensajeHtml)}</p>
                     </div>
                     
-                    <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las próximas 24 horas hábiles para brindarte la atención que mereces.</p>
+                    <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las proximas 24 horas habiles para brindarte la atencion que mereces.</p>
                     
                     <div class="contact-box">
-                        <p style="margin: 0; color: #034AB0; font-weight: bold;">📞 ¿Necesitas ayuda inmediata?</p>
-                        <p style="margin: 10px 0 0;">Contáctanos al <strong>+505 8329 5424</strong><br>
-                        o escríbenos a <strong>edapymestech@gmail.com</strong></p>
+                        <p style="margin: 0; color: #034AB0; font-weight: bold;">Necesitas ayuda inmediata?</p>
+                        <p style="margin: 10px 0 0;">Contactanos al <strong>+505 8329 5424</strong><br>
+                        o escribenos a <strong>edapymestech@gmail.com</strong></p>
                     </div>
                 </div>
                 <div class="footer">
-                    Este es un mensaje automático, por favor no responder a este correo.<br>
-                    <strong>EDAPymes</strong> - Tecnología con Calidad y Calidez<br>
+                    Este es un mensaje automatico, por favor no responder a este correo.<br>
+                    EDAPymes - Tecnologia con Calidad y Calidez<br>
                     Nicaragua
                 </div>
             </div>
@@ -728,19 +710,25 @@ app.post("/api/enviar-correo", async (req, res) => {
         </html>
     `;
 
-    // Crear los emails
+    // Crear los emails con attachments
     const adminEmail = new brevo.SendSmtpEmail();
     adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
     adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
     adminEmail.replyTo = { email: email, name: nombre };
     adminEmail.subject = `Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
     adminEmail.htmlContent = adminEmailContent;
+    if (attachments.length > 0) {
+        adminEmail.attachment = attachments;
+    }
 
     const userEmail = new brevo.SendSmtpEmail();
     userEmail.to = [{ email: email, name: nombre }];
     userEmail.sender = { email: emailUser, name: 'EDAPymes' };
-    userEmail.subject = `¡Gracias por contactarnos ${nombre}! - EDAPymes`;
+    userEmail.subject = `Gracias por contactarnos ${nombre} - EDAPymes`;
     userEmail.htmlContent = userEmailContent;
+    if (attachments.length > 0) {
+        userEmail.attachment = attachments;
+    }
 
     try {
         console.log('Enviando correo al administrador via Brevo...');
@@ -780,14 +768,11 @@ app.post("/api/test-body", (req, res) => {
 });
 
 app.get("/api/diagnostico-email", async (req, res) => {
-    const logoData = cargarLogoBase64();
     res.json({
         status: "OK",
         message: "Brevo configurado",
         emailUser: emailUser,
-        hasApiKey: !!brevoApiKey,
-        logoEncontrado: !!logoData,
-        rutaLogo: logoData ? "Logo cargado" : "No se encontro logo"
+        hasApiKey: !!brevoApiKey
     });
 });
 
@@ -798,42 +783,21 @@ app.post("/api/test-email", async (req, res) => {
         return res.status(500).json({ error: "Brevo no configurado" });
     }
 
-    const logoData = cargarLogoBase64();
-    const testHeader = crearHeaderConLogoInline(logoData);
-
     const testMsg = new brevo.SendSmtpEmail();
     testMsg.to = [{ email: testEmail }];
     testMsg.sender = { email: emailUser, name: 'EDAPymes Test' };
     testMsg.subject = "Prueba de configuracion - EDAPymes";
     testMsg.htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <style>
-                body { font-family: Arial, sans-serif; }
-                .container { max-width: 600px; margin: 0 auto; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                ${testHeader}
-                <div style="padding: 20px;">
-                    <h2>¡Brevo funcionando correctamente!</h2>
-                    <p>Este es un correo de prueba desde EDAPymes con Brevo.</p>
-                    <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
-                    <hr>
-                    <p><strong>Configuracion actual:</strong></p>
-                    <ul>
-                        <li>Email remitente: ${emailUser}</li>
-                        <li>Servicio: Brevo</li>
-                        <li>API Key configurada: ${!!brevoApiKey ? 'Si' : 'No'}</li>
-                        <li>Logo cargado: ${!!logoData ? 'Si' : 'No'}</li>
-                    </ul>
-                </div>
-            </div>
-        </body>
-        </html>
+        <h2>Brevo funcionando correctamente!</h2>
+        <p>Este es un correo de prueba desde EDAPymes con Brevo.</p>
+        <p>Fecha: ${new Date().toLocaleString()}</p>
+        <hr>
+        <p><strong>Configuracion actual:</strong></p>
+        <ul>
+            <li>Email remitente: ${emailUser}</li>
+            <li>Servicio: Brevo</li>
+            <li>API Key configurada: ${!!brevoApiKey ? 'Si' : 'No'}</li>
+        </ul>
     `;
 
     try {
@@ -872,12 +836,4 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`ImageKit: Configurado`);
     console.log(`Brevo: ${brevoApiKey ? 'Configurado' : 'No configurado'}`);
     console.log(`Email remitente: ${emailUser}`);
-
-    // Verificar logo al iniciar
-    const logoCheck = cargarLogoBase64();
-    if (logoCheck) {
-        console.log('✅ Logo encontrado y listo para usar en correos');
-    } else {
-        console.log('⚠️ ADVERTENCIA: No se encontro el logo. Asegurate de tener el logo en src/image/ con nombre TU-LOGO.png, redimension.png o logo.png');
-    }
 });
