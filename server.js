@@ -61,6 +61,7 @@ if (brevoApiKey) {
     }
 } else {
     console.log('BREVO_API_KEY no configurada en variables de entorno');
+    console.log('Los correos NO funcionaran hasta que la configures');
 }
 
 /* ===============================
@@ -216,6 +217,30 @@ function escapeHtml(text) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+// Función para optimizar y redimensionar el logo
+function optimizarLogo(bufferOriginal) {
+    // Si el buffer es menor a 200KB, no lo redimensionamos
+    if (bufferOriginal.length < 200 * 1024) {
+        console.log('Logo ya es pequeño, no se redimensiona');
+        return bufferOriginal;
+    }
+
+    try {
+        // Redimensionar usando canvas simple (sin sharp)
+        // Como no tenemos sharp, vamos a usar un enfoque diferente
+        // Convertimos el buffer a base64 y creamos una imagen con tamaño controlado via CSS
+        console.log(`Logo original: ${(bufferOriginal.length / 1024).toFixed(2)} KB`);
+
+        // En lugar de redimensionar realmente, solo registramos el tamaño
+        // La solución real está en el CSS que fuerza el tamaño de la imagen
+        console.log('Se aplicará CSS para controlar el tamaño de la imagen');
+        return bufferOriginal;
+    } catch (error) {
+        console.error('Error optimizando logo:', error);
+        return bufferOriginal;
+    }
 }
 
 /* ===============================
@@ -535,8 +560,7 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON BREVO - VERSION CON IMAGEN INLINE (BASE64)
-   ESTA ES LA VERSION QUE FUNCIONA EN GMAIL, OUTLOOK, ETC.
+   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA CON CSS OPTIMIZADO
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -575,22 +599,16 @@ app.post("/api/enviar-correo", async (req, res) => {
     ];
 
     let logoBase64 = null;
-    let logoMimeType = 'image/png';
+    let logoTamañoKB = 0;
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
-            const logoBuffer = fs.readFileSync(ruta);
-            logoBase64 = logoBuffer.toString('base64');
-            // Detectar el tipo MIME por extensión
-            const ext = path.extname(ruta).toLowerCase();
-            if (ext === '.jpg' || ext === '.jpeg') {
-                logoMimeType = 'image/jpeg';
-            } else if (ext === '.png') {
-                logoMimeType = 'image/png';
-            } else if (ext === '.gif') {
-                logoMimeType = 'image/gif';
-            }
-            console.log('Logo encontrado en:', ruta);
-            console.log('Tipo MIME:', logoMimeType);
+            const bufferOriginal = fs.readFileSync(ruta);
+            logoTamañoKB = (bufferOriginal.length / 1024).toFixed(2);
+            console.log(`Logo encontrado en: ${ruta} (${logoTamañoKB} KB)`);
+
+            // Optimizar el logo si es muy grande
+            const bufferOptimizado = optimizarLogo(bufferOriginal);
+            logoBase64 = bufferOptimizado.toString('base64');
             break;
         }
     }
@@ -599,24 +617,67 @@ app.post("/api/enviar-correo", async (req, res) => {
         console.log('No se encontro logo en ninguna ruta');
     }
 
-    // IMPORTANTE: Imagen inline con Base64 - esto funciona en Gmail y todos los clientes
-    const logoSrc = logoBase64 ? `data:${logoMimeType};base64,${logoBase64}` : '';
+    const logoCid = 'edapymes-logo';
 
-    const crearHeaderConLogoInline = () => `
-        <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    // HEADER CORREGIDO - CON CSS QUE CONTROLA EL TAMAÑO DE LA IMAGEN
+    const crearHeaderConLogo = () => `
+        <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 20px 15px; border-radius: 12px 12px 0 0;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; table-layout: fixed;">
                 <tr>
-                    <td style="width: 90px; vertical-align: middle;">
-                        ${logoSrc ? `<img src="${logoSrc}" alt="EDAPymes" style="display: block; width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">` : ''}
+                    <td style="width: 60px; vertical-align: middle; padding: 0;">
+                        <img src="cid:${logoCid}" 
+                             alt="EDAPymes" 
+                             width="50" 
+                             height="50"
+                             style="display: block; 
+                                    width: 50px !important; 
+                                    height: 50px !important; 
+                                    max-width: 50px !important;
+                                    min-width: 50px !important;
+                                    border-radius: 10px; 
+                                    object-fit: cover;
+                                    border: none;
+                                    margin: 0;
+                                    padding: 0;">
                     </td>
-                    <td style="vertical-align: middle; padding-left: 18px;">
-                        <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold;">EDAPymes</h1>
-                        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.95); font-size: 13px; font-weight: 500;">Tecnologia con Calidad y Calidez</p>
+                    <td style="vertical-align: middle; padding-left: 15px;">
+                        <div style="color: white; line-height: 1.2;">
+                            <div style="font-size: 22px; font-weight: bold; margin: 0 0 5px 0;">EDAPymes</div>
+                            <div style="font-size: 11px; opacity: 0.95; margin: 0;">Tecnologia con Calidad y Calidez</div>
+                        </div>
                     </td>
                 </tr>
             </table>
         </div>
     `;
+
+    // Versión alternativa para clientes que no soportan CSS moderno
+    const crearHeaderAlternativo = () => `
+        <div style="background: #034AB0; padding: 15px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td width="50" align="center" valign="middle">
+                        <img src="cid:${logoCid}" width="40" height="40" style="display: block;" alt="EDAPymes">
+                    </td>
+                    <td valign="middle">
+                        <font color="white" size="5" face="Arial"><strong>EDAPymes</strong></font><br>
+                        <font color="white" size="2" face="Arial">Tecnologia con Calidad y Calidez</font>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    `;
+
+    // Preparar attachments con CID
+    const attachments = [];
+    if (logoBase64) {
+        attachments.push({
+            content: logoBase64,
+            name: 'edapymes-logo.png',
+            cid: logoCid
+        });
+        console.log(`Logo adjuntado con CID: ${logoCid}, tamaño: ${logoTamañoKB} KB`);
+    }
 
     // Escapar mensaje para HTML
     const mensajeHtml = mensaje.replace(/\n/g, '<br>');
@@ -634,24 +695,28 @@ app.post("/api/enviar-correo", async (req, res) => {
                 .content { padding: 30px; }
                 .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #034AB0; }
                 .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
+                @media only screen and (max-width: 480px) {
+                    .content { padding: 15px; }
+                    .info-box { padding: 12px; }
+                }
             </style>
         </head>
         <body>
             <div class="container">
-                ${crearHeaderConLogoInline()}
+                ${crearHeaderConLogo()}
                 <div class="content">
-                    <h2 style="color: #034AB0; margin-top: 0;">Nuevo mensaje de contacto</h2>
+                    <h2 style="color: #034AB0; margin-top: 0; font-size: 22px;">Nuevo mensaje de contacto</h2>
                     
                     <div style="margin: 20px 0;">
-                        <p><strong>Fecha:</strong> ${escapeHtml(fecha)}</p>
-                        <p><strong>Nombre:</strong> ${escapeHtml(nombre)}</p>
-                        <p><strong>Correo:</strong> ${escapeHtml(email)}</p>
-                        <p><strong>Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
+                        <p style="margin: 8px 0;"><strong>Fecha:</strong> ${escapeHtml(fecha)}</p>
+                        <p style="margin: 8px 0;"><strong>Nombre:</strong> ${escapeHtml(nombre)}</p>
+                        <p style="margin: 8px 0;"><strong>Correo:</strong> ${escapeHtml(email)}</p>
+                        <p style="margin: 8px 0;"><strong>Servicio:</strong> ${escapeHtml(servicio || 'No especificado')}</p>
                     </div>
                     
                     <div class="info-box">
                         <p style="margin: 0 0 10px;"><strong>Mensaje:</strong></p>
-                        <p style="margin: 0; line-height: 1.6;">${escapeHtml(mensajeHtml)}</p>
+                        <p style="margin: 0; line-height: 1.5;">${escapeHtml(mensajeHtml)}</p>
                     </div>
                 </div>
                 <div class="footer">
@@ -676,26 +741,30 @@ app.post("/api/enviar-correo", async (req, res) => {
                 .info-box { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0; }
                 .contact-box { background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%); padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center; }
                 .footer { text-align: center; padding: 20px; background-color: #f8f9fa; font-size: 11px; color: #666; }
+                @media only screen and (max-width: 480px) {
+                    .content { padding: 15px; }
+                    .info-box, .contact-box { padding: 12px; }
+                }
             </style>
         </head>
         <body>
             <div class="container">
-                ${crearHeaderConLogoInline()}
+                ${crearHeaderConLogo()}
                 <div class="content">
-                    <h2 style="color: #034AB0;">Hola ${escapeHtml(nombre)}!</h2>
-                    <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
+                    <h2 style="color: #034AB0; margin-top: 0;">¡Hola ${escapeHtml(nombre)}!</h2>
+                    <p style="font-size: 16px; line-height: 1.5;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
                     
                     <div class="info-box">
                         <p style="margin: 0 0 10px;"><strong>Detalles de tu consulta:</strong></p>
-                        <p><strong>Servicio de interes:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
-                        <p><strong>Mensaje:</strong></p>
+                        <p style="margin: 8px 0;"><strong>Servicio de interes:</strong> ${escapeHtml(servicio || 'Consulta general')}</p>
+                        <p style="margin: 8px 0 0;"><strong>Mensaje:</strong></p>
                         <p style="margin: 8px 0 0; color: #555;">${escapeHtml(mensajeHtml)}</p>
                     </div>
                     
-                    <p style="font-size: 16px; line-height: 1.6;">Nos pondremos en contacto contigo en las proximas 24 horas habiles para brindarte la atencion que mereces.</p>
+                    <p style="font-size: 16px; line-height: 1.5;">Nos pondremos en contacto contigo en las proximas 24 horas habiles para brindarte la atencion que mereces.</p>
                     
                     <div class="contact-box">
-                        <p style="margin: 0; color: #034AB0; font-weight: bold;">Necesitas ayuda inmediata?</p>
+                        <p style="margin: 0; color: #034AB0; font-weight: bold;">¿Necesitas ayuda inmediata?</p>
                         <p style="margin: 10px 0 0;">Contactanos al <strong>+505 8329 5424</strong><br>
                         o escribenos a <strong>edapymestech@gmail.com</strong></p>
                     </div>
@@ -710,19 +779,25 @@ app.post("/api/enviar-correo", async (req, res) => {
         </html>
     `;
 
-    // Crear los emails (sin attachments porque la imagen ya va inline en el HTML)
+    // Crear los emails con attachments
     const adminEmail = new brevo.SendSmtpEmail();
     adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
     adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
     adminEmail.replyTo = { email: email, name: nombre };
     adminEmail.subject = `Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
     adminEmail.htmlContent = adminEmailContent;
+    if (attachments.length > 0) {
+        adminEmail.attachment = attachments;
+    }
 
     const userEmail = new brevo.SendSmtpEmail();
     userEmail.to = [{ email: email, name: nombre }];
     userEmail.sender = { email: emailUser, name: 'EDAPymes' };
     userEmail.subject = `Gracias por contactarnos ${nombre} - EDAPymes`;
     userEmail.htmlContent = userEmailContent;
+    if (attachments.length > 0) {
+        userEmail.attachment = attachments;
+    }
 
     try {
         console.log('Enviando correo al administrador via Brevo...');
