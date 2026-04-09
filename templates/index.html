@@ -715,8 +715,7 @@ function irAServicioEspecifico(servicioId) {
         }
     }, 600);
 }
-
-// Función para enviar correo - VERSIÓN CON BOTÓN MEJORADO
+// Función para enviar correo - SIN NINGÚN MENSAJE
 async function enviarCorreo(e) {
     e.preventDefault();
     
@@ -725,13 +724,12 @@ async function enviarCorreo(e) {
     const servicio = document.getElementById('contacto_servicio').value;
     const mensaje = document.getElementById('contacto_mensaje').value;
     
+    // Validaciones silenciosas - solo no envía si hay error
     if (!nombre || !email || !mensaje) {
-        mostrarToast('❌ Por favor completa todos los campos', 'error');
         return;
     }
     
     if (!email.includes('@') || !email.includes('.')) {
-        mostrarToast('❌ Por favor ingresa un correo válido', 'error');
         return;
     }
     
@@ -780,6 +778,27 @@ async function enviarCorreo(e) {
                     <span>Enviado</span>
                 </div>
             `;
+            
+            // Limpiar el formulario
+            e.target.reset();
+            const servicioSelect = document.getElementById('contacto_servicio');
+            if (servicioSelect) servicioSelect.value = '';
+            
+            // Volver al estado normal después de 2 segundos
+            setTimeout(() => {
+                submitBtn.classList.remove('success');
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }, 2000);
+        } else {
+            throw new Error(data.error || data.details || 'Error al enviar');
+        }
+    } catch (error) {
+        console.error('Error detallado:', error);
+        submitBtn.classList.remove('loading');
+        submitBtn.innerHTML = originalHTML;
+        submitBtn.disabled = false;
+    }
 }
 
 function mostrarToast(mensaje, tipo) {
