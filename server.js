@@ -61,7 +61,6 @@ if (brevoApiKey) {
     }
 } else {
     console.log('BREVO_API_KEY no configurada en variables de entorno');
-    console.log('Los correos NO funcionaran hasta que la configures');
 }
 
 /* ===============================
@@ -536,7 +535,8 @@ app.delete("/api/categorias/:id", requireAuth, async (req, res) => {
 });
 
 /* ===============================
-   API DE ENVIO DE CORREOS CON BREVO - CORREGIDA (CON CID)
+   API DE ENVIO DE CORREOS CON BREVO - VERSION CON IMAGEN INLINE (BASE64)
+   ESTA ES LA VERSION QUE FUNCIONA EN GMAIL, OUTLOOK, ETC.
 ================================ */
 app.post("/api/enviar-correo", async (req, res) => {
     const { nombre, email, servicio, mensaje } = req.body;
@@ -575,12 +575,22 @@ app.post("/api/enviar-correo", async (req, res) => {
     ];
 
     let logoBase64 = null;
-    let logoPath = null;
+    let logoMimeType = 'image/png';
     for (const ruta of posiblesLogos) {
         if (fs.existsSync(ruta)) {
-            logoPath = ruta;
-            logoBase64 = fs.readFileSync(ruta, { encoding: 'base64' });
+            const logoBuffer = fs.readFileSync(ruta);
+            logoBase64 = logoBuffer.toString('base64');
+            // Detectar el tipo MIME por extensión
+            const ext = path.extname(ruta).toLowerCase();
+            if (ext === '.jpg' || ext === '.jpeg') {
+                logoMimeType = 'image/jpeg';
+            } else if (ext === '.png') {
+                logoMimeType = 'image/png';
+            } else if (ext === '.gif') {
+                logoMimeType = 'image/gif';
+            }
             console.log('Logo encontrado en:', ruta);
+            console.log('Tipo MIME:', logoMimeType);
             break;
         }
     }
@@ -589,15 +599,15 @@ app.post("/api/enviar-correo", async (req, res) => {
         console.log('No se encontro logo en ninguna ruta');
     }
 
-    const logoCid = 'edapymes-logo';
+    // IMPORTANTE: Imagen inline con Base64 - esto funciona en Gmail y todos los clientes
+    const logoSrc = logoBase64 ? `data:${logoMimeType};base64,${logoBase64}` : '';
 
-    // Función para crear header con CID (igual que funcionaba en Nodemailer)
-    const crearHeaderConLogo = () => `
+    const crearHeaderConLogoInline = () => `
         <div style="background: linear-gradient(135deg, #034AB0 0%, #022B66 100%); padding: 25px 20px; border-radius: 12px 12px 0 0;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                     <td style="width: 90px; vertical-align: middle;">
-                        <img src="cid:${logoCid}" alt="EDAPymes" style="display: block; width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                        ${logoSrc ? `<img src="${logoSrc}" alt="EDAPymes" style="display: block; width: 70px; height: 70px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">` : ''}
                     </td>
                     <td style="vertical-align: middle; padding-left: 18px;">
                         <h1 style="margin: 0; color: white; font-size: 26px; font-weight: bold;">EDAPymes</h1>
@@ -607,16 +617,6 @@ app.post("/api/enviar-correo", async (req, res) => {
             </table>
         </div>
     `;
-
-    // Preparar attachments con CID (esta es la parte CORREGIDA)
-    const attachments = [];
-    if (logoBase64) {
-        attachments.push({
-            content: logoBase64,
-            name: 'edapymes-logo.png',
-            cid: logoCid  // ← ESTO ES LO QUE FALTABA - el CID que referencia el HTML
-        });
-    }
 
     // Escapar mensaje para HTML
     const mensajeHtml = mensaje.replace(/\n/g, '<br>');
@@ -638,7 +638,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         </head>
         <body>
             <div class="container">
-                ${crearHeaderConLogo()}
+                ${crearHeaderConLogoInline()}
                 <div class="content">
                     <h2 style="color: #034AB0; margin-top: 0;">Nuevo mensaje de contacto</h2>
                     
@@ -680,7 +680,7 @@ app.post("/api/enviar-correo", async (req, res) => {
         </head>
         <body>
             <div class="container">
-                ${crearHeaderConLogo()}
+                ${crearHeaderConLogoInline()}
                 <div class="content">
                     <h2 style="color: #034AB0;">Hola ${escapeHtml(nombre)}!</h2>
                     <p style="font-size: 16px; line-height: 1.6;">Gracias por contactarte con <strong>EDAPymes</strong>. Hemos recibido tu mensaje exitosamente.</p>
@@ -710,25 +710,19 @@ app.post("/api/enviar-correo", async (req, res) => {
         </html>
     `;
 
-    // Crear los emails con attachments
+    // Crear los emails (sin attachments porque la imagen ya va inline en el HTML)
     const adminEmail = new brevo.SendSmtpEmail();
     adminEmail.to = [{ email: emailUser, name: 'Administrador EDAPymes' }];
     adminEmail.sender = { email: emailUser, name: 'EDAPymes Contacto' };
     adminEmail.replyTo = { email: email, name: nombre };
     adminEmail.subject = `Nuevo mensaje de contacto - ${servicio || 'Consulta general'}`;
     adminEmail.htmlContent = adminEmailContent;
-    if (attachments.length > 0) {
-        adminEmail.attachment = attachments;
-    }
 
     const userEmail = new brevo.SendSmtpEmail();
     userEmail.to = [{ email: email, name: nombre }];
     userEmail.sender = { email: emailUser, name: 'EDAPymes' };
     userEmail.subject = `Gracias por contactarnos ${nombre} - EDAPymes`;
     userEmail.htmlContent = userEmailContent;
-    if (attachments.length > 0) {
-        userEmail.attachment = attachments;
-    }
 
     try {
         console.log('Enviando correo al administrador via Brevo...');
