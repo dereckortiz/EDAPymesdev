@@ -601,8 +601,7 @@
                 <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('servicios.html', this)">Servicios</a>
                 <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Catalogo.html', this)">Catálogo</a>
                 <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="cargarSeccion('Nosotros.html', this)">Nosotros</a>
-                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="(() => { const navInicio = document.querySelectorAll('.nav-link')[0]; cargarSeccion('inicio', navInicio); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500); })()">Contacto</a>
-                <div id="nav-indicator" class="absolute -bottom-5 left-0 h-0.5 bg-primary transition-all duration-300"></div>
+                <a class="nav-link text-gray-700 hover:text-primary transition-colors font-medium cursor-pointer" onclick="irAContactoDesdeCualquierLado()">Contacto</a>                <div id="nav-indicator" class="absolute -bottom-5 left-0 h-0.5 bg-primary transition-all duration-300"></div>
             </div>
         </div>
 
@@ -619,8 +618,7 @@
             <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('servicios.html', this); document.getElementById('mobileNav').classList.remove('open')">Servicios</a>
             <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Catalogo.html', this); document.getElementById('mobileNav').classList.remove('open')">Catálogo</a>
             <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="cargarSeccion('Nosotros.html', this); document.getElementById('mobileNav').classList.remove('open')">Nosotros</a>
-            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="(() => { const navInicio = document.querySelectorAll('.nav-link')[0]; cargarSeccion('inicio', navInicio); setTimeout(() => { const el = document.getElementById('contacto'); if(el) el.scrollIntoView({ behavior: 'smooth' }); }, 500); document.getElementById('mobileNav').classList.remove('open'); })()">Contacto</a>
-        </div>
+            <a class="nav-link block px-8 py-3 text-gray-700 hover:bg-gray-50 transition-colors" onclick="irAContactoDesdeCualquierLado(); document.getElementById('mobileNav').classList.remove('open')">Contacto</a>        </div>
     </div>
 </nav>
 
@@ -768,6 +766,62 @@ function irAServicioEspecifico(servicioId) {
         }
         intentarScroll();
     }, 1500); // 1.5 segundos como máximo de espera
+}
+
+// Función MEJORADA para navegar a Inicio y hacer scroll a Contacto
+function irAContactoDesdeCualquierLado() {
+    console.log('[EDAPymes] Navegando a Inicio y buscando Contacto...');
+    
+    const navInicio = document.querySelectorAll('.nav-link')[0]; // Primer link es "Inicio"
+    
+    // 1. Cargar la sección de inicio
+    cargarSeccion('inicio', navInicio);
+    
+    // 2. Función robusta de scroll
+    const intentarScrollContacto = (intentos = 0) => {
+        const elementoContacto = document.getElementById('contacto');
+        
+        if (elementoContacto) {
+            console.log('[EDAPymes] Sección Contacto encontrada. Haciendo scroll.');
+            setTimeout(() => {
+                elementoContacto.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 50);
+        } else if (intentos < 30) { // Hasta 3 segundos de espera (por si el video/carrusel tarda)
+            setTimeout(() => intentarScrollContacto(intentos + 1), 100);
+        } else {
+            console.warn('[EDAPymes] No se encontró la sección #contacto.');
+        }
+    };
+    
+    // 3. Observar cambios en el DOM principal
+    const contenedor = document.getElementById("contenido");
+    
+    if (window._observerContacto) {
+        window._observerContacto.disconnect();
+    }
+    
+    window._observerContacto = new MutationObserver((mutations) => {
+        if (document.getElementById('contacto')) {
+            window._observerContacto.disconnect();
+            intentarScrollContacto();
+        }
+    });
+    
+    window._observerContacto.observe(contenedor, { 
+        childList: true, 
+        subtree: true 
+    });
+    
+    // 4. Fallback de seguridad
+    setTimeout(() => {
+        if (window._observerContacto) {
+            window._observerContacto.disconnect();
+        }
+        intentarScrollContacto();
+    }, 2000); // 2 segundos máximo
 }
 // Función para enviar correo - SIN NINGÚN MENSAJE
 async function enviarCorreo(e) {
@@ -1655,6 +1709,7 @@ window.addEventListener("resize", () => {
 
 window.cargarSeccion = cargarSeccion;
 window.irAServicioEspecifico = irAServicioEspecifico;
+window.irAContactoDesdeCualquierLado = irAContactoDesdeCualquierLado;
 window.enviarCorreo = enviarCorreo;
 window.configurarCardsServicios = configurarCardsServicios;
 window.activarAnimacionesScroll = activarAnimacionesScroll;

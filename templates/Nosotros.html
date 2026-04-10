@@ -846,18 +846,9 @@
                 <p class="text-on-surface-variant mb-8 sm:mb-12 text-base sm:text-lg">Descubre cómo nuestra gama de servicios, desde soporte técnico hasta préstamos prendatarios, puede impulsar tu crecimiento hoy mismo.</p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button 
-                      onclick="(() => {
-                        const navInicio = document.querySelectorAll('.nav-link')[0];
-                        if (typeof cargarSeccion === 'function') {
-                          cargarSeccion('inicio', navInicio);
-                        }
-                        setTimeout(() => { 
-                          const el = document.getElementById('contacto');
-                          if(el) el.scrollIntoView({ behavior: 'smooth' }); 
-                        }, 500);
-                      })()"
-                      class="bg-primary text-white px-6 sm:px-10 py-3 sm:py-5 rounded-xl font-headline font-bold btn-smooth hover:bg-primary-dim hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95">
-                      Solicitar Asesoría
+                    onclick="irAContactoDesdeCualquierLado()"
+                    class="bg-primary text-white px-6 sm:px-10 py-3 sm:py-5 rounded-xl font-headline font-bold btn-smooth hover:bg-primary-dim hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95">
+                    Solicitar Asesoría
                     </button>
 
 <button 
