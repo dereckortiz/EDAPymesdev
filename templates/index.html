@@ -705,15 +705,69 @@ let intervaloAutoPlay = null;
 let productosGlobales = [];
 
 // Función para ir a un servicio específico en la página de servicios
+// Función MEJORADA para ir a un servicio específico en la página de servicios
 function irAServicioEspecifico(servicioId) {
-    const navServicios = document.querySelectorAll('.nav-link')[1];
+    console.log(`[EDAPymes] Navegando a servicio: ${servicioId}`);
+    
+    const navServicios = document.querySelectorAll('.nav-link')[1]; // El segundo link es "Servicios"
+    
+    // 1. Cargar la página de servicios
     cargarSeccion('servicios.html', navServicios);
-    setTimeout(() => {
+    
+    // 2. Función interna para intentar hacer scroll cuando el elemento esté listo
+    const intentarScroll = (intentos = 0) => {
         const elementoDestino = document.getElementById(servicioId);
+        
         if (elementoDestino) {
-            elementoDestino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            console.log(`[EDAPymes] Elemento ${servicioId} encontrado. Haciendo scroll.`);
+            
+            // Pequeño delay para asegurar que el layout está estable (especialmente en móviles)
+            setTimeout(() => {
+                elementoDestino.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 50);
+            
+        } else if (intentos < 20) { // Reintentar hasta ~2 segundos (20 * 100ms)
+            console.log(`[EDAPymes] Esperando a que exista el ID: ${servicioId} (Intento ${intentos})`);
+            setTimeout(() => intentarScroll(intentos + 1), 100);
+        } else {
+            console.warn(`[EDAPymes] No se encontró el ID ${servicioId} después de varios intentos.`);
         }
-    }, 600);
+    };
+    
+    // 3. Observar cambios en el contenedor principal "contenido"
+    // Esto es más fiable que un setTimeout fijo, porque espera a que el fetch termine de inyectar el HTML.
+    const contenedor = document.getElementById("contenido");
+    
+    // Limpiar observador anterior si existe
+    if (window._observerServicios) {
+        window._observerServicios.disconnect();
+    }
+    
+    // Crear nuevo observador
+    window._observerServicios = new MutationObserver((mutations) => {
+        // Verificar si el nodo que buscamos ya existe
+        if (document.getElementById(servicioId)) {
+            window._observerServicios.disconnect(); // Dejar de observar
+            intentarScroll();
+        }
+    });
+    
+    // Iniciar observación del contenedor
+    window._observerServicios.observe(contenedor, { 
+        childList: true, 
+        subtree: true 
+    });
+    
+    // 4. Fallback de seguridad por si el MutationObserver no se dispara
+    setTimeout(() => {
+        if (window._observerServicios) {
+            window._observerServicios.disconnect();
+        }
+        intentarScroll();
+    }, 1500); // 1.5 segundos como máximo de espera
 }
 // Función para enviar correo - SIN NINGÚN MENSAJE
 async function enviarCorreo(e) {
