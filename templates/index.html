@@ -768,31 +768,40 @@ function irAServicioEspecifico(servicioId) {
     }, 1500); // 1.5 segundos como máximo de espera
 }
 
-// Función MEJORADA para navegar a Inicio y hacer scroll a Contacto
+// Función MEJORADA para navegar a Inicio y hacer scroll al FORMULARIO de Contacto
 function irAContactoDesdeCualquierLado() {
-    console.log('[EDAPymes] Navegando a Inicio y buscando Contacto...');
+    console.log('[EDAPymes] Navegando a Inicio y buscando Formulario de Contacto...');
     
     const navInicio = document.querySelectorAll('.nav-link')[0]; // Primer link es "Inicio"
     
     // 1. Cargar la sección de inicio
     cargarSeccion('inicio', navInicio);
     
-    // 2. Función robusta de scroll
+    // 2. Función robusta de scroll - AHORA BUSCA EL FORMULARIO
     const intentarScrollContacto = (intentos = 0) => {
-        const elementoContacto = document.getElementById('contacto');
+        // Buscar PRIMERO el formulario, luego el contenedor como fallback
+        const elementoFormulario = document.getElementById('contactoForm') || document.getElementById('contacto');
         
-        if (elementoContacto) {
-            console.log('[EDAPymes] Sección Contacto encontrada. Haciendo scroll.');
+        if (elementoFormulario) {
+            console.log('[EDAPymes] Formulario de Contacto encontrado. Haciendo scroll.');
             setTimeout(() => {
-                elementoContacto.scrollIntoView({ 
+                elementoFormulario.scrollIntoView({ 
                     behavior: 'smooth', 
-                    block: 'start' 
+                    block: 'center' // 'center' hace que el formulario quede en el medio de la pantalla
                 });
+                
+                // Enfocar el primer campo del formulario para mejor UX
+                setTimeout(() => {
+                    const primerInput = document.getElementById('contacto_nombre');
+                    if (primerInput) primerInput.focus();
+                }, 800);
+                
             }, 50);
         } else if (intentos < 30) { // Hasta 3 segundos de espera (por si el video/carrusel tarda)
+            console.log(`[EDAPymes] Esperando formulario... (Intento ${intentos})`);
             setTimeout(() => intentarScrollContacto(intentos + 1), 100);
         } else {
-            console.warn('[EDAPymes] No se encontró la sección #contacto.');
+            console.warn('[EDAPymes] No se encontró el formulario de contacto.');
         }
     };
     
@@ -804,7 +813,8 @@ function irAContactoDesdeCualquierLado() {
     }
     
     window._observerContacto = new MutationObserver((mutations) => {
-        if (document.getElementById('contacto')) {
+        // Verificar si existe el formulario O el contenedor
+        if (document.getElementById('contactoForm') || document.getElementById('contacto')) {
             window._observerContacto.disconnect();
             intentarScrollContacto();
         }
@@ -823,6 +833,7 @@ function irAContactoDesdeCualquierLado() {
         intentarScrollContacto();
     }, 2000); // 2 segundos máximo
 }
+
 // Función para enviar correo - SIN NINGÚN MENSAJE
 async function enviarCorreo(e) {
     e.preventDefault();
