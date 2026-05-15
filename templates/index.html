@@ -381,15 +381,15 @@ function crearModalProducto() { let modalExistente = document.getElementById('pr
 function iniciarCarrusel() {
 if (intervaloAutoPlay) clearInterval(intervaloAutoPlay);
 const slidesData = [
-{ type: 'video', src: '/src/image/fondo de pantalla.mp4', poster: '/EDAPyme/src/image/fondo-poster.jpg', title: 'Impulsamos tu <span class="text-primary">negocio</span> con tecnología', subtitle: 'Soluciones tecnológicas integrales diseñadas para la era digital.' },
-{ type: 'image', src: '/EDAPyme/src/image/foto3.jpg', title: 'Capacitaciones <span class="text-primary">Tecnológicas</span>', subtitle: 'Aprende habilidades digitales con expertos.' },
-{ type: 'image', src: '/EDAPyme/src/image/foto1.jpg', title: 'Asesorías <span class="text-primary">Profesionales</span>', subtitle: 'Impulsa tu negocio con tecnología.' },
-{ type: 'image', src: '/EDAPyme/src/image/dirty-computer-attractive-young-man-wearing-protection-glasses-while-cleaning-inside-with-compressed-air-hardware-computer.jpg', title: 'Reparación de <span class="text-primary">Computadoras</span>', subtitle: 'Mantenimiento rápido y confiable.' },
-{ type: 'image', src: '/EDAPyme/src/image/foto4.jpg', title: 'Venta de <span class="text-primary">Laptops</span>', subtitle: 'Equipos modernos y de alto rendimiento.' },
-{ type: 'image', src: '/EDAPyme/src/image/foto5.jpg', title: 'Cámaras de <span class="text-primary">Seguridad</span>', subtitle: 'Protege tu hogar o negocio.' },
-{ type: 'image', src: '/EDAPyme/src/image/foto8.jpg', title: 'Accesorios para <span class="text-primary">Celulares</span>', subtitle: 'Todo lo que necesitás para tu smartphone.' },
-{ type: 'image', src: '/EDAPyme/src/image/foto9.jpg', title: 'Préstamos <span class="text-primary">Prendatarios</span>', subtitle: 'Soluciones rápidas de financiamiento.' },
-{ type: 'image', src: '/EDAPyme/src/image/foto10.jpg', title: 'Servicios de <span class="text-primary">Traducción</span>', subtitle: 'Traducción profesional de inglés a español.' }
+{ type: 'video', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/fondo%20de%20pantalla.mp4', poster: '/EDAPyme/src/image/fondo-poster.jpg', title: 'Impulsamos tu <span class="text-primary">negocio</span> con tecnología', subtitle: 'Soluciones tecnológicas integrales diseñadas para la era digital.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/foto3.jpg', title: 'Capacitaciones <span class="text-primary">Tecnológicas</span>', subtitle: 'Aprende habilidades digitales con expertos.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/foto1.jpg', title: 'Asesorías <span class="text-primary">Profesionales</span>', subtitle: 'Impulsa tu negocio con tecnología.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/dirty-computer-attractive-young-man-wearing-protection-glasses-while-cleaning-inside-with-compressed-air-hardware-computer.jpg', title: 'Reparación de <span class="text-primary">Computadoras</span>', subtitle: 'Mantenimiento rápido y confiable.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/foto4.jpg', title: 'Venta de <span class="text-primary">Laptops</span>', subtitle: 'Equipos modernos y de alto rendimiento.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/foto5.jpg', title: 'Cámaras de <span class="text-primary">Seguridad</span>', subtitle: 'Protege tu hogar o negocio.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/foto8.jpg', title: 'Accesorios para <span class="text-primary">Celulares</span>', subtitle: 'Todo lo que necesitás para tu smartphone.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/foto9.jpg', title: 'Préstamos <span class="text-primary">Prendatarios</span>', subtitle: 'Soluciones rápidas de financiamiento.' },
+{ type: 'image', src: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/foto10.jpg', title: 'Servicios de <span class="text-primary">Traducción</span>', subtitle: 'Traducción profesional de inglés a español.' }
 ];
 let currentIndex = 0; let videoElement = null; let isTransitioning = false;
 const track = document.getElementById('carouselTrack'); const dotsContainer = document.getElementById('carouselDots');
