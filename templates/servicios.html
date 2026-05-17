@@ -1,879 +1,462 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>EDAPYMES – Servicios Premium</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<style>
-  :root {
-    --cobalt: #034AB0;
-    --cobalt-light: #1a5fc8;
-    --navy: #0a1628;
-    --slate: #f0f4f8;
-    --white: #ffffff;
-    --card-shadow: 0 20px 60px rgba(3,74,176,0.10);
-    --card-hover: 0 40px 80px rgba(3,74,176,0.22);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--white);
-    color: var(--navy);
-    overflow-x: hidden;
-  }
-
-  /* ─── HERO ─────────────────────────────────────────── */
-  .hero {
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    background: #000;
-  }
-
-  .hero video {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    opacity: 0;
-    transition: opacity 1s ease;
-  }
-  .hero video.loaded { opacity: 1; }
-
-  /* Gradient overlay - left side heavier so text always readable */
-  .hero-overlay {
-    position: absolute; inset: 0; z-index: 1;
-    background: linear-gradient(
-      105deg,
-      rgba(255,255,255,0.92) 0%,
-      rgba(255,255,255,0.75) 35%,
-      rgba(255,255,255,0.30) 60%,
-      rgba(255,255,255,0.08) 100%
-    );
-  }
-
-  /* Mobile: stronger overlay so text is readable on portrait video */
-  @media (max-width: 768px) {
-    .hero-overlay {
-      background: linear-gradient(
-        180deg,
-        rgba(255,255,255,0.96) 0%,
-        rgba(255,255,255,0.88) 50%,
-        rgba(255,255,255,0.65) 100%
-      );
-    }
-  }
-
-  .hero-content {
-    position: relative; z-index: 2;
-    width: 100%;
-    padding: clamp(6rem, 12vw, 10rem) clamp(1.25rem, 5vw, 5rem) clamp(4rem, 8vw, 6rem);
-    max-width: 900px;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    background: var(--cobalt);
-    color: #fff;
-    font-size: clamp(.6rem, 1.8vw, .7rem);
-    font-weight: 700;
-    letter-spacing: .35em;
-    text-transform: uppercase;
-    padding: .4rem 1.1rem;
-    border-radius: 100px;
-    margin-bottom: clamp(1rem, 3vw, 1.75rem);
-    animation: slideDown .6s var(--ease-out) .1s both;
-  }
-
-  .hero-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(4.5rem, 16vw, 11rem);
-    font-weight: 900;
-    line-height: .88;
-    letter-spacing: -.02em;
-    margin-bottom: clamp(1.25rem, 3vw, 2rem);
-    animation: slideUp .7s var(--ease-out) .2s both;
-  }
-
-  .hero-title .accent { color: var(--cobalt); }
-  .hero-title .outline {
-    color: transparent;
-    -webkit-text-stroke: clamp(2px, .4vw, 3px) var(--cobalt);
-  }
-
-  .hero-desc {
-    max-width: min(560px, 90vw);
-    border-left: 6px solid var(--cobalt);
-    padding: .5rem 0 .5rem 1.25rem;
-    font-size: clamp(1rem, 2.4vw, 1.3rem);
-    font-weight: 300;
-    line-height: 1.65;
-    color: #374151;
-    animation: slideUp .7s var(--ease-out) .35s both;
-  }
-
-  .hero-desc strong {
-    font-weight: 700;
-    color: var(--navy);
-    font-style: italic;
-    text-decoration: underline;
-    text-decoration-color: var(--cobalt);
-    text-decoration-thickness: 3px;
-  }
-
-  .scroll-hint {
-    position: absolute;
-    bottom: clamp(1.25rem, 4vw, 2rem);
-    left: 50%; transform: translateX(-50%);
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .3rem;
-    animation: fadeIn 1s ease 1s both;
-  }
-  .scroll-hint span {
-    font-family: 'Material Symbols Outlined';
-    font-size: 2rem;
-    color: #9ca3af;
-    animation: bounce 2s infinite;
-  }
-  .scroll-hint p {
-    font-size: .65rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: #9ca3af;
-  }
-
-  /* ─── SERVICES SECTION ─────────────────────────────── */
-  .services {
-    background: var(--slate);
-    padding: clamp(4rem, 10vw, 7rem) clamp(1rem, 5vw, 4rem);
-    overflow: hidden;
-  }
-
-  .section-header {
-    text-align: center;
-    margin-bottom: clamp(2.5rem, 6vw, 5rem);
-  }
-
-  .section-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: .75rem;
-    font-size: .7rem;
-    font-weight: 700;
-    letter-spacing: .3em;
-    text-transform: uppercase;
-    color: var(--cobalt);
-    margin-bottom: 1rem;
-  }
-  .section-eyebrow::before, .section-eyebrow::after {
-    content: '';
-    width: 2.5rem; height: 1px;
-    background: var(--cobalt);
-  }
-
-  .section-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(2.8rem, 8vw, 5.5rem);
-    font-weight: 900;
-    color: var(--navy);
-    line-height: 1;
-    margin-bottom: .75rem;
-  }
-
-  .section-sub {
-    font-size: clamp(.9rem, 2vw, 1.1rem);
-    color: #6b7280;
-    max-width: 40ch;
-    margin: 0 auto;
-    font-weight: 300;
-  }
-
-  /* Grid */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-    gap: clamp(1rem, 2.5vw, 1.75rem);
-    max-width: 1280px;
-    margin: 0 auto;
-  }
-
-  /* ─── SERVICE CARD ──────────────────────────────────── */
-  .card-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    outline-offset: 4px;
-  }
-
-  .card {
-    background: var(--white);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
-    transition:
-      transform .45s var(--ease-spring),
-      box-shadow .45s var(--ease-out);
-    will-change: transform;
-    cursor: pointer;
-    border: 1px solid rgba(3,74,176,0.07);
-  }
-
-  /* Animated top bar */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: var(--cobalt);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .4s var(--ease-out);
-    z-index: 2;
-  }
-
-  /* Glow halo on hover */
-  .card::after {
-    content: '';
-    position: absolute; inset: 0;
-    border-radius: 20px;
-    opacity: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(3,74,176,.07) 0%, transparent 70%);
-    transition: opacity .4s ease;
-    pointer-events: none;
-  }
-
-  .card:hover,
-  .card:focus-visible {
-    transform: translateY(-10px) scale(1.015);
-    box-shadow: var(--card-hover);
-  }
-  .card:hover::before { transform: scaleX(1); }
-  .card:hover::after { opacity: 1; }
-
-  /* Touch tap — instant tactile response on mobile */
-  .card:active {
-    transform: translateY(-4px) scale(1.008);
-    transition-duration: .12s;
-  }
-
-  .card-img {
-    width: 100%; height: 200px;
-    object-fit: cover;
-    display: block;
-    transition: transform .55s var(--ease-out), filter .45s ease;
-    filter: saturate(.9);
-  }
-  .card:hover .card-img {
-    transform: scale(1.07);
-    filter: saturate(1.15);
-  }
-
-  .card-img-wrap {
-    overflow: hidden;
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  /* Icon badge floating on image */
-  .card-icon-badge {
-    position: absolute;
-    bottom: -1.1rem; right: 1.25rem;
-    width: 3rem; height: 3rem;
-    background: var(--cobalt);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 24px rgba(3,74,176,.35);
-    transition: transform .4s var(--ease-spring);
-    z-index: 1;
-  }
-  .card-icon-badge span {
-    font-family: 'Material Symbols Outlined';
-    color: white;
-    font-size: 1.4rem;
-    font-variation-settings: 'FILL' 1;
-  }
-  .card:hover .card-icon-badge {
-    transform: rotate(-8deg) scale(1.15) translateY(-4px);
-  }
-
-  .card-body {
-    padding: clamp(1.25rem, 3vw, 1.75rem);
-    padding-top: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-
-  .card-tag {
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: .25em;
-    text-transform: uppercase;
-    color: var(--cobalt);
-    margin-bottom: .5rem;
-    opacity: .75;
-  }
-
-  .card-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(1.35rem, 3vw, 1.65rem);
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: .6rem;
-    line-height: 1.1;
-  }
-
-  .card-desc {
-    font-size: clamp(.85rem, 1.8vw, .95rem);
-    color: #6b7280;
-    line-height: 1.6;
-    font-weight: 300;
-    flex: 1;
-  }
-
-  .card-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: .45rem;
-    margin-top: 1.25rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(3,74,176,.1);
-    font-size: .85rem;
-    font-weight: 700;
-    color: var(--cobalt);
-    letter-spacing: .03em;
-    transition: gap .3s var(--ease-spring);
-  }
-  .card-cta span {
-    font-family: 'Material Symbols Outlined';
-    font-size: 1rem;
-    transition: transform .3s var(--ease-spring);
-  }
-  .card:hover .card-cta { gap: .75rem; }
-  .card:hover .card-cta span { transform: translateX(4px); }
-
-  /* ─── STATS ──────────────────────────────────────────── */
-  .stats {
-    padding: clamp(3rem, 8vw, 5rem) clamp(1rem, 5vw, 4rem);
-    border-top: 1px solid #e5e7eb;
-    max-width: 1280px;
-    margin: 0 auto;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2rem);
-  }
-  @media (min-width: 640px) {
-    .stats-grid { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  .stat {
-    text-align: center;
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity .5s ease, transform .5s var(--ease-out);
-  }
-  .stat.visible { opacity: 1; transform: none; }
-
-  .stat-num {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(2.5rem, 7vw, 4rem);
-    font-weight: 900;
-    color: var(--cobalt);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: clamp(.65rem, 1.5vw, .75rem);
-    font-weight: 600;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: #9ca3af;
-    margin-top: .4rem;
-  }
-
-  /* ─── CTA SECTION ────────────────────────────────────── */
-  .cta-section {
-    padding: clamp(4rem, 12vw, 8rem) clamp(1rem, 5vw, 4rem);
-    background: var(--white);
-    border-top: 1px solid #e5e7eb;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .cta-watermark {
-    position: absolute;
-    bottom: -2rem; right: -5%;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(5rem, 20vw, 18rem);
-    font-weight: 900;
-    color: var(--cobalt);
-    opacity: .04;
-    white-space: nowrap;
-    pointer-events: none;
-    user-select: none;
-    line-height: 1;
-  }
-
-  .cta-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2.5rem, 7vw, 5rem);
-    align-items: center;
-    max-width: 1280px;
-    margin: 0 auto;
-  }
-  @media (min-width: 900px) {
-    .cta-grid { grid-template-columns: 1fr 1fr; }
-  }
-
-  .cta-img-wrap {
-    position: relative;
-    order: 2;
-  }
-  @media (min-width: 900px) { .cta-img-wrap { order: 1; } }
-
-  .cta-img-bg {
-    position: absolute; inset: 0;
-    background: var(--slate);
-    border-radius: 40px;
-    transform: rotate(-5deg);
-    box-shadow: 0 30px 80px rgba(0,0,0,.08);
-  }
-
-  .cta-img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 40px;
-    position: relative;
-    z-index: 1;
-    transform: translate(1.5rem, -1.5rem);
-    box-shadow: 0 30px 80px rgba(0,0,0,.15);
-    transition: transform .6s var(--ease-spring);
-  }
-  .cta-img-wrap:hover .cta-img { transform: translate(1.2rem, -1.8rem) scale(1.02); }
-
-  .cta-content { order: 1; }
-  @media (min-width: 900px) { .cta-content { order: 2; } }
-
-  .cta-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(2.8rem, 9vw, 6rem);
-    font-weight: 900;
-    line-height: .9;
-    letter-spacing: -.01em;
-    color: var(--navy);
-    margin-bottom: 1.5rem;
-  }
-  .cta-title em { color: var(--cobalt); font-style: italic; }
-
-  .cta-text {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    font-weight: 300;
-    line-height: 1.65;
-    color: #374151;
-    border-left: 6px solid var(--cobalt);
-    padding-left: 1.25rem;
-    margin-bottom: 2.5rem;
-  }
-  .cta-text strong { color: var(--cobalt); font-weight: 700; }
-
-  .cta-btns {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: .6rem;
-    background: var(--cobalt);
-    color: white;
-    font-weight: 800;
-    font-size: clamp(.85rem, 2vw, 1rem);
-    letter-spacing: .08em;
-    padding: clamp(.85rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 2.5rem);
-    border-radius: 100px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 12px 40px rgba(3,74,176,.4);
-    transition: transform .35s var(--ease-spring), box-shadow .35s ease, background .2s;
-    text-decoration: none;
-  }
-  .btn-primary:hover {
-    transform: translateY(-4px) scale(1.04);
-    box-shadow: 0 20px 50px rgba(3,74,176,.5);
-    background: var(--cobalt-light);
-  }
-  .btn-primary:active { transform: scale(.97); }
-  .btn-primary .material-symbols-outlined { font-size: 1.1rem; transition: transform .3s var(--ease-spring); }
-  .btn-primary:hover .material-symbols-outlined { transform: translateX(4px); }
-
-  .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    gap: .6rem;
-    background: transparent;
-    color: #6b7280;
-    font-weight: 800;
-    font-size: clamp(.85rem, 2vw, 1rem);
-    letter-spacing: .08em;
-    padding: clamp(.85rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 2.5rem);
-    border-radius: 100px;
-    border: 2.5px solid #d1d5db;
-    cursor: pointer;
-    transition: all .35s var(--ease-spring);
-    text-decoration: none;
-  }
-  .btn-outline:hover {
-    background: var(--navy);
-    color: white;
-    border-color: var(--navy);
-    transform: translateY(-4px);
-  }
-
-  /* ─── ANIMATIONS ─────────────────────────────────────── */
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-16px); }
-    to   { opacity: 1; transform: none; }
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: none; }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; } to { opacity: 1; }
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(8px); }
-  }
-
-  /* Reveal on scroll */
-  .reveal {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity .6s ease, transform .6s var(--ease-out);
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* Stagger delays for grid cards */
-  .card-link:nth-child(1) .reveal { transition-delay: .05s; }
-  .card-link:nth-child(2) .reveal { transition-delay: .1s; }
-  .card-link:nth-child(3) .reveal { transition-delay: .15s; }
-  .card-link:nth-child(4) .reveal { transition-delay: .2s; }
-  .card-link:nth-child(5) .reveal { transition-delay: .25s; }
-  .card-link:nth-child(6) .reveal { transition-delay: .3s; }
-  .card-link:nth-child(7) .reveal { transition-delay: .35s; }
-  .card-link:nth-child(8) .reveal { transition-delay: .4s; }
-
-  /* Ripple on card tap */
-  .ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(3,74,176,.15);
-    transform: scale(0);
-    animation: rippleAnim .6s linear;
-    pointer-events: none;
-    z-index: 10;
-  }
-  @keyframes rippleAnim {
-    to { transform: scale(4); opacity: 0; }
-  }
-
-  /* ─── SMALL SCREEN TWEAKS ───────────────────────────── */
-  @media (max-width: 480px) {
-    .hero-title { font-size: clamp(3.8rem, 22vw, 6rem); }
-    .card-img { height: 170px; }
-    .cta-img { transform: translate(.75rem, -.75rem); }
-  }
-</style>
-</head>
-<body>
-
-<!-- ══════════ HERO ══════════ -->
-<section class="hero">
-  <video autoplay muted loop playsinline>
-    <source src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/prueba3.mp4" type="video/mp4"/>
-  </video>
-  <div class="hero-overlay"></div>
-
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="material-symbols-outlined" style="font-size:1rem;font-variation-settings:'FILL' 1">verified</span>
-      Expertos Digitales
-    </div>
-    <h1 class="hero-title">
-      SERVI<span class="accent">CIOS</span><br/>
-      <span class="outline">PREMIUM</span>
-    </h1>
-    <p class="hero-desc">
-      Transformamos la complejidad técnica en
-      <strong>Calidad y Calidez</strong>
-      para potenciar su visión empresarial.
-    </p>
-  </div>
-
-  <div class="scroll-hint">
-    <span>keyboard_arrow_down</span>
-    <p>Scroll</p>
-  </div>
-</section>
-
-<!-- ══════════ SERVICES ══════════ -->
-<section class="services">
-  <div class="section-header reveal">
-    <p class="section-eyebrow">Ecosistema Profesional</p>
-    <h2 class="section-title">Nuestros Servicios</h2>
-    <p class="section-sub">Soluciones integrales diseñadas para la era tecnológica</p>
-  </div>
-
-  <div class="services-grid">
-
-    <!-- 1 Capacitación -->
-    <a href="apartadoSS.html?service=capacitacion" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" alt="Capacitación" loading="lazy"/>
-          <div class="card-icon-badge"><span>school</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Formación</p>
-          <h3 class="card-title">Capacitación</h3>
-          <p class="card-desc">Programas especializados en TI, gestión y habilidades blandas para equipos de alto rendimiento.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-    <!-- 2 Asesoría -->
-    <a href="apartadoSS.html?service=asesoria" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop" alt="Asesoría" loading="lazy"/>
-          <div class="card-icon-badge"><span>business_center</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Consultoría</p>
-          <h3 class="card-title">Asesoría</h3>
-          <p class="card-desc">Consultoría estratégica para la implementación de nuevas tecnologías y optimización de procesos.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-    <!-- 3 Desarrollo -->
-    <a href="apartadoSS.html?service=desarrollo" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg" alt="Desarrollo de Software" loading="lazy"/>
-          <div class="card-icon-badge"><span>code</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Ingeniería</p>
-          <h3 class="card-title">Desarrollo</h3>
-          <p class="card-desc">Soluciones personalizadas, desde aplicaciones web robustas hasta plataformas móviles innovadoras.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-    <!-- 4 Soporte TI -->
-    <a href="apartadoSS.html?service=soporte" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg" alt="Soporte TI" loading="lazy"/>
-          <div class="card-icon-badge"><span>settings_suggest</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Infraestructura</p>
-          <h3 class="card-title">Soporte TI</h3>
-          <p class="card-desc">Soporte preventivo y correctivo para garantizar la continuidad operativa de su infraestructura.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-    <!-- 5 Seguridad -->
-    <a href="apartadoSS.html?service=seguridad" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/s1.png?updatedAt=1778875875093" alt="Seguridad" loading="lazy"/>
-          <div class="card-icon-badge"><span>videocam</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Vigilancia</p>
-          <h3 class="card-title">Seguridad</h3>
-          <p class="card-desc">Venta e instalación de sistemas de videovigilancia avanzados y equipo de cómputo corporativo.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-    <!-- 6 Financiamiento -->
-    <a href="apartadoSS.html?service=financiamiento" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814" alt="Financiamiento" loading="lazy"/>
-          <div class="card-icon-badge"><span>payments</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Finanzas</p>
-          <h3 class="card-title">Financiamiento</h3>
-          <p class="card-desc">Financiamiento inmediato y seguro respaldado por activos, con las mejores tasas del mercado.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-    <!-- 7 Traducción -->
-    <a href="apartadoSS.html?service=traduccion" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704" alt="Traducción Profesional" loading="lazy"/>
-          <div class="card-icon-badge"><span>translate</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Lingüística</p>
-          <h3 class="card-title">Traducción Profesional</h3>
-          <p class="card-desc">Servicios lingüísticos expertos de inglés a español para documentos técnicos, legales y corporativos.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-    <!-- 8 Venta de Laptops -->
-    <a href="apartadoSS.html?service=laptops" class="card-link">
-      <div class="card reveal">
-        <div class="card-img-wrap">
-          <img class="card-img" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195" alt="Venta de Laptops" loading="lazy"/>
-          <div class="card-icon-badge"><span>laptop_mac</span></div>
-        </div>
-        <div class="card-body">
-          <p class="card-tag">Equipos</p>
-          <h3 class="card-title">Venta de Laptops</h3>
-          <p class="card-desc">Venta de laptops y equipos tecnológicos ideales para estudiantes, emprendedores y empresas.</p>
-          <div class="card-cta">Ver detalles <span>arrow_forward</span></div>
-        </div>
-      </div>
-    </a>
-
-  </div>
-</section>
-
-<!-- ══════════ STATS ══════════ -->
-<div class="stats">
-  <div class="stats-grid">
-    <div class="stat"><div class="stat-num" data-target="1500" data-suffix="+">0</div><div class="stat-label">Proyectos Finalizados</div></div>
-    <div class="stat"><div class="stat-num" data-target="25" data-suffix="+">0</div><div class="stat-label">Años de Experiencia</div></div>
-    <div class="stat"><div class="stat-num" data-text="24/7">24/7</div><div class="stat-label">Soporte Técnico</div></div>
-    <div class="stat"><div class="stat-num" data-target="100" data-suffix="%">0</div><div class="stat-label">Satisfacción Clientes</div></div>
-  </div>
+<div class="bg-white text-navy-dark font-body selection:bg-cobalt selection:text-white overflow-x-hidden">
+    <main>
+        <!-- ================= HERO SECTION CON VIDEO HD - SIN CAPAS NI FILTROS ================= -->
+        <section class="relative min-h-screen flex items-center overflow-hidden">
+            <!-- SOLO EL VIDEO - NADA MÁS -->
+            <div class="absolute inset-0 z-0">
+                <!-- Video para PC -->
+                <video autoplay muted loop playsinline class="w-full h-full object-cover hero-video-desktop" style="object-position: center center;">
+                    <source src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/prueba3.mp4" type="video/mp4">
+                </video>
+                <!-- Video para Móviles -->
+                <video autoplay muted loop playsinline class="w-full h-full object-cover hero-video-mobile" style="object-position: center center; display: none;">
+                    <source src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/WhatsApp%20Video%202026-05-17%20at%202.44.54%20AM.mp4" type="video/mp4">
+                </video>
+                <!-- SIN NINGÚN OVERLAY -->
+            </div>
+            
+            <!-- Contenido principal: texto sobre el video -->
+            <div class="container mx-auto px-4 md:px-6 relative z-10 flex flex-col items-start gap-4 md:gap-12">
+                <div class="w-full lg:w-3/5 text-left">
+                    <span class="inline-block px-2 md:px-4 py-0.5 md:py-1 bg-cobalt text-white text-[8px] md:text-xs font-bold tracking-[0.15em] md:tracking-[0.4em] uppercase mb-3 md:mb-6 rounded-full shadow-lg">
+                        Expertos Digitales
+                    </span>
+                    <h1 class="font-headline text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] font-extrabold leading-[1.1] md:leading-[0.85] tracking-tighter mb-3 md:mb-8">
+                        SERVI<span class="text-cobalt">CIOS</span><br/>
+                        <span class="text-premium-outline text-4xl sm:text-7xl md:text-8xl lg:text-[10rem]">PREMIUM</span>
+                    </h1>
+                    <div class="max-w-xl border-l-4 md:border-l-8 border-cobalt pl-3 md:pl-8 py-1 md:py-2">
+                        <p class="text-sm md:text-xl lg:text-2xl text-white font-light leading-relaxed drop-shadow-lg">
+                            Transformamos la complejidad técnica en <span class="text-white font-bold italic underline decoration-cobalt decoration-2 md:decoration-4">Calidad y Calidez</span> para potenciar su visión empresarial.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scroll indicator (solo PC) -->
+            <div class="absolute bottom-5 md:bottom-10 left-1/2 transform -translate-x-1/2 z-10 hidden md:block">
+                <div class="animate-bounce-custom cursor-pointer" onclick="window.scrollBy({ top: window.innerHeight - 80, behavior: 'smooth' });">
+                    <span class="material-symbols-outlined text-white text-3xl drop-shadow-lg">keyboard_arrow_down</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN DE SERVICIOS CON BROCHURES ================= -->
+        <section class="bg-slate-50 py-12 md:py-24 overflow-hidden relative">
+            <div class="container mx-auto px-4 md:px-6 relative z-10">
+                <div class="text-center mb-12 md:mb-16 fade-in-up">
+                    <div class="flex items-center justify-center gap-2 md:gap-3 mb-3 md:mb-4">
+                        <div class="h-px w-8 md:w-12 bg-cobalt"></div>
+                        <span class="text-xs md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-cobalt">Ecosistema Profesional</span>
+                        <div class="h-px w-8 md:w-12 bg-cobalt"></div>
+                    </div>
+                    <h2 class="font-headline text-3xl md:text-7xl font-bold text-navy-dark mb-3 md:mb-4">Nuestros <span class="text-cobalt">Servicios</span></h2>
+                    <p class="text-gray-600 text-sm md:text-lg mt-3 md:mt-4 max-w-2xl mx-auto">Soluciones integrales diseñadas para la era tecnológica</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    
+                    <!-- Service 1: Capacitación -->
+                    <a href="apartadoSS.html?service=capacitacion" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">school</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Capacitación</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Programas especializados para equipos de alto rendimiento.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Capacitación" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Programas especializados en TI, gestión y habilidades blandas.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 2: Asesoría -->
+                    <a href="apartadoSS.html?service=asesoria" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">business_center</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Asesoría</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Consultoría estratégica para la optimización de procesos.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Asesoría" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Consultoría estratégica para implementación de nuevas tecnologías.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 3: Desarrollo -->
+                    <a href="apartadoSS.html?service=desarrollo" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">code</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Desarrollo</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Soluciones personalizadas y plataformas móviles.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Desarrollo" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Apps web robustas y plataformas móviles innovadoras.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 4: Mantenimiento -->
+                    <a href="apartadoSS.html?service=soporte" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">settings_suggest</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Soporte TI</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Garantizamos la continuidad operativa.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Soporte TI" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Soporte preventivo y correctivo para tu infraestructura.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 5: Seguridad -->
+                    <a href="apartadoSS.html?service=seguridad" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">videocam</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Seguridad</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Sistemas de videovigilancia avanzados.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Seguridad" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/s1.png?updatedAt=1778875875093"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Venta e instalación de sistemas de videovigilancia.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 6: Financiamiento -->
+                    <a href="apartadoSS.html?service=financiamiento" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">payments</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Financiamiento</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Préstamos prendatarios con mejores tasas.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Financiamiento" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Financiamiento inmediato y seguro respaldado por activos.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 7: Traducción -->
+                    <a href="apartadoSS.html?service=traduccion" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">translate</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Traducción</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Servicios lingüísticos profesionales.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Traducción" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Inglés a español para documentos técnicos y legales.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 8: Venta Laptops -->
+                    <a href="apartadoSS.html?service=laptops" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                        <div class="brochure">
+                            <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
+                                <div class="spine-shadow rounded-l-lg"></div>
+                                <div>
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                        <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">laptop_mac</span>
+                                    </div>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Venta Laptops</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Equipos tecnológicos de última generación.</p>
+                                </div>
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
+                                </div>
+                            </div>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
+                                    <img alt="Laptops" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195"/>
+                                </div>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Laptops ideales para estudiantes, emprendedores y empresas.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= STATS SECTION ================= -->
+        <section id="stats-section" class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 border-t border-gray-200">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
+                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
+                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">task_alt</span>
+                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt"><span class="counter" data-target="1500">0</span>+</div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Proyectos Finalizados</div>
+                </div>
+                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
+                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">history_edu</span>
+                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt"><span class="counter" data-target="25">0</span>+</div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Años de Experiencia</div>
+                </div>
+                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
+                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">headset_mic</span>
+                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt">24/7</div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Soporte Técnico</div>
+                </div>
+                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
+                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">sentiment_very_satisfied</span>
+                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt"><span class="counter" data-target="100">0</span>%</div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Satisfacción de Clientes</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN FINAL CTA ================= -->
+        <section id="contacto" class="relative flex items-center bg-white overflow-hidden py-16 md:py-32 border-t border-slate-200">
+            <div class="container mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-8 md:gap-24">
+                <div class="relative order-2 lg:order-1 group">
+                    <div class="w-full aspect-square bg-slate-100 rounded-[30px] md:rounded-[50px] transform -rotate-6 absolute top-0 left-0 shadow-2xl opacity-50 group-hover:rotate-0 transition-transform duration-500"></div>
+                    <img alt="Equipo de Trabajo" class="w-full aspect-square object-cover rounded-[30px] md:rounded-[50px] relative z-10 transform translate-x-3 md:translate-x-8 -translate-y-3 md:-translate-y-8 shadow-2xl group-hover:translate-x-2 group-hover:-translate-y-2 transition-all duration-500" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"/>
+                </div>
+                <div class="order-1 lg:order-2 space-y-4 md:space-y-12">
+                    <h2 class="font-headline text-3xl md:text-6xl lg:text-8xl font-black text-navy-dark leading-none tracking-tighter">
+                        Donde la <span class="text-cobalt italic">Excelencia</span> se vuelve <span class="text-cobalt italic">Humana</span>.
+                    </h2>
+                    <p class="text-base md:text-2xl lg:text-3xl text-gray-700 font-medium border-l-4 md:border-l-8 border-cobalt pl-4 md:pl-10 leading-relaxed">
+                        No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercanía, <span class="text-cobalt font-bold">calidad y calidez</span> que su visión merece.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3 md:gap-8 pt-3 md:pt-8">
+                        <button class="px-6 md:px-14 py-3 md:py-7 bg-cobalt text-white font-black text-base md:text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 md:gap-4">
+                            INICIAR PROYECTO
+                            <span class="material-symbols-outlined text-base md:text-2xl">arrow_forward</span>
+                        </button>
+                        <button class="px-6 md:px-14 py-3 md:py-7 border-2 md:border-4 border-gray-400 text-gray-600 font-black text-base md:text-2xl rounded-full hover:border-cobalt hover:text-cobalt transition-all duration-300 active:scale-95 shadow-xl">
+                            CONTÁCTANOS
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <span class="absolute bottom-10 right-[-10%] text-[4rem] md:text-[30rem] font-black text-cobalt/5 opacity-[0.3] whitespace-nowrap select-none pointer-events-none uppercase">EDAPYMES</span>
+        </section>
+    </main>
 </div>
 
-<!-- ══════════ CTA ══════════ -->
-<section class="cta-section">
-  <div class="cta-watermark">EDAPYMES</div>
-  <div class="cta-grid">
-    <div class="cta-img-wrap reveal">
-      <div class="cta-img-bg"></div>
-      <img class="cta-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop" alt="Equipo de Trabajo"/>
-    </div>
-    <div class="cta-content reveal">
-      <h2 class="cta-title">
-        Donde la <em>Excelencia</em><br/>se vuelve <em>Humana</em>.
-      </h2>
-      <p class="cta-text">
-        No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercanía,
-        <strong>calidad y calidez</strong> que su visión merece.
-      </p>
-      <div class="cta-btns">
-        <a href="#" class="btn-primary">
-          INICIAR PROYECTO
-          <span class="material-symbols-outlined">arrow_forward</span>
-        </a>
-        <a href="#contacto" class="btn-outline">CONTÁCTANOS</a>
-      </div>
-    </div>
-  </div>
-</section>
+<style>
+    /* === ESTILOS BASE === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    .text-premium-outline {
+        color: transparent;
+        -webkit-text-stroke: 3px #034AB0;
+        font-weight: 900;
+    }
+    @media (max-width: 768px) {
+        .text-premium-outline {
+            -webkit-text-stroke: 1.5px #034AB0;
+        }
+    }
+    
+    /* === BROCHURE STYLES === */
+    .brochure-container { perspective: 2000px; height: 380px; }
+    @media (min-width: 768px) { .brochure-container { height: 480px; } }
+    
+    .brochure {
+        position: relative; width: 100%; height: 100%;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+    }
+    .brochure-cover {
+        position: absolute; width: 100%; height: 100%; background: white;
+        backface-visibility: hidden; z-index: 2; transform-origin: left;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 2px 0 15px rgba(0,0,0,0.05);
+        border-left: 4px solid rgba(0,0,0,0.1);
+    }
+    .brochure-inside {
+        position: absolute; width: 100%; height: 100%; background: white;
+        z-index: 1;
+    }
+    .brochure-container:hover .brochure-cover { transform: rotateY(-110deg); }
+    .spine-shadow {
+        position: absolute; left: 0; top: 0; bottom: 0; width: 10px;
+        background: linear-gradient(to right, rgba(0,0,0,0.05), transparent);
+        z-index: 3; pointer-events: none;
+    }
+    .brochure-shadow { box-shadow: 0px 4px 20px rgba(0,0,0,0.05); }
+    
+    /* === VIDEO RESPONSIVE === */
+    @media (max-width: 768px) {
+        .hero-video-desktop { display: none; }
+        .hero-video-mobile { display: block !important; }
+    }
+    @media (min-width: 769px) {
+        .hero-video-desktop { display: block; }
+        .hero-video-mobile { display: none; }
+    }
+    
+    @keyframes bounceCustom {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(15px); }
+    }
+    .animate-bounce-custom { animation: bounceCustom 2s infinite; cursor: pointer; }
+    
+    /* === STATS CARD === */
+    .stats-card {
+        border-radius: 16px;
+        border: 1px solid rgba(3,74,176,0.1);
+        background: white;
+        transition: all 0.3s ease;
+    }
+    .stats-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(3,74,176,0.3);
+        box-shadow: 0 20px 40px rgba(3,74,176,0.1);
+    }
+</style>
 
 <script>
-// ── Video fade-in ──
-document.querySelector('video').addEventListener('canplay', function(){
-  this.classList.add('loaded');
-});
-setTimeout(() => document.querySelector('video')?.classList.add('loaded'), 2000);
-
-// ── Scroll reveal (IntersectionObserver) ──
-const revealEls = document.querySelectorAll('.reveal, .stat');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      // trigger counter if stat
-      const num = e.target.querySelector('[data-target]');
-      if (num) animateCounter(num);
-      io.unobserve(e.target);
+    /* VIDEO RESPONSIVE */
+    function detectAndSwitchVideo() {
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        const videoDesktop = document.querySelector('.hero-video-desktop');
+        const videoMobile = document.querySelector('.hero-video-mobile');
+        if (isMobile) {
+            if (videoDesktop) videoDesktop.pause();
+            if (videoMobile) videoMobile.play().catch(() => {});
+        } else {
+            if (videoMobile) videoMobile.pause();
+            if (videoDesktop) videoDesktop.play().catch(() => {});
+        }
     }
-  });
-}, { threshold: 0.15 });
-revealEls.forEach(el => io.observe(el));
+    window.addEventListener('resize', detectAndSwitchVideo);
+    document.addEventListener('DOMContentLoaded', detectAndSwitchVideo);
 
-// ── Counter animation ──
-function animateCounter(el) {
-  const target = +el.dataset.target;
-  const suffix = el.dataset.suffix || '';
-  const dur = 1600;
-  const start = performance.now();
-  function frame(now) {
-    const p = Math.min((now - start) / dur, 1);
-    const ease = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(ease * target) + suffix;
-    if (p < 1) requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-
-// ── Ripple on card tap ──
-document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('pointerdown', function(e) {
-    const r = document.createElement('span');
-    r.className = 'ripple';
-    const rect = this.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
-    this.appendChild(r);
-    r.addEventListener('animationend', () => r.remove());
-  });
-});
+    /* CONTADORES */
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
+    
+    function animateCounter(counter) {
+        const updateCount = () => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const count = parseInt(counter.innerText);
+            const increment = Math.ceil(target / speed);
+            if (count < target) {
+                counter.innerText = count + increment;
+                setTimeout(updateCount, 20);
+            } else {
+                counter.innerText = target;
+            }
+        };
+        updateCount();
+    }
+    
+    const observerOptions = { threshold: 0.5 };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    counters.forEach(counter => observer.observe(counter));
 </script>
-</body>
-</html>
