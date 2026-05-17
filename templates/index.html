@@ -1,558 +1,173 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-    <title>EDAPymes - Tecnología con Calidad y Calidez</title>
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #f6f6f6;
-            color: #2d2f2f;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-        }
-        .material-symbols-outlined {
-            vertical-align: middle;
-        }
-        .loading-spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #0059b6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .specs-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s;
-        }
-        .specs-content {
-            background: white;
-            border-radius: 24px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .catalogo-layout {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        .catalogo-sidebar {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            height: calc(100vh - 80px);
-            width: 264px;
-            overflow-y: auto;
-            z-index: 40;
-            background-color: #f8fafc;
-            border-right: 1px solid #e2e8f0;
-        }
-        
-        .catalogo-main {
-            margin-left: 264px;
-            flex: 1;
-            overflow-y: auto;
-            height: calc(100vh - 80px);
-            padding-top: 0;
-        }
-        
-        .catalogo-main::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .catalogo-main::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        .catalogo-main::-webkit-scrollbar-thumb {
-            background: #0059b6;
-            border-radius: 4px;
-        }
-        
-        .catalogo-main::-webkit-scrollbar-thumb:hover {
-            background: #004090;
-        }
-        
-        .footer-hidden {
-            display: none !important;
-        }
-        
-        .toast-notification {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            padding: 12px 24px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            animation: slideUp 0.3s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        /* Botón de WhatsApp flotante */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 100;
-            background-color: #25D366;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-            background-color: #20b859;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        .whatsapp-float svg {
-            width: 32px;
-            height: 32px;
-            fill: white;
-        }
-
-        /* Mobile menu styles */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .mobile-menu-btn span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background-color: #034AB0;
-            margin: 5px 0;
-            transition: 0.3s;
-        }
-
-        @media (max-width: 768px) {
-            .desktop-nav {
-                display: none;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-            .mobile-nav.open {
-                display: flex !important;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                padding: 20px;
-                gap: 15px;
-                border-bottom: 1px solid #e2e8f0;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            }
-            .whatsapp-float {
-                width: 50px;
-                height: 50px;
-                bottom: 20px;
-                right: 20px;
-            }
-            .whatsapp-float svg {
-                width: 28px;
-                height: 28px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .whatsapp-float {
-                width: 45px;
-                height: 45px;
-                bottom: 15px;
-                right: 15px;
-            }
-            .whatsapp-float svg {
-                width: 24px;
-                height: 24px;
-            }
-        }
-        
-        /* Estilos para el modal de producto */
-        .image-zoom-container {
-            position: relative;
-            overflow: hidden;
-            cursor: crosshair;
-        }
-        .image-zoom-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .thumbnail-detail {
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-        }
-        .thumbnail-detail:hover {
-            transform: scale(1.05);
-            border-color: #0059b6;
-        }
-        .thumbnail-detail.active {
-            border-color: #0059b6;
-            transform: scale(1.02);
-        }
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .producto-card {
-            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
-            cursor: pointer;
-        }
-        .producto-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 30px -12px rgba(0,89,182,0.15);
-        }
-        .card-img {
-            transition: transform 0.5s ease;
-        }
-        .group:hover .card-img {
-            transform: scale(1.05);
-        }
-
-        /* Estilos optimizados para el carrusel */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            max-width: 1800px;
-            margin: 0 auto;
-            border-radius: 40px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-        
-        .carousel-track {
-            position: relative;
-            width: 100%;
-            height: 600px;
-            overflow: hidden;
-        }
-        
-        .carousel-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: opacity;
-        }
-        
-        .carousel-slide.active {
-            opacity: 1;
-            visibility: visible;
-            z-index: 10;
-        }
-        
-        .carousel-slide img,
-        .carousel-slide video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        /* Optimización para video - carga más rápida */
-        .carousel-slide video {
-            object-fit: cover;
-            background-color: #0a0a2a;
-        }
-        
-        .carousel-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
-            z-index: 15;
-        }
-        
-        .carousel-content {
-            position: absolute;
-            inset: 0;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            pointer-events: none;
-        }
-        
-        .carousel-content.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-        
-        .carousel-content-inner {
-            padding-left: 3rem;
-            max-width: 650px;
-        }
-        
-        @media (min-width: 768px) {
-            .carousel-content-inner {
-                padding-left: 6rem;
-            }
-        }
-        
-        /* Botones del carrusel - solo visibles en hover/click */
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 30;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            width: 52px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .carousel-container:hover .carousel-btn {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        /* En móvil, los botones aparecen al tocar la imagen */
-        @media (max-width: 768px) {
-            .carousel-btn {
-                opacity: 0;
-                visibility: hidden;
-            }
-            .carousel-container.touch-active .carousel-btn {
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-        
-        .carousel-btn:hover {
-            background: rgba(255, 255, 255, 0.35);
-            transform: translateY(-50%) scale(1.1);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .carousel-btn.prev {
-            left: 20px;
-        }
-        
-        .carousel-btn.next {
-            right: 20px;
-        }
-        
-        .carousel-dots {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            z-index: 30;
-        }
-        
-        .carousel-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .carousel-dot.active {
-            background: #034AB0;
-            width: 28px;
-            border-radius: 20px;
-            box-shadow: 0 0 8px rgba(7, 105, 210, 0.6);
-        }
-        
-        .carousel-action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .btn-primary-carousel {
-            background: #034AB0;
-            color: white;
-            padding: 0.875rem 2rem;
-            border-radius: 50px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            pointer-events: auto;
-        }
-        
-        .btn-primary-carousel:hover {
-            background: #023a8a;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary-carousel {
-            background: transparent;
-            border: 1.5px solid rgba(255, 255, 255, 0.6);
-            color: white;
-            padding: 0.875rem 2rem;
-            border-radius: 50px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-size: 1rem;
-            pointer-events: auto;
-        }
-        
-        .btn-secondary-carousel:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: white;
-        }
-        
-        .carousel-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            line-height: 1.2;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        .carousel-subtitle {
-            color: rgba(255,255,255,0.9);
-            margin-top: 1rem;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-        
-        @media (min-width: 768px) {
-            .carousel-title { font-size: 3.5rem; }
-            .carousel-subtitle { font-size: 1.125rem; }
-        }
-        
-        @media (min-width: 1024px) {
-            .carousel-title { font-size: 4.5rem; }
-            .carousel-subtitle { font-size: 1.25rem; }
-        }
-        
-        .service-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .service-card.active {
-            transform: scale(1.05);
-            box-shadow: 0 25px 30px -12px rgba(7, 105, 210, 0.3);
-        }
-        
-        .aurora-gradient { background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%); }
-        .bg-team { background: linear-gradient(115deg, #0f172a 0%, #1e293b 100%); position: relative; }
-        .bg-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(7,105,210,0.15) 0%, transparent 70%); }
-        .bg-contacto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
-        .contacto-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(7,105,210,0.2) 0%, transparent 70%); }
-
-        /* Estilo para el botón de envío con estado */
-        .submit-btn {
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .submit-btn.loading {
-            background-color: #034AB0;
-            pointer-events: none;
-        }
-        .submit-btn.success {
-            background-color: #10b981;
-            pointer-events: none;
-        }
-        .submit-btn .btn-text {
-            transition: all 0.3s ease;
-        }
-        .submit-btn .btn-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-    </style>
-
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>EDAPymes - Tecnología con Calidad y Calidez</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: #f6f6f6; color: #2d2f2f; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+.material-symbols-outlined { vertical-align: middle; }
+.loading-spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0059b6; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.specs-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.3s; }
+.specs-content { background: white; border-radius: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.catalogo-layout { display: flex; min-height: 100vh; }
+.catalogo-sidebar { position: fixed; top: 80px; left: 0; height: calc(100vh - 80px); width: 264px; overflow-y: auto; z-index: 40; background-color: #f8fafc; border-right: 1px solid #e2e8f0; }
+.catalogo-main { margin-left: 264px; flex: 1; overflow-y: auto; height: calc(100vh - 80px); padding-top: 0; }
+.catalogo-main::-webkit-scrollbar { width: 8px; }
+.catalogo-main::-webkit-scrollbar-track { background: #f1f1f1; }
+.catalogo-main::-webkit-scrollbar-thumb { background: #0059b6; border-radius: 4px; }
+.catalogo-main::-webkit-scrollbar-thumb:hover { background: #004090; }
+.footer-hidden { display: none !important; }
+.toast-notification { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; padding: 12px 24px; border-radius: 8px; color: white; font-weight: bold; animation: slideUp 0.3s ease-out; }
+@keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+.whatsapp-float { position: fixed; bottom: 30px; right: 30px; z-index: 100; background-color: #25D366; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; cursor: pointer; border: none; }
+.whatsapp-float:hover { transform: scale(1.1); background-color: #20b859; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); }
+.whatsapp-float svg { width: 32px; height: 32px; fill: white; }
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-menu-btn span { display: block; width: 25px; height: 3px; background-color: #034AB0; margin: 5px 0; transition: 0.3s; }
+@media (max-width: 768px) {
+.desktop-nav { display: none; }
+.mobile-menu-btn { display: block; }
+.mobile-nav.open { display: flex !important; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: white; padding: 20px; gap: 15px; border-bottom: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+.whatsapp-float { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+.whatsapp-float svg { width: 28px; height: 28px; }
+}
+@media (max-width: 480px) {
+.whatsapp-float { width: 45px; height: 45px; bottom: 15px; right: 15px; }
+.whatsapp-float svg { width: 24px; height: 24px; }
+}
+.image-zoom-container { position: relative; overflow: hidden; cursor: crosshair; }
+.image-zoom-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+.thumbnail-detail { cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; }
+.thumbnail-detail:hover { transform: scale(1.05); border-color: #0059b6; }
+.thumbnail-detail.active { border-color: #0059b6; transform: scale(1.02); }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.producto-card { transition: all 0.25s cubic-bezier(0.2, 0, 0, 1); cursor: pointer; }
+.producto-card:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -12px rgba(0,89,182,0.15); }
+.card-img { transition: transform 0.5s ease; }
+.group:hover .card-img { transform: scale(1.05); }
+.carousel-container { position: relative; width: 100%; max-width: 1800px; margin: 0 auto; border-radius: 40px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+.carousel-track { position: relative; width: 100%; height: 600px; overflow: hidden; }
+.carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1); will-change: opacity; }
+.carousel-slide.active { opacity: 1; visibility: visible; z-index: 10; }
+.carousel-slide img, .carousel-slide video { width: 100%; height: 100%; object-fit: cover; }
+.carousel-slide video { object-fit: cover; background-color: #0a0a2a; }
+.carousel-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%); z-index: 15; }
+.carousel-content { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; pointer-events: none; }
+.carousel-content.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.carousel-content-inner { padding-left: 3rem; max-width: 650px; }
+@media (min-width: 768px) { .carousel-content-inner { padding-left: 6rem; } }
+.carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 30; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; color: white; opacity: 0; visibility: hidden; }
+.carousel-container:hover .carousel-btn { opacity: 1; visibility: visible; }
+@media (max-width: 768px) { .carousel-btn { opacity: 0; visibility: hidden; } .carousel-container.touch-active .carousel-btn { opacity: 1; visibility: visible; } }
+.carousel-btn:hover { background: rgba(255, 255, 255, 0.35); transform: translateY(-50%) scale(1.1); border-color: rgba(255, 255, 255, 0.6); }
+.carousel-btn.prev { left: 20px; }
+.carousel-btn.next { right: 20px; }
+.carousel-dots { position: absolute; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; gap: 12px; z-index: 30; }
+.carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); cursor: pointer; transition: all 0.3s ease; }
+.carousel-dot.active { background: #034AB0; width: 28px; border-radius: 20px; box-shadow: 0 0 8px rgba(7, 105, 210, 0.6); }
+.carousel-action-buttons { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+.btn-primary-carousel { background: #034AB0; color: white; padding: 0.875rem 2rem; border-radius: 50px; font-weight: 700; transition: all 0.3s ease; border: none; cursor: pointer; font-size: 1rem; pointer-events: auto; }
+.btn-primary-carousel:hover { background: #023a8a; transform: translateY(-2px); }
+.btn-secondary-carousel { background: transparent; border: 1.5px solid rgba(255, 255, 255, 0.6); color: white; padding: 0.875rem 2rem; border-radius: 50px; font-weight: 700; transition: all 0.3s ease; cursor: pointer; font-size: 1rem; pointer-events: auto; }
+.btn-secondary-carousel:hover { background: rgba(255, 255, 255, 0.15); border-color: white; }
+.carousel-title { font-size: 2.5rem; font-weight: 800; line-height: 1.2; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.carousel-subtitle { color: rgba(255,255,255,0.9); margin-top: 1rem; font-size: 1rem; line-height: 1.5; }
+@media (min-width: 768px) { .carousel-title { font-size: 3.5rem; } .carousel-subtitle { font-size: 1.125rem; } }
+@media (min-width: 1024px) { .carousel-title { font-size: 4.5rem; } .carousel-subtitle { font-size: 1.25rem; } }
+.service-card { transition: all 0.3s ease; cursor: pointer; }
+.service-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+.service-card.active { transform: scale(1.05); box-shadow: 0 25px 30px -12px rgba(7, 105, 210, 0.3); }
+.aurora-gradient { background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%); }
+.bg-team { background: #FFFFFF; position: relative; }
+.bg-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(7,105,210,0.08) 0%, transparent 70%); }
+.bg-contacto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; }
+.contacto-efecto { position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(7,105,210,0.2) 0%, transparent 70%); }
+.submit-btn { transition: all 0.3s ease; position: relative; overflow: hidden; }
+.submit-btn.loading { background-color: #034AB0; pointer-events: none; }
+.submit-btn.success { background-color: #10b981; pointer-events: none; }
+.submit-btn .btn-text { transition: all 0.3s ease; }
+.submit-btn .btn-icon { display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+.services-3d-section { position: relative; background: #FFFFFF; overflow: hidden; padding: 1.5rem 0 5rem 0; }
+.services-3d-section::before { display: none; }
+.services-3d-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+.services-3d-header { text-align: center; margin-bottom: 2.5rem; }
+.services-3d-header h2 { font-size: 3rem; font-weight: 900; color: #030A29; margin-bottom: 0.8rem; line-height: 1.1; }
+.services-3d-header h2 span { color: #034AB0; }
+.services-3d-header p { color: #092363; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+.services-3d-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: center; min-height: 400px; }
+.info-panel { padding-right: 2rem; }
+.info-content { display: none; }
+.info-content.active { display: block; animation: infoFadeIn 0.6s ease forwards; }
+@keyframes infoFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.info-icon { font-size: 3.5rem; margin-bottom: 1.2rem; display: inline-block; }
+.info-content h3 { font-size: 3rem; font-weight: 900; color: #010C3B; line-height: 1.2; margin-bottom: 1.2rem; letter-spacing: -0.5px; }
+.info-content p { font-size: 1.05rem; color: #092363; line-height: 1.8; margin-bottom: 1.8rem; max-width: 90%; }
+.info-tags { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 2rem; }
+.info-tags span { padding: 0.6rem 1.3rem; background: rgba(7, 105, 210, 0.08); border: 1.5px solid #034AB0; border-radius: 50px; color: #030A29; font-size: 0.9rem; font-weight: 600; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.4rem; }
+.info-tags span:hover { background: #034AB0; color: #FFFFFF; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(3, 74, 176, 0.2); }
+.info-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2.5rem; background: #034AB0; color: #FFFFFF; font-weight: 700; font-size: 1rem; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 10px 35px rgba(3, 74, 176, 0.3); margin-top: 0.5rem; }
+.info-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 45px rgba(3, 74, 176, 0.4); background: #010C3B; }
+.carousel-3d-wrapper { perspective: 1200px; height: 450px; display: flex; align-items: center; justify-content: center; position: relative; padding: 0 4rem; }
+.carousel-3d-spinner { position: relative; width: 180px; height: 260px; transform-style: preserve-3d; animation: spin3d 16s linear infinite; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.carousel-3d-wrapper:hover .carousel-3d-spinner { animation-play-state: paused; }
+@keyframes spin3d { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
+.carousel-card-3d { position: absolute; width: 180px; height: 260px; left: 50%; top: 50%; margin-left: -90px; margin-top: -130px; transform-style: preserve-3d; cursor: pointer; transition: all 0.5s ease; }
+.card-3d-inner { position: relative; width: 100%; height: 100%; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1); }
+.card-bg-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.7) 100%); z-index: 2; border-radius: 24px; pointer-events: none; }
+.card-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4.5rem; color: white; z-index: 3; filter: drop-shadow(0 4px 15px rgba(0,0,0,0.3)); }
+.card-label { position: absolute; bottom: 25px; left: 0; right: 0; text-align: center; color: white; font-weight: 800; font-size: 1.3rem; z-index: 3; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.carousel-card-3d:nth-child(1) { transform: rotateY(0deg) translateZ(280px); }
+.carousel-card-3d:nth-child(2) { transform: rotateY(90deg) translateZ(280px); }
+.carousel-card-3d:nth-child(3) { transform: rotateY(180deg) translateZ(280px); }
+.carousel-card-3d:nth-child(4) { transform: rotateY(270deg) translateZ(280px); }
+.carousel-card-3d:hover { filter: brightness(1.2) saturate(1.3); transform: scale(1.08) rotateY(var(--rot-y)) translateZ(380px) !important; z-index: 100; }
+.carousel-card-3d.active-card { filter: brightness(1.3) saturate(1.5); z-index: 50; }
+.carousel-3d-dots { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; }
+.carousel-3d-dots .carousel-dot-3d { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s ease; cursor: pointer; }
+.carousel-3d-dots .carousel-dot-3d:hover { background: rgba(255,255,255,0.6); transform: scale(1.2); }
+.carousel-3d-dots .carousel-dot-3d.active { background: #034AB0; transform: scale(1.4); box-shadow: 0 0 15px rgba(3, 74, 176, 0.6); }
+@media (max-width: 900px) {
+.services-3d-layout { grid-template-columns: 1fr; text-align: center; gap: 3rem; }
+.info-panel { padding-right: 0; order: 2; }
+.carousel-3d-wrapper { order: 1; height: 350px; padding: 0 2rem; }
+.info-icon { font-size: 3rem; }
+.info-content h3 { font-size: 2.2rem; }
+.info-tags { justify-content: center; }
+.carousel-3d-spinner { width: 200px; height: 280px; }
+.carousel-card-3d { width: 200px; height: 280px; margin-left: -100px; margin-top: -140px; }
+.carousel-card-3d:nth-child(1) { transform: rotateY(0deg) translateZ(280px); }
+.carousel-card-3d:nth-child(2) { transform: rotateY(90deg) translateZ(280px); }
+.carousel-card-3d:nth-child(3) { transform: rotateY(180deg) translateZ(280px); }
+.carousel-card-3d:nth-child(4) { transform: rotateY(270deg) translateZ(280px); }
+.card-icon { font-size: 3rem; }
+.services-3d-header h2 { font-size: 2.5rem; }
+}
+#vision-mission-video { position: relative; overflow: hidden; min-height: 70vh; display: flex; align-items: center; padding: 0; }
+#vision-mission-video video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; transform: translate(-50%, -50%); object-fit: cover; z-index: 0; }
+#vision-mission-video::before { content: ''; position: absolute; inset: 0; background: rgba(1, 1, 4, 0.7); z-index: 1; pointer-events: none; }
+.vision-mission-content { position: relative; z-index: 5; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; width: 100%; max-width: 1300px; margin: 0 auto; padding: 5rem 2rem; }
+.mv-side { display: flex; flex-direction: column; justify-content: center; opacity: 0; animation: fadeInSlide 0.8s ease-out forwards; }
+.mv-side:nth-child(1) { animation-delay: 0.3s; }
+.mv-side:nth-child(2) { animation-delay: 0.6s; }
+@keyframes fadeInSlide { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+.mv-side .group h3 { color: #FFFFFF !important; font-size: 2.5rem; font-weight: 800; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.8rem; }
+.mv-side .material-symbols-outlined { color: #0769D2 !important; font-size: 2.2rem; }
+.mv-side .group p { color: rgba(255, 255, 255, 0.9) !important; background: rgba(255, 255, 255, 0.05) !important; backdrop-filter: blur(10px); border-left: 4px solid #034AB0 !important; border-radius: 0 12px 12px 0; padding: 1.5rem 1.8rem; font-size: 1.1rem; line-height: 1.75; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.mv-side .group:hover p { background: rgba(3, 74, 176, 0.15); transform: translateX(5px); box-shadow: 0 8px 30px rgba(3, 74, 176, 0.2); }
+@media (max-width: 900px) {
+.vision-mission-content { grid-template-columns: 1fr; text-align: center; gap: 3rem; padding: 4rem 1.5rem; }
+.mv-side .group p { text-align: left; }
+.mv-side .group h3 { justify-content: center; font-size: 2rem; }
+}
+</style>
 <script>
 tailwind.config = {
 theme: {
@@ -722,23 +337,7 @@ if (typeof iniciarTodo === "function") iniciarTodo();
 if(linkElement) { document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active")); linkElement.classList.add("active"); moverIndicador(linkElement); }
 }, 300);
 }
-
-function configurarCardsServicios() {
-    const cards = document.querySelectorAll('#contenido .service-card');
-    cards.forEach(card => {
-        card.removeEventListener('click', card.clickHandler);
-        card.clickHandler = () => {
-            cards.forEach(c => c.classList.remove('active'));
-            card.classList.add('active');
-            if (typeof cargarSeccion === 'function') {
-                cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]);
-            }
-        };
-        card.addEventListener('click', card.clickHandler);
-    });
-}
-
-// Función para cargar productos destacados desde el backend
+function configurarCardsServicios() { const cards = document.querySelectorAll('#contenido .service-card'); cards.forEach(card => { card.removeEventListener('click', card.clickHandler); card.clickHandler = () => { cards.forEach(c => c.classList.remove('active')); card.classList.add('active'); if (typeof cargarSeccion === 'function') { cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]); } }; card.addEventListener('click', card.clickHandler); }); }
 async function cargarProductosDestacados() {
 const contenedorDestacados = document.getElementById('productos-destacados-grid'); if (!contenedorDestacados) return;
 contenedorDestacados.innerHTML = `<div class="col-span-full flex justify-center py-12"><div class="loading-spinner w-10 h-10 border-4"></div></div>`;
@@ -842,51 +441,45 @@ return `
 <div class="carousel-dots" id="carouselDots"></div>
 </div>
 </div>
-
-<section class="py-24 bg-background-soft" id="services">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
-      <div class="space-y-4">
-        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface">Servicios de <span class="text-primary">Vanguardia</span></h2>
-        <p class="text-on-surface-variant max-w-xl">Curamos las mejores herramientas y servicios para que tu empresa nunca se detenga.</p>
-      </div>
-      <button onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todos los servicios <span class="material-symbols-outlined">east</span></button>
-    </div>
-    <div class="flex justify-center items-center gap-8 flex-wrap">
-      <div onclick="irAServicioEspecifico('capacitaciones')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined service-icon text-4xl">school</span>
-        <h3 class="text-xl font-bold text-white">Capacitaciones</h3>
-        <p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p>
-      </div>
-      <div onclick="irAServicioEspecifico('asesorias')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined text-4xl mb-4">lightbulb</span>
-        <h3 class="text-2xl font-bold text-white">Asesorías</h3>
-        <p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p>
-      </div>
-      <div onclick="irAServicioEspecifico('seguridad')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined service-icon text-4xl">videocam</span>
-        <h3 class="text-xl font-bold text-white">Seguridad</h3>
-        <p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p>
-      </div>
-      <div onclick="irAServicioEspecifico('mantenimiento')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined text-4xl mb-4">build</span>
-        <h3 class="text-2xl font-bold text-white">Mantenimiento</h3>
-        <p class="text-white/80 text-sm mt-2">Soporte técnico preventivo y correctivo.</p>
-      </div>
-    </div>
-  </div>
+<section class="py-28 bg-background relative overflow-hidden">
+<div class="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-20 -right-20 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"></div>
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid lg:grid-cols-12 gap-20 items-center">
+<div class="lg:col-span-7 space-y-8"><span class="text-primary font-bold uppercase tracking-widest text-xs">Nuestra Trayectoria</span><h2 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tight leading-tight">Acerca de <span class="text-primary">nosotros</span></h2><p class="text-on-surface-variant text-lg leading-relaxed">Nacimos con la firme convicción de que la tecnología debe ser el motor de crecimiento para las empresas en desarrollo. En EDAPymes, no solo vendemos productos; curamos soluciones integrales que se adaptan a la realidad y desafíos de cada uno de nuestros clientes.</p><p class="text-on-surface-variant text-lg leading-relaxed">Nuestro equipo combina décadas de experiencia técnica con una visión humana, asegurando que cada implementación tecnológica tenga un impacto positivo directo en la productividad y bienestar de tu organización.</p><div class="pt-6"><button onclick="cargarSeccion('Nosotros.html', document.querySelectorAll('.nav-link')[3])" class="relative overflow-hidden border border-primary text-primary px-8 py-3 rounded-full font-bold transition-all duration-300 hover:text-white hover:bg-primary">Conoce nuestra historia</button></div></div>
+<div class="lg:col-span-5"><div class="relative group"><div class="absolute inset-0 bg-primary/20 blur-2xl opacity-0 group-hover:opacity-100 transition-all"></div><div class="relative aspect-square bg-white rounded-2xl overflow-hidden border border-outline p-3 shadow-xl"><img class="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKdoUxNlx2Zygo0Wo5Ar2mDUJEaacdduxOxKuMI5iX3PmPIbEiT84zI8DiWdKEXwGpiVq04OmuMuT2rn_hhAGEi8p_qoIlBXjopAkIbysicb5JNUhkKaUizrwmluQ_256WiBadLPE1mldB9uXnknJ4PJkMW3j3RQTvOXgxrg7vJCGYKWE8w0ta7YNv-hsr40bb1MXlSvqkuk9qzPaakUc9xT9Fo4S93P-xLjio5_0SPuOR7vU8q9vo_ix1rektw5Uo2RyB1jeJSFDp" alt="Workspace"></div></div></div>
+</div>
+</div>
 </section>
-
-<section class="relative py-32 overflow-hidden" id="vision-mission">
-  <div class="absolute inset-0 aurora-gradient z-0"></div>
-  <div class="absolute inset-0 bg-black/10 z-10"></div>
-  <div class="relative z-20 max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-24 items-center">
-    <div class="relative"><img alt="Team meeting" class="rounded-xl grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl w-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCivFyI9U0ch_lXTv2afdbSJd7yEC6ICDgX2pKEwWpuVX5lNRbN35768GUHdrzUEkq2BqpNn_0CzC9oRLAqy-EiT-Z-tpBYhR9s0e_yIOAsXm_nCfVlFFqRUYn4oMx127GGeOkDe8acXbZfJ4oQak6jy5zGJDCKyXOI884o9BXigCdn28otGU5SVDqbr1xXeC0TAMrQqTPytokSHoNzeaUSodzZH7SVgYKtpfG4j8KhbnZesuwnIwBfx5wPLR3lI8BScbR1A9jKm1oV"></div>
-    <div class="space-y-16">
-      <div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">rocket_launch</span><h3 class="text-3xl font-headline font-bold text-white">Misión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-primary pl-6">"Brindar servicios con calidad y calidez, así como ofertar computadoras, accesorios para computadoras y para móviles con las mejores y más modernas especificaciones que satisfagan las necesidades de nuestros clientes"</p></div>
-      <div class="group"><div class="flex items-center gap-4 mb-6"><span class="material-symbols-outlined text-primary transition-all duration-300 group-hover:scale-110" style="font-variation-settings:'FILL'1;">visibility</span><h3 class="text-3xl font-headline font-bold text-white">Visión</h3></div><p class="text-white/80 leading-relaxed text-lg italic border-l-4 border-white/40 pl-6">"Ser una empresa especializada en la atención a las necesidades de la pequeña y mediana empresa nacional."</p></div>
-    </div>
-  </div>
+<section class="services-3d-section">
+<div class="services-3d-wrapper">
+<div class="services-3d-header">
+<h2>Servicios de <span>Vanguardia</span></h2>
+<p>Curamos las mejores herramientas y servicios para que tu empresa nunca se detenga.</p>
+</div>
+<div class="services-3d-layout">
+<div class="info-panel">
+<div class="info-content active" data-service="capacitaciones"><div class="info-icon">🎓</div><h3>Capacitaciones</h3><p>Aprende habilidades digitales con expertos en tecnología. Transforma tu conocimiento y lleva tu carrera al siguiente nivel con nuestras capacitaciones personalizadas y dinámicas.</p><div class="info-tags"><span>Educación</span><span>Online</span></div><a href="#" onclick="irAServicioEspecifico('capacitaciones'); return false;" class="info-btn">Conocer más →</a></div>
+<div class="info-content" data-service="asesorias"><div class="info-icon">💡</div><h3>Asesorías</h3><p>Impulsa tu negocio con soluciones tecnológicas estratégicas. Consultoría especializada para maximizar tu productividad y llevar tu empresa al siguiente nivel con asesoría profesional.</p><div class="info-tags"><span>💼 Consultoría</span><span>📍 Presencial</span><span>📈 Estratégica</span></div><a href="#" onclick="irAServicioEspecifico('asesorias'); return false;" class="info-btn">Conocer más →</a></div>
+<div class="info-content" data-service="seguridad"><div class="info-icon">📹</div><h3>Seguridad</h3><p>Sistemas de vigilancia avanzados para proteger tu negocio. Tecnología de punta las 24 horas del día para garantizar la seguridad de tus instalaciones y activos más valiosos.</p><div class="info-tags"><span>🛡️ Seguridad</span><span>⏰ 24/7</span><span>📡 Monitoreo</span></div><a href="#" onclick="irAServicioEspecifico('seguridad'); return false;" class="info-btn">Conocer más →</a></div>
+<div class="info-content" data-service="mantenimiento"><div class="info-icon">🔧</div><h3>Mantenimiento</h3><p>Soporte técnico preventivo y correctivo especializado. Mantenemos tus equipos funcionando al máximo rendimiento con nuestro equipo de expertos certificados y servicio rápido.</p><div class="info-tags"><span> Técnico</span><span> Express</span><span>Preventivo</span></div><a href="#" onclick="irAServicioEspecifico('mantenimiento'); return false;" class="info-btn">Conocer más →</a></div>
+</div>
+<div class="carousel-3d-wrapper">
+<div class="carousel-3d-spinner" id="carousel3dSpinner">
+<div class="carousel-card-3d" data-index="0" data-servicio="capacitaciones"><div class="card-3d-inner"><img src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/S1.jpg?updatedAt=1778875881238" alt="Capacitaciones" class="card-bg-image" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #3b82f6, #06b6d4, #4f46e5)'"><div class="card-overlay"></div><span class="card-label">Capacitaciones</span></div></div>
+<div class="carousel-card-3d" data-index="1" data-servicio="asesorias"><div class="card-3d-inner"><img src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/S2.jpg?updatedAt=1778875873700" alt="Asesorías" class="card-bg-image" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #f59e0b, #f97316, #ef4444)'"><div class="card-overlay"></div><span class="card-label">Asesorías</span></div></div>
+<div class="carousel-card-3d" data-index="2" data-servicio="seguridad"><div class="card-3d-inner"><img src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/S3.jpg?updatedAt=1778875875918" alt="Seguridad" class="card-bg-image" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #ef4444, #ec4899, #f43f5e)'"><div class="card-overlay"></div><span class="card-label">Seguridad</span></div></div>
+<div class="carousel-card-3d" data-index="3" data-servicio="mantenimiento"><div class="card-3d-inner"><img src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/S4.jpg?updatedAt=1778875879876" alt="Mantenimiento" class="card-bg-image" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #14b8a6, #3b82f6, #06b6d4)'"><div class="card-overlay"></div><span class="card-label">Mantenimiento</span></div></div>
+</div>
+<div class="carousel-3d-dots">
+<div class="carousel-dot-3d active" data-index="0"></div>
+<div class="carousel-dot-3d" data-index="1"></div>
+<div class="carousel-dot-3d" data-index="2"></div>
+<div class="carousel-dot-3d" data-index="3"></div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section class="relative overflow-hidden" id="vision-mission-video">
 <video autoplay muted loop playsinline><source src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/fondo.mp4" type="video/mp4"></video>
