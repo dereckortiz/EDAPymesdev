@@ -1,413 +1,482 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle de Servicio - EDAPYMES</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cobalt: '#034AB0',
-                        'navy-dark': '#0F172A',
-                        'premium-outline': '#034AB0',
-                    },
-                    fontFamily: {
-                        headline: ['Inter', 'sans-serif'],
-                        body: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Servicio - EDAPymes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { cobalt: '#034AB0', 'navy-dark': '#0F172A' },
+          fontFamily: { headline: ['Manrope', 'sans-serif'], body: ['Inter', 'sans-serif'] }
         }
-    </script>
-    <style>
-        .brochure-shadow { box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05); }
-        .text-premium-outline {
-            color: transparent;
-            -webkit-text-stroke: 2px #034AB0;
-        }
-        .spine-gradient {
-            background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(0,0,0,0.1) 100%);
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #F8FAFC; }
+    .material-symbols-outlined { vertical-align: middle; }
+
+    /* ── ENTRY ANIMATION ── */
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-60px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(60px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .animate-slide-left  { animation: slideInLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .animate-slide-right { animation: slideInRight 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards; opacity: 0; }
+    .animate-fade-up     { animation: fadeInUp 0.6s ease forwards; opacity: 0; }
+    .animate-scale-in    { animation: scaleIn 0.5s ease forwards; opacity: 0; }
+
+    /* ── HEADER ── */
+    .detail-header {
+      background: white;
+      border-bottom: 1px solid #E5E7EB;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: 1.5px solid #E5E7EB;
+      color: #6B7280;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      background: white;
+      text-decoration: none;
+    }
+    .back-btn:hover {
+      border-color: #034AB0;
+      color: #034AB0;
+      background: #EFF6FF;
+      transform: translateX(-4px);
+    }
+
+    /* ── MAIN CARD ── */
+    .detail-card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 4px 24px rgba(15,23,42,0.07), 0 1px 4px rgba(15,23,42,0.04);
+      overflow: hidden;
+    }
+    .detail-image-pane {
+      position: relative;
+      min-height: 500px;
+      background: #0F172A;
+      overflow: hidden;
+    }
+    .detail-image-pane img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.72;
+      position: absolute;
+      inset: 0;
+      transition: transform 8s ease;
+    }
+    .detail-image-pane:hover img { transform: scale(1.04); }
+    .detail-badge {
+      position: absolute;
+      top: 28px; left: 28px;
+      background: #034AB0;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(3,74,176,0.4);
+    }
+    .detail-image-text {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 10;
+      padding: 48px 36px;
+      background: linear-gradient(to top, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.5) 60%, transparent 100%);
+    }
+    .detail-image-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900;
+      color: white;
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+    .detail-image-desc { color: rgba(255,255,255,0.78); font-size: 1rem; max-width: 420px; }
+
+    /* ── CONTENT PANE ── */
+    .detail-content-pane {
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (max-width: 768px) { .detail-content-pane { padding: 32px 24px; } }
+    .detail-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #9CA3AF; margin-bottom: 8px; }
+    .detail-heading { font-family: 'Manrope', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; color: #0F172A; margin-bottom: 20px; line-height: 1.2; }
+    .detail-description { color: #4B5563; line-height: 1.75; font-size: 1rem; }
+    .benefits-title { font-family: 'Manrope', sans-serif; font-size: 1.3rem; font-weight: 700; color: #0F172A; margin-bottom: 16px; }
+    .benefit-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; }
+    .benefit-icon-wrap { width: 32px; height: 32px; min-width: 32px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .benefit-icon-wrap .material-symbols-outlined { color: #034AB0; font-size: 1rem; }
+    .benefit-name { font-weight: 700; font-size: 0.9rem; color: #0F172A; }
+    .benefit-desc { font-size: 0.8rem; color: #6B7280; margin-top: 2px; }
+    .btn-whatsapp {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 32px; background: #034AB0; color: white;
+      font-family: 'Manrope', sans-serif; font-size: 1rem; font-weight: 800;
+      border-radius: 999px; border: none; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(3,74,176,0.35);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      text-decoration: none;
+    }
+    .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(3,74,176,0.45); }
+    .btn-whatsapp:active { transform: scale(0.98); }
+
+    /* ── OTHER SERVICES ── */
+    .other-services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (min-width: 640px) { .other-services-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (min-width: 1024px) { .other-services-grid { grid-template-columns: repeat(8, 1fr); } }
+    .service-chip {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 16px 12px; background: white; border-radius: 12px;
+      border: 1.5px solid #E5E7EB; cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      text-decoration: none;
+    }
+    .service-chip:hover { border-color: #034AB0; box-shadow: 0 4px 16px rgba(3,74,176,0.12); transform: translateY(-3px); }
+    .service-chip.active { border-color: #034AB0; border-width: 2px; background: #EFF6FF; }
+    .service-chip .material-symbols-outlined { color: #034AB0; font-size: 1.4rem; }
+    .service-chip span:last-child { font-size: 0.72rem; font-weight: 600; color: #4B5563; text-align: center; }
+    .service-chip.active span:last-child { color: #034AB0; }
+
+    /* ── PAGE TRANSITION (salida) ── */
+    #page-exit {
+      position: fixed; inset: 0;
+      background: #034AB0;
+      z-index: 9999;
+      pointer-events: none;
+      clip-path: circle(0% at 50% 50%);
+      transition: clip-path 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    #page-exit.expanding { clip-path: circle(160% at 50% 50%); }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
 
-    <!-- Breadcrumb -->
-    <div class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center gap-2 text-sm text-gray-500">
-                <a href="index.html" class="flex items-center gap-1 hover:text-cobalt transition-colors">
-                    <span class="material-icons-round text-[18px]">arrow_back</span>
-                    Volver a Inicio
-                </a>
-                <span class="material-icons-round text-[14px] text-gray-300">chevron_right</span>
-                <span class="text-cobalt font-medium" id="breadcrumb-title">Detalle de Consultoría</span>
-            </div>
+<div id="page-exit"></div>
+
+<!-- ── HEADER ── -->
+<div class="detail-header">
+  <div style="max-width:1200px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+    <button class="back-btn" onclick="volverAtras()">
+      <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_back</span>
+      Volver a Servicios
+    </button>
+    <span style="font-size:0.85rem; font-weight:600; color:#034AB0;" id="breadcrumb-title">Detalle del Servicio</span>
+    <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; color:#6B7280; font-size:0.85rem; font-weight:600; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#034AB0'" onmouseout="this.style.color='#6B7280'">
+      <span class="material-symbols-outlined" style="font-size:1rem;">home</span>
+      Inicio
+    </a>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main style="max-width:1200px; margin:0 auto; padding:32px 24px;">
+  <div class="detail-card">
+    <div class="grid grid-cols-1 lg:grid-cols-2">
+
+      <!-- IMAGEN -->
+      <div class="detail-image-pane animate-slide-left">
+        <img id="detail-image" src="" alt="Servicio">
+        <span class="detail-badge" id="detail-badge">SERVICIO DESTACADO</span>
+        <div class="detail-image-text">
+          <h2 class="detail-image-title" id="detail-title-visual"></h2>
+          <p class="detail-image-desc" id="detail-desc-visual"></p>
         </div>
+      </div>
+
+      <!-- CONTENIDO -->
+      <div class="detail-content-pane animate-slide-right">
+        <div style="display:flex; flex-direction:column; gap:28px;">
+          <div>
+            <p class="detail-label" id="detail-portafolio">PORTAFOLIO DE SERVICIOS</p>
+            <h1 class="detail-heading" id="detail-heading"></h1>
+            <p class="detail-description" id="detail-description"></p>
+          </div>
+
+          <div style="border-top:1px solid #F1F5F9; padding-top:24px;">
+            <h3 class="benefits-title">Beneficios Clave</h3>
+            <ul id="detail-benefits-list" style="display:flex; flex-direction:column; gap:0;"></ul>
+          </div>
+
+          <div style="padding-top:8px; display:flex; flex-wrap:wrap; gap:14px;">
+            <button class="btn-whatsapp" id="btn-contacto" onclick="irAContacto()">
+              <span class="material-symbols-outlined">chat</span>
+              Solicitar Asesoría
+              <span class="material-symbols-outlined" style="font-size:1rem;">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
+</main>
 
-    <!-- Contenido Principal -->
-    <main class="container mx-auto px-6 py-8">
-        <div class="bg-white rounded-xl brochure-shadow overflow-hidden">
-            <div class="flex flex-col lg:flex-row">
-                
-                <!-- Left Page: Visual -->
-                <div class="w-full lg:w-1/2 relative bg-navy-dark overflow-hidden min-h-[500px] lg:min-h-[700px]">
-                    <img id="detail-image" 
-                         alt="Servicio" 
-                         class="absolute inset-0 w-full h-full object-cover opacity-70"
-                         src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"/>
-                    
-                    <div class="absolute top-0 right-0 h-full w-4 spine-gradient hidden lg:block z-10"></div>
-                    
-                    <div id="detail-badge" 
-                         class="absolute top-8 left-8 bg-cobalt text-white px-6 py-2 rounded-lg font-headline text-sm font-bold shadow-lg z-20">
-                        SERVICIO DESTACADO
-                    </div>
-                    
-                    <div class="absolute bottom-12 left-12 right-12 z-20">
-                        <h2 id="detail-title-visual" 
-                            class="font-headline text-4xl md:text-5xl text-white mb-4 font-bold">
-                            Consultoría Estratégica
-                        </h2>
-                        <p id="detail-desc-visual" 
-                           class="text-white/80 text-lg max-w-md">
-                            Impulsando la transformación digital y la excelencia operativa en organizaciones globales.
-                        </p>
-                    </div>
-                </div>
+<!-- ── OTROS SERVICIOS ── -->
+<section style="background:#F1F5F9; padding:48px 24px; border-top:1px solid #E5E7EB; margin-top:32px;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <p style="text-align:center; font-size:0.7rem; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.2em; margin-bottom:24px;">Explorar otros servicios</p>
+    <div class="other-services-grid" id="services-grid"></div>
+  </div>
+</section>
 
-                <!-- Right Page: Content -->
-                <div class="w-full lg:w-1/2 bg-white p-8 lg:p-16 flex flex-col justify-center relative">
-                    <div class="space-y-8">
-                        <div>
-                            <span class="text-gray-500 font-medium text-sm tracking-widest uppercase mb-2 block" 
-                                  id="detail-portafolio">
-                                PORTAFOLIO DE SERVICIOS
-                            </span>
-                            <h1 id="detail-heading" 
-                                class="font-headline text-3xl lg:text-4xl text-navy-dark mb-6 font-bold">
-                                Optimización y Escalamiento Empresarial
-                            </h1>
-                            <p id="detail-description" 
-                               class="text-gray-600 leading-relaxed text-base lg:text-lg">
-                                Nuestra división de consultoría en TechConsult ofrece una visión experta para navegar los desafíos tecnológicos actuales. No solo implementamos soluciones; rediseñamos procesos para garantizar que su infraestructura soporte el crecimiento a largo plazo y la agilidad competitiva.
-                            </p>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <h3 id="detail-benefits-title" 
-                                class="font-headline text-2xl text-navy-dark font-semibold">
-                                Beneficios Clave
-                            </h3>
-                            <ul id="detail-benefits-list" class="space-y-4">
-                                <li class="flex items-start gap-4">
-                                    <div class="bg-blue-50 p-1 rounded-full text-cobalt shrink-0">
-                                        <span class="material-icons-round text-[20px]">check</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-sm text-navy-dark font-bold block">Análisis Predictivo</span>
-                                        <span class="text-xs text-gray-500">Modelado de escenarios para decisiones basadas en datos reales.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4">
-                                    <div class="bg-blue-50 p-1 rounded-full text-cobalt shrink-0">
-                                        <span class="material-icons-round text-[20px]">check</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-sm text-navy-dark font-bold block">Arquitectura Escalable</span>
-                                        <span class="text-xs text-gray-500">Diseños modulares que crecen junto con su base de usuarios.</span>
-                                    </div>
-                                </li>
-                                <li class="flex items-start gap-4">
-                                    <div class="bg-blue-50 p-1 rounded-full text-cobalt shrink-0">
-                                        <span class="material-icons-round text-[20px]">check</span>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-sm text-navy-dark font-bold block">Seguridad por Diseño</span>
-                                        <span class="text-xs text-gray-500">Protocolos integrados de protección desde la fase de planificación.</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="pt-8 flex flex-col sm:flex-row gap-4">
-                            <!-- Botón Solicitar con acción para ir al formulario de contacto -->
-                            <button onclick="irAContacto()" 
-                                    class="bg-cobalt hover:bg-blue-700 text-white rounded-full font-headline text-base font-bold transition-all shadow-md flex items-center justify-center gap-2 group px-8 py-4 cursor-pointer">
-                                Solicitar Asesoría
-                                <span class="material-icons-round group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                            </button>
-                            <!-- Botón de descarga ELIMINADO -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+<script>
+  /* ── DATOS DE SERVICIOS ── */
+  const serviceData = {
+    capacitacion: {
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop',
+      badge: 'CAPACITACIÓN',
+      titleVisual: 'Capacitación Profesional',
+      descVisual: 'Formación especializada para potenciar el talento humano de su empresa.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Capacitación y Formación Empresarial',
+      description: 'En EDAPymes brindamos capacitaciones orientadas al fortalecimiento de las pequeñas y medianas empresas nicaragüenses, enfocándonos en el desarrollo de habilidades tecnológicas y empresariales. Nuestros programas combinan teoría y práctica para que los participantes puedan aplicar los conocimientos en situaciones reales.',
+      benefits: [
+        { title: 'Programas Personalizados', desc: 'Contenido adaptado a las necesidades específicas de su equipo y sector.' },
+        { title: 'Certificación Oficial', desc: 'Certificados que respaldan las competencias adquiridas por sus colaboradores.' },
+        { title: 'Seguimiento Post-Capacitación', desc: 'Acompañamiento continuo para asegurar la aplicación efectiva de lo aprendido.' }
+      ]
+    },
+    asesoria: {
+      image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop',
+      badge: 'ASESORÍA ESTRATÉGICA',
+      titleVisual: 'Consultoría Estratégica',
+      descVisual: 'Impulsando la transformación digital y la excelencia operativa.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Optimización y Escalamiento Empresarial',
+      description: 'Nuestra división de consultoría ofrece una visión experta para navegar los desafíos tecnológicos actuales. No solo implementamos soluciones; rediseñamos procesos para garantizar que su infraestructura soporte el crecimiento a largo plazo y la agilidad competitiva.',
+      benefits: [
+        { title: 'Análisis Predictivo', desc: 'Modelado de escenarios para decisiones basadas en datos reales.' },
+        { title: 'Arquitectura Escalable', desc: 'Diseños modulares que crecen junto con su base de usuarios.' },
+        { title: 'Seguridad por Diseño', desc: 'Protocolos integrados de protección desde la fase de planificación.' }
+      ]
+    },
+    desarrollo: {
+      image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg',
+      badge: 'DESARROLLO DE SOFTWARE',
+      titleVisual: 'Desarrollo de Software',
+      descVisual: 'Soluciones tecnológicas a medida para su negocio.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Desarrollo de Sistemas Personalizados',
+      description: 'Desarrollamos sistemas personalizados adaptados a las necesidades de cada empresa, con el objetivo de mejorar la organización, automatización y control de sus procesos. Creamos sistemas administrativos, páginas web y aplicaciones funcionales, modernas y escalables.',
+      benefits: [
+        { title: 'Software a Medida', desc: 'Aplicaciones diseñadas específicamente para sus procesos de trabajo.' },
+        { title: 'Tecnología Moderna', desc: 'Las últimas tecnologías para garantizar rendimiento y compatibilidad.' },
+        { title: 'Escalabilidad Garantizada', desc: 'Sistemas que crecen con su empresa sin necesidad de reemplazo total.' }
+      ]
+    },
+    soporte: {
+      image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg',
+      badge: 'SOPORTE TÉCNICO TI',
+      titleVisual: 'Soporte Técnico TI',
+      descVisual: 'Mantenimiento preventivo y correctivo para su infraestructura.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Mantenimiento y Soporte Técnico',
+      description: 'Brindamos servicios de mantenimiento preventivo y correctivo para computadoras, laptops y equipos tecnológicos. Realizamos limpieza interna y externa, optimización de sistemas, revisión de componentes e instalación de programas para garantizar la continuidad operativa.',
+      benefits: [
+        { title: 'Mantenimiento Preventivo', desc: 'Programas regulares para prevenir fallas y prolongar la vida útil de sus equipos.' },
+        { title: 'Soporte Remoto', desc: 'Asistencia técnica inmediata sin necesidad de desplazamiento físico.' },
+        { title: 'Respuesta Rápida', desc: 'Tiempos de respuesta optimizados para minimizar interrupciones en su operación.' }
+      ]
+    },
+    seguridad: {
+      image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/s1.png?updatedAt=1778875875093',
+      badge: 'SEGURIDAD ELECTRÓNICA',
+      titleVisual: 'Seguridad Electrónica',
+      descVisual: 'Protección integral para sus instalaciones y activos.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Sistemas de Seguridad y Vigilancia',
+      description: 'Ofrecemos la venta de cámaras de seguridad y equipos de vigilancia para hogares, negocios y empresas. Contamos con soluciones modernas y accesibles que permiten fortalecer la seguridad de las instalaciones y mejorar el control visual de diferentes áreas.',
+      benefits: [
+        { title: 'Monitoreo 24/7', desc: 'Vigilancia continua con acceso remoto desde cualquier dispositivo.' },
+        { title: 'Instalación Profesional', desc: 'Equipo técnico certificado para una instalación óptima y segura.' },
+        { title: 'Alta Definición', desc: 'Equipos de última generación con resolución HD y visión nocturna.' }
+      ]
+    },
+    financiamiento: {
+      image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814',
+      badge: 'FINANCIAMIENTO',
+      titleVisual: 'Financiamiento Rápido',
+      descVisual: 'Soluciones financieras accesibles y seguras.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Préstamos Prendatarios',
+      description: 'Brindamos servicios de préstamos prendatarios de manera rápida, segura y accesible para personas y pequeños negocios que necesitan apoyo financiero. Facilitamos procesos confiables utilizando artículos de valor como garantía, con atención transparente.',
+      benefits: [
+        { title: 'Proceso Rápido', desc: 'Aprobación y desembolso en tiempo récord para sus necesidades urgentes.' },
+        { title: 'Tasas Competitivas', desc: 'Las mejores condiciones del mercado con total transparencia.' },
+        { title: 'Confidencialidad', desc: 'Manejo discreto y profesional de toda su información financiera.' }
+      ]
+    },
+    traduccion: {
+      image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704',
+      badge: 'TRADUCCIÓN PROFESIONAL',
+      titleVisual: 'Traducción Profesional',
+      descVisual: 'Precisión lingüística para documentos corporativos.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Traducción Inglés – Español',
+      description: 'Ofrecemos servicios de traducción de inglés a español para empresas y emprendedores. Realizamos traducción de documentos, contenidos empresariales, material corporativo y textos digitales, manteniendo la coherencia y el significado original.',
+      benefits: [
+        { title: 'Precisión Terminológica', desc: 'Traducciones especializadas que mantienen el significado técnico y profesional.' },
+        { title: 'Entrega Puntual', desc: 'Cumplimos con los plazos establecidos sin comprometer la calidad.' },
+        { title: 'Adaptación Cultural', desc: 'Contenido adaptado al contexto cultural de su audiencia objetivo.' }
+      ]
+    },
+    laptops: {
+      image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195',
+      badge: 'VENTA DE EQUIPOS',
+      titleVisual: 'Venta de Laptops',
+      descVisual: 'Equipos tecnológicos de calidad para cada necesidad.',
+      portafolio: 'PORTAFOLIO PROFESIONAL',
+      heading: 'Venta de Laptops y Equipos',
+      description: 'Ofrecemos venta de laptops y equipos tecnológicos ideales para estudiantes, emprendedores y empresas. Contamos con diferentes modelos y especificaciones que se adaptan a las necesidades de trabajo, estudio y uso profesional con equipos funcionales y accesibles.',
+      benefits: [
+        { title: 'Variedad de Modelos', desc: 'Amplio catálogo para diferentes necesidades y presupuestos.' },
+        { title: 'Garantía Extendida', desc: 'Respaldo completo en todos nuestros equipos vendidos.' },
+        { title: 'Asesoría Técnica', desc: 'Le ayudamos a elegir el equipo ideal según sus requerimientos.' }
+      ]
+    }
+  };
+
+  const allServices = [
+    { key: 'capacitacion', icon: 'school',          label: 'Capacitación' },
+    { key: 'asesoria',     icon: 'business_center',  label: 'Consultoría' },
+    { key: 'desarrollo',   icon: 'code',             label: 'Software' },
+    { key: 'soporte',      icon: 'settings_suggest', label: 'Soporte IT' },
+    { key: 'seguridad',    icon: 'videocam',          label: 'Seguridad' },
+    { key: 'financiamiento',icon:'payments',          label: 'Créditos' },
+    { key: 'traduccion',   icon: 'translate',         label: 'Traducción' },
+    { key: 'laptops',      icon: 'laptop_mac',        label: 'Laptops' },
+  ];
+
+  /* ── CARGAR DATOS ── */
+  const params = new URLSearchParams(window.location.search);
+  const serviceKey = params.get('service') || 'asesoria';
+  const data = serviceData[serviceKey];
+
+  if (data) {
+    document.getElementById('detail-image').src = data.image;
+    document.getElementById('detail-badge').textContent = data.badge;
+    document.getElementById('detail-title-visual').textContent = data.titleVisual;
+    document.getElementById('detail-desc-visual').textContent = data.descVisual;
+    document.getElementById('detail-portafolio').textContent = data.portafolio;
+    document.getElementById('detail-heading').textContent = data.heading;
+    document.getElementById('detail-description').textContent = data.description;
+    document.getElementById('breadcrumb-title').textContent = data.heading;
+    document.title = `${data.heading} - EDAPymes`;
+
+    const list = document.getElementById('detail-benefits-list');
+    list.innerHTML = '';
+    data.benefits.forEach(b => {
+      const li = document.createElement('li');
+      li.className = 'benefit-item';
+      li.innerHTML = `
+        <div class="benefit-icon-wrap">
+          <span class="material-symbols-outlined">check</span>
         </div>
-    </main>
+        <div>
+          <div class="benefit-name">${b.title}</div>
+          <div class="benefit-desc">${b.desc}</div>
+        </div>`;
+      list.appendChild(li);
+    });
+  }
 
-    <!-- Footer: Otros Servicios (8 servicios completos) -->
-    <section class="bg-gray-50 py-12 border-t border-gray-200 mt-12">
-        <div class="container mx-auto px-6">
-            <h3 class="text-center text-sm font-bold text-gray-400 uppercase tracking-widest mb-8">Otros Servicios</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4" id="services-grid">
-                
-                <!-- 1. Capacitación -->
-                <a href="apartadoS.html?service=capacitacion" 
-                   data-service="capacitacion"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">school</span>
-                    <span class="text-xs font-medium text-gray-600">Capacitación</span>
-                </a>
-                
-                <!-- 2. Asesoría -->
-                <a href="apartadoS.html?service=asesoria" 
-                   data-service="asesoria"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">business_center</span>
-                    <span class="text-xs font-medium text-gray-600">Consultoría</span>
-                </a>
-                
-                <!-- 3. Desarrollo -->
-                <a href="apartadoS.html?service=desarrollo" 
-                   data-service="desarrollo"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">code</span>
-                    <span class="text-xs font-medium text-gray-600">Software</span>
-                </a>
-                
-                <!-- 4. Soporte IT -->
-                <a href="apartadoS.html?service=soporte" 
-                   data-service="soporte"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">settings_suggest</span>
-                    <span class="text-xs font-medium text-gray-600">Soporte IT</span>
-                </a>
-                
-                <!-- 5. Seguridad -->
-                <a href="apartadoS.html?service=seguridad" 
-                   data-service="seguridad"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">shield</span>
-                    <span class="text-xs font-medium text-gray-600">Seguridad</span>
-                </a>
-                
-                <!-- 6. Financiamiento -->
-                <a href="apartadoS.html?service=financiamiento" 
-                   data-service="financiamiento"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">payments</span>
-                    <span class="text-xs font-medium text-gray-600">Créditos</span>
-                </a>
-                
-                <!-- 7. Traducción (NUEVO) -->
-                <a href="apartadoS.html?service=traduccion" 
-                   data-service="traduccion"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">translate</span>
-                    <span class="text-xs font-medium text-gray-600">Traducción</span>
-                </a>
-                
-                <!-- 8. Venta de Laptops (NUEVO) -->
-                <a href="apartadoS.html?service=laptops" 
-                   data-service="laptops"
-                   class="service-link flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-cobalt hover:shadow-md transition-all">
-                    <span class="material-icons-round text-cobalt text-2xl mb-2">laptop_mac</span>
-                    <span class="text-xs font-medium text-gray-600">Laptops</span>
-                </a>
-                
-            </div>
-        </div>
-    </section>
+  /* ── CHIPS DE OTROS SERVICIOS ── */
+  const grid = document.getElementById('services-grid');
+  allServices.forEach(svc => {
+    const chip = document.createElement('div');
+    chip.className = 'service-chip' + (svc.key === serviceKey ? ' active' : '');
+    chip.innerHTML = `
+      <span class="material-symbols-outlined">${svc.icon}</span>
+      <span>${svc.label}</span>`;
+    chip.onclick = () => cambiarServicio(svc.key, chip);
+    grid.appendChild(chip);
+  });
 
-    <script>
-        // Función para redirigir al formulario de contacto en index.html
-        function irAContacto() {
-            // Redirige a index.html con ancla #contacto
-            window.location.href = 'index.html#contacto';
-        }
+  /* ── CAMBIAR SERVICIO CON TRANSICIÓN ── */
+  function cambiarServicio(key, chipEl) {
+    if (key === serviceKey) return;
+    const overlay = document.getElementById('page-exit');
+    overlay.classList.add('expanding');
+    setTimeout(() => { window.location.href = `apartadoS.html?service=${key}`; }, 550);
+  }
 
-        // Datos de servicios
-        var serviceData = {
-            capacitacion: {
-                image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Capacitación Profesional',
-                descVisual: 'Formación especializada para potenciar el talento humano de su empresa.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Capacitación y Formación Empresarial',
-                description: 'En EDAPYMES brindamos capacitaciones orientadas al fortalecimiento de las pequeñas y medianas empresas nicaragüenses, enfocándonos en el desarrollo de habilidades tecnológicas y empresariales. Nuestros programas combinan teoría y práctica para que los participantes puedan aplicar los conocimientos en situaciones reales dentro de sus negocios.',
-                benefits: [
-                    { title: 'Programas Personalizados', desc: 'Contenido adaptado a las necesidades específicas de su equipo y sector empresarial.' },
-                    { title: 'Certificación Oficial', desc: 'Obtenga certificados que respaldan las competencias adquiridas por sus colaboradores.' },
-                    { title: 'Seguimiento Post-Capacitación', desc: 'Acompañamiento continuo para asegurar la aplicación efectiva de lo aprendido.' }
-                ]
-            },
-            asesoria: {
-                image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Consultoría Estratégica',
-                descVisual: 'Impulsando la transformación digital y la excelencia operativa en organizaciones globales.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Optimización y Escalamiento Empresarial',
-                description: 'Nuestra división de consultoría en TechConsult ofrece una visión experta para navegar los desafíos tecnológicos actuales. No solo implementamos soluciones; rediseñamos procesos para garantizar que su infraestructura soporte el crecimiento a largo plazo y la agilidad competitiva.',
-                benefits: [
-                    { title: 'Análisis Predictivo', desc: 'Modelado de escenarios para decisiones basadas en datos reales.' },
-                    { title: 'Arquitectura Escalable', desc: 'Diseños modulares que crecen junto con su base de usuarios.' },
-                    { title: 'Seguridad por Diseño', desc: 'Protocolos integrados de protección desde la fase de planificación.' }
-                ]
-            },
-            desarrollo: {
-                image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Desarrollo de Software',
-                descVisual: 'Soluciones tecnológicas a medida para su negocio.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Desarrollo de Sistemas Personalizados',
-                description: 'Desarrollamos sistemas personalizados adaptados a las necesidades de cada empresa, con el objetivo de mejorar la organización, automatización y control de sus procesos. Creamos sistemas administrativos, páginas web y aplicaciones funcionales, modernas y escalables.',
-                benefits: [
-                    { title: 'Software a Medida', desc: 'Aplicaciones diseñadas específicamente para sus procesos y flujos de trabajo.' },
-                    { title: 'Tecnología Moderna', desc: 'Utilizamos las últimas tecnologías para garantizar rendimiento y compatibilidad.' },
-                    { title: 'Escalabilidad Garantizada', desc: 'Sistemas que crecen con su empresa sin necesidad de reemplazo total.' }
-                ]
-            },
-            soporte: {
-                image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Soporte Técnico TI',
-                descVisual: 'Mantenimiento preventivo y correctivo para su infraestructura.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Mantenimiento y Soporte Técnico',
-                description: 'Brindamos servicios de mantenimiento preventivo y correctivo para computadoras, laptops y equipos tecnológicos. Realizamos limpieza interna y externa, optimización de sistemas, revisión de componentes e instalación de programas para garantizar la continuidad operativa.',
-                benefits: [
-                    { title: 'Mantenimiento Preventivo', desc: 'Programas regulares para prevenir fallas y prolongar la vida útil de sus equipos.' },
-                    { title: 'Soporte Remoto', desc: 'Asistencia técnica inmediata sin necesidad de desplazamiento físico.' },
-                    { title: 'Respuesta Rápida', desc: 'Tiempos de respuesta optimizados para minimizar interrupciones en su operación.' }
-                ]
-            },
-            seguridad: {
-                image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/S1.jpg?updatedAt=1778875881238',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Seguridad Electrónica',
-                descVisual: 'Protección integral para sus instalaciones y activos.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Sistemas de Seguridad y Vigilancia',
-                description: 'Ofrecemos la venta de cámaras de seguridad y equipos de vigilancia para hogares, negocios y empresas. Contamos con soluciones modernas y accesibles que permiten fortalecer la seguridad de las instalaciones y mejorar el control visual de diferentes áreas.',
-                benefits: [
-                    { title: 'Monitoreo 24/7', desc: 'Vigilancia continua con acceso remoto desde cualquier dispositivo.' },
-                    { title: 'Instalación Profesional', desc: 'Equipo técnico certificado para una instalación óptima y segura.' },
-                    { title: 'Alta Definición', desc: 'Equipos de última generación con resolución HD y visión nocturna.' }
-                ]
-            },
-            financiamiento: {
-                image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Financiamiento Rápido',
-                descVisual: 'Soluciones financieras accesibles y seguras.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Préstamos Prendatarios',
-                description: 'Brindamos servicios de préstamos prendatarios de manera rápida, segura y accesible para personas y pequeños negocios que necesitan apoyo financiero. Facilitamos procesos confiables utilizando artículos de valor como garantía, con atención transparente.',
-                benefits: [
-                    { title: 'Proceso Rápido', desc: 'Aprobación y desembolso en tiempo récord para sus necesidades urgentes.' },
-                    { title: 'Tasas Competitivas', desc: 'Las mejores condiciones del mercado con total transparencia.' },
-                    { title: 'Confidencialidad', desc: 'Manejo discreto y profesional de toda su información financiera.' }
-                ]
-            },
-            traduccion: {
-                image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Traducción Profesional',
-                descVisual: 'Precisión lingüística para documentos corporativos.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Traducción Inglés – Español',
-                description: 'Ofrecemos servicios de traducción de inglés a español para empresas y emprendedores. Realizamos traducción de documentos, contenidos empresariales, material corporativo y textos digitales, manteniendo la coherencia y el significado original de la información.',
-                benefits: [
-                    { title: 'Precisión Terminológica', desc: 'Traducciones especializadas que mantienen el significado técnico y profesional.' },
-                    { title: 'Entrega Puntual', desc: 'Cumplimos con los plazos establecidos sin comprometer la calidad.' },
-                    { title: 'Adaptación Cultural', desc: 'Contenido adaptado al contexto cultural de su audiencia objetivo.' }
-                ]
-            },
-            laptops: {
-                image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195',
-                badge: 'SERVICIO DESTACADO',
-                titleVisual: 'Venta de Laptops',
-                descVisual: 'Equipos tecnológicos de calidad para cada necesidad.',
-                portafolio: 'PORTAFOLIO PROFESIONAL',
-                heading: 'Venta de Laptops y Equipos',
-                description: 'Ofrecemos venta de laptops y equipos tecnológicos ideales para estudiantes, emprendedores y empresas. Contamos con diferentes modelos y especificaciones que se adaptan a las necesidades de trabajo, estudio y uso profesional con equipos funcionales y accesibles.',
-                benefits: [
-                    { title: 'Variedad de Modelos', desc: 'Amplio catálogo para diferentes necesidades y presupuestos.' },
-                    { title: 'Garantía Extendida', desc: 'Respaldo completo en todos nuestros equipos vendidos.' },
-                    { title: 'Asesoría Técnica', desc: 'Le ayudamos a elegir el equipo ideal según sus requerimientos.' }
-                ]
-            }
-        };
+  /* ── VOLVER ATRÁS ── */
+  function volverAtras() {
+    const overlay = document.getElementById('page-exit');
+    overlay.classList.add('expanding');
+    setTimeout(() => {
+      // Intentar volver al historial; si no hay historial, ir a servicios
+      if (document.referrer && document.referrer.includes('servicios')) {
+        history.back();
+      } else {
+        window.location.href = 'servicios.html';
+      }
+    }, 550);
+  }
 
-        // Obtener parámetro de la URL
-        var urlParams = new URLSearchParams(window.location.search);
-        var serviceKey = urlParams.get('service') || 'asesoria'; // Default: asesoria
-        
-        var data = serviceData[serviceKey];
-        if (data) {
-            document.getElementById('detail-image').src = data.image;
-            document.getElementById('detail-badge').textContent = data.badge;
-            document.getElementById('detail-title-visual').textContent = data.titleVisual;
-            document.getElementById('detail-desc-visual').textContent = data.descVisual;
-            document.getElementById('detail-portafolio').textContent = data.portafolio;
-            document.getElementById('detail-heading').textContent = data.heading;
-            document.getElementById('detail-description').textContent = data.description;
-            
-            // Actualizar breadcrumb
-            document.getElementById('breadcrumb-title').textContent = 'Detalle de ' + data.heading.split(' ').slice(0, 2).join(' ');
-            
-            // Actualizar beneficios
-            var benefitsList = document.getElementById('detail-benefits-list');
-            benefitsList.innerHTML = '';
-            data.benefits.forEach(function(benefit) {
-                var liItem = document.createElement('li');
-                liItem.className = 'flex items-start gap-4';
-                liItem.innerHTML = 
-                    '<div class="bg-blue-50 p-1 rounded-full text-cobalt shrink-0">' +
-                    '<span class="material-icons-round text-[20px]">check</span></div>' +
-                    '<div><span class="font-medium text-sm text-navy-dark font-bold block">' + 
-                    benefit.title + '</span>' +
-                    '<span class="text-xs text-gray-500">' + benefit.desc + '</span></div>';
-                benefitsList.appendChild(liItem);
-            });
-        }
+  /* ── BOTÓN CONTACTO ── */
+  function irAContacto() {
+    const msg = encodeURIComponent(`Hola, me interesa el servicio de: ${data ? data.heading : 'información general'}`);
+    window.open(`https://wa.me/50583295424?text=${msg}`, '_blank');
+  }
 
-        // CORRECCIÓN: Actualizar el borde azul según el servicio activo
-        document.addEventListener('DOMContentLoaded', function() {
-            var serviceLinks = document.querySelectorAll('.service-link');
-            
-            serviceLinks.forEach(function(link) {
-                var linkService = link.getAttribute('data-service');
-                
-                if (linkService === serviceKey) {
-                    // Este es el servicio activo - agregar borde azul
-                    link.classList.remove('border-gray-200', 'hover:border-cobalt');
-                    link.classList.add('border-2', 'border-cobalt', 'shadow-md');
-                    
-                    // Cambiar texto a color cobalt
-                    var textSpan = link.querySelector('span:last-child');
-                    if (textSpan) {
-                        textSpan.classList.remove('text-gray-600');
-                        textSpan.classList.add('text-cobalt');
-                    }
-                } else {
-                    // Servicios inactivos - estilo normal
-                    link.classList.add('border-gray-200', 'hover:border-cobalt');
-                    link.classList.remove('border-2', 'border-cobalt', 'shadow-md');
-                }
-            });
-        });
-    </script>
+  /* ── ENTRADA ELEGANTE ── */
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.opacity = '0';
+    requestAnimationFrame(() => {
+      document.body.style.transition = 'opacity 0.4s ease';
+      document.body.style.opacity = '1';
+    });
+
+    // Animar chips con delay escalonado
+    document.querySelectorAll('.service-chip').forEach((chip, idx) => {
+      chip.style.opacity = '0';
+      chip.style.transform = 'translateY(20px)';
+      chip.style.transition = `opacity 0.4s ease ${0.3 + idx * 0.05}s, transform 0.4s ease ${0.3 + idx * 0.05}s`;
+      requestAnimationFrame(() => {
+        chip.style.opacity = '1';
+        chip.style.transform = 'translateY(0)';
+      });
+    });
+  });
+</script>
 </body>
 </html>
