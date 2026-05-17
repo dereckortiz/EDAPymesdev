@@ -507,19 +507,129 @@
             .carousel-subtitle { font-size: 1.25rem; }
         }
         
+        /* Carrusel de Servicios Mejorado */
+        .services-carousel-wrapper {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(3, 74, 176, 0.05) 100%);
+            padding: 40px 20px;
+            border-radius: 24px;
+        }
+
+        .services-carousel-track {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .services-carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
         .service-card {
-            transition: all 0.3s ease;
+            flex: 0 0 280px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
+            position: relative;
+            transform-origin: center;
+            will-change: transform, box-shadow, z-index;
         }
-        
+
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-20px) scale(1.08);
+            box-shadow: 0 30px 60px -15px rgba(3, 74, 176, 0.4);
+            z-index: 10;
         }
-        
+
         .service-card.active {
-            transform: scale(1.05);
-            box-shadow: 0 25px 30px -12px rgba(7, 105, 210, 0.3);
+            transform: scale(1.12) translateY(-25px);
+            box-shadow: 0 40px 80px -20px rgba(3, 74, 176, 0.5);
+            z-index: 20;
+            position: relative;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(3, 74, 176, 0.1) 0%, transparent 70%);
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .service-card:hover::before,
+        .service-card.active::before {
+            opacity: 1;
+        }
+
+        .service-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .services-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            background: rgba(3, 74, 176, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .services-nav-btn:hover {
+            background: rgba(3, 74, 176, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .services-carousel-wrapper:hover .services-nav-btn {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .services-nav-btn.prev {
+            left: 10px;
+        }
+
+        .services-nav-btn.next {
+            right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .services-carousel-wrapper {
+                padding: 30px 10px;
+            }
+
+            .service-card {
+                flex: 0 0 250px;
+            }
+
+            .services-nav-btn {
+                opacity: 1;
+                visibility: visible;
+                width: 40px;
+                height: 40px;
+            }
         }
         
         .aurora-gradient { background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1e293b 100%); }
@@ -1086,16 +1196,72 @@ function cargarSeccion(pagina, linkElement) {
 
 function configurarCardsServicios() {
     const cards = document.querySelectorAll('#contenido .service-card');
+    const track = document.getElementById('servicesCarouselTrack');
+    const prevBtn = document.getElementById('servicesPrevBtn');
+    const nextBtn = document.getElementById('servicesNextBtn');
+
+    if (!track) return;
+
+    // Detectar interacción con las tarjetas
     cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            cards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.classList.remove('active');
+        });
+
         card.removeEventListener('click', card.clickHandler);
         card.clickHandler = () => {
             cards.forEach(c => c.classList.remove('active'));
             card.classList.add('active');
-            if (typeof cargarSeccion === 'function') {
-                cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]);
+            const serviceId = card.getAttribute('data-service');
+            if (serviceId && typeof irAServicioEspecifico === 'function') {
+                setTimeout(() => {
+                    irAServicioEspecifico(serviceId);
+                }, 300);
             }
         };
         card.addEventListener('click', card.clickHandler);
+    });
+
+    // Scroll del carrusel
+    const scrollAmount = 320;
+
+    if (prevBtn) {
+        prevBtn.removeEventListener('click', prevBtn.clickHandler);
+        prevBtn.clickHandler = () => {
+            track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        };
+        prevBtn.addEventListener('click', prevBtn.clickHandler);
+    }
+
+    if (nextBtn) {
+        nextBtn.removeEventListener('click', nextBtn.clickHandler);
+        nextBtn.clickHandler = () => {
+            track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        };
+        nextBtn.addEventListener('click', nextBtn.clickHandler);
+    }
+
+    // Touch swipe para móviles
+    let startX = 0;
+    track.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    track.addEventListener('touchend', (e) => {
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            } else {
+                track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            }
+        }
     });
 }
 
@@ -1600,27 +1766,53 @@ function obtenerHTMLInicio() {
       </div>
       <button onclick="cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1])" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">Ver todos los servicios <span class="material-symbols-outlined">east</span></button>
     </div>
-    <div class="flex justify-center items-center gap-8 flex-wrap">
-      <div onclick="irAServicioEspecifico('capacitaciones')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined service-icon text-4xl">school</span>
-        <h3 class="text-xl font-bold text-white">Capacitaciones</h3>
-        <p class="text-white/80 text-sm mt-2">Aprende habilidades digitales con expertos.</p>
+
+    <div class="services-carousel-wrapper" id="servicesCarouselWrapper">
+      <button class="services-nav-btn prev" id="servicesPrevBtn" aria-label="Anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+
+      <div class="services-carousel-track" id="servicesCarouselTrack">
+        <div class="service-card p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10" data-service="capacitaciones" onclick="irAServicioEspecifico('capacitaciones')">
+          <div class="service-card-content">
+            <span class="material-symbols-outlined service-icon text-4xl block mb-4">school</span>
+            <h3 class="text-xl font-bold text-white">Capacitaciones</h3>
+            <p class="text-white/80 text-sm mt-3">Aprende habilidades digitales con expertos.</p>
+          </div>
+        </div>
+
+        <div class="service-card p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10" data-service="asesorias" onclick="irAServicioEspecifico('asesorias')">
+          <div class="service-card-content">
+            <span class="material-symbols-outlined text-4xl block mb-4">lightbulb</span>
+            <h3 class="text-xl font-bold text-white">Asesorías</h3>
+            <p class="text-white/80 text-sm mt-3">Impulsa tu negocio con soluciones tecnológicas.</p>
+          </div>
+        </div>
+
+        <div class="service-card p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10" data-service="seguridad" onclick="irAServicioEspecifico('seguridad')">
+          <div class="service-card-content">
+            <span class="material-symbols-outlined service-icon text-4xl block mb-4">videocam</span>
+            <h3 class="text-xl font-bold text-white">Seguridad</h3>
+            <p class="text-white/80 text-sm mt-3">Sistemas de vigilancia para proteger tu negocio.</p>
+          </div>
+        </div>
+
+        <div class="service-card p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10" data-service="mantenimiento" onclick="irAServicioEspecifico('mantenimiento')">
+          <div class="service-card-content">
+            <span class="material-symbols-outlined text-4xl block mb-4">build</span>
+            <h3 class="text-xl font-bold text-white">Mantenimiento</h3>
+            <p class="text-white/80 text-sm mt-3">Soporte técnico preventivo y correctivo.</p>
+          </div>
+        </div>
       </div>
-      <div onclick="irAServicioEspecifico('asesorias')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined text-4xl mb-4">lightbulb</span>
-        <h3 class="text-2xl font-bold text-white">Asesorías</h3>
-        <p class="text-white/80 text-sm mt-2">Impulsa tu negocio con soluciones tecnológicas.</p>
-      </div>
-      <div onclick="irAServicioEspecifico('seguridad')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined service-icon text-4xl">videocam</span>
-        <h3 class="text-xl font-bold text-white">Seguridad</h3>
-        <p class="text-white/80 text-sm mt-2">Sistemas de vigilancia para proteger tu negocio.</p>
-      </div>
-      <div onclick="irAServicioEspecifico('mantenimiento')" class="service-card w-[280px] p-6 rounded-3xl bg-gradient-to-br from-[#1e293b] to-[#334155] text-white border border-white/10 transition-all duration-300 cursor-pointer">
-        <span class="material-symbols-outlined text-4xl mb-4">build</span>
-        <h3 class="text-2xl font-bold text-white">Mantenimiento</h3>
-        <p class="text-white/80 text-sm mt-2">Soporte técnico preventivo y correctivo.</p>
-      </div>
+
+      <button class="services-nav-btn next" id="servicesNextBtn" aria-label="Siguiente">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
     </div>
   </div>
 </section>
