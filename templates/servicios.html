@@ -1,280 +1,293 @@
 <div class="bg-white text-navy-dark font-body selection:bg-cobalt selection:text-white overflow-x-hidden">
     <main>
-        <!-- ================= HERO SECTION CON VIDEO HD - SIN CAPAS NI FILTROS ================= -->
-        <section class="relative min-h-screen flex items-center overflow-hidden">
-            <!-- SOLO EL VIDEO - NADA MÁS -->
-            <div class="absolute inset-0 z-0">
-                <!-- Video para PC -->
-                <video autoplay muted loop playsinline class="w-full h-full object-cover hero-video-desktop" style="object-position: center center;">
+        <!-- ================= HERO SECTION CON VIDEO HD ================= -->
+        <section class="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-slate-900 to-navy-dark">
+            <!-- Contenedor de video SIN filtros que afecten la calidad -->
+            <div class="absolute inset-0 z-0 hero-video-container">
+                <!-- Video para PC (autoplay, muted, loop, playsinline) -->
+                <video autoplay muted loop playsinline class="hero-video-desktop w-full h-full object-cover" style="object-position: center center;">
                     <source src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/prueba3.mp4" type="video/mp4">
                 </video>
                 <!-- Video para Móviles -->
-                <video autoplay muted loop playsinline class="w-full h-full object-cover hero-video-mobile" style="object-position: center center; display: none;">
+                <video autoplay muted loop playsinline class="hero-video-mobile w-full h-full object-cover" style="object-position: center center; display: none;">
                     <source src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/WhatsApp%20Video%202026-05-17%20at%202.44.54%20AM.mp4" type="video/mp4">
                 </video>
-                <!-- SIN NINGÚN OVERLAY -->
+                <!-- Overlay MÍNIMO para legibilidad del texto (sin degradar el video) -->
+                <div class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-transparent md:from-white/10 md:via-transparent md:to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent md:hidden"></div>
             </div>
             
-            <!-- Contenido principal: texto sobre el video -->
-            <div class="container mx-auto px-4 md:px-6 relative z-10 flex flex-col items-start gap-4 md:gap-12">
+            <!-- Elementos decorativos animados (sin afectar el video) -->
+            <div class="absolute inset-0 z-[1] pointer-events-none">
+                <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[80%] bg-cobalt rounded-full blur-[150px] opacity-10 animate-pulse-slow"></div>
+                <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[70%] bg-blue-900 rounded-full blur-[150px] opacity-10 animate-pulse-slow animation-delay-2000"></div>
+            </div>
+            
+            <!-- Contenido principal: SIEMPRE ALINEADO A LA IZQUIERDA -->
+            <div class="container mx-auto px-4 md:px-6 relative z-10 flex flex-col items-start gap-4 md:gap-12 fade-in-up">
                 <div class="w-full lg:w-3/5 text-left">
-                    <span class="inline-block px-2 md:px-4 py-0.5 md:py-1 bg-cobalt text-white text-[8px] md:text-xs font-bold tracking-[0.15em] md:tracking-[0.4em] uppercase mb-3 md:mb-6 rounded-full shadow-lg">
+                    <span class="inline-block px-2 md:px-4 py-0.5 md:py-1 bg-cobalt text-white text-[8px] md:text-xs font-bold tracking-[0.15em] md:tracking-[0.4em] uppercase mb-3 md:mb-6 rounded-full shadow-lg shadow-cobalt/30 hover:shadow-cobalt/50 transition-all duration-300 hover:scale-105">
                         Expertos Digitales
                     </span>
                     <h1 class="font-headline text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] font-extrabold leading-[1.1] md:leading-[0.85] tracking-tighter mb-3 md:mb-8">
-                        SERVI<span class="text-cobalt">CIOS</span><br/>
+                        SERVI<span class="text-cobalt relative inline-block hover:scale-110 transition-transform duration-300">CIOS</span><br/>
                         <span class="text-premium-outline text-4xl sm:text-7xl md:text-8xl lg:text-[10rem]">PREMIUM</span>
                     </h1>
-                    <div class="max-w-xl border-l-4 md:border-l-8 border-cobalt pl-3 md:pl-8 py-1 md:py-2">
-                        <p class="text-sm md:text-xl lg:text-2xl text-white font-light leading-relaxed drop-shadow-lg">
-                            Transformamos la complejidad técnica en <span class="text-white font-bold italic underline decoration-cobalt decoration-2 md:decoration-4">Calidad y Calidez</span> para potenciar su visión empresarial.
+                    <div class="max-w-xl border-l-4 md:border-l-8 border-cobalt pl-3 md:pl-8 py-1 md:py-2 transform transition-all duration-500 hover:translate-x-2">
+                        <p class="text-sm md:text-xl lg:text-2xl text-white font-light leading-relaxed bg-black/25 md:bg-transparent backdrop-blur-[2px] md:backdrop-blur-none inline-block px-3 md:px-0 py-1.5 md:py-0 rounded-lg">
+                            Transformamos la complejidad técnica en <span class="text-white md:text-navy-dark font-bold italic underline decoration-cobalt decoration-2 md:decoration-4">Calidad y Calidez</span> para potenciar su visión empresarial.
                         </p>
                     </div>
                 </div>
             </div>
             
-            <!-- Scroll indicator (solo PC) -->
+            <!-- Scroll indicator animado (solo PC) -->
             <div class="absolute bottom-5 md:bottom-10 left-1/2 transform -translate-x-1/2 z-10 hidden md:block">
                 <div class="animate-bounce-custom cursor-pointer" onclick="window.scrollBy({ top: window.innerHeight - 80, behavior: 'smooth' });">
-                    <span class="material-symbols-outlined text-white text-3xl drop-shadow-lg">keyboard_arrow_down</span>
+                    <span class="material-symbols-outlined text-cobalt text-3xl drop-shadow-lg">keyboard_arrow_down</span>
                 </div>
             </div>
         </section>
 
         <!-- ================= SECCIÓN DE SERVICIOS CON BROCHURES ================= -->
         <section class="bg-slate-50 py-12 md:py-24 overflow-hidden relative">
+            <div class="absolute inset-0 opacity-30">
+                <div class="absolute top-20 left-10 w-72 h-72 bg-cobalt/5 rounded-full blur-3xl animate-float"></div>
+                <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-900/5 rounded-full blur-3xl animate-float animation-delay-3000"></div>
+            </div>
+            
             <div class="container mx-auto px-4 md:px-6 relative z-10">
                 <div class="text-center mb-12 md:mb-16 fade-in-up">
                     <div class="flex items-center justify-center gap-2 md:gap-3 mb-3 md:mb-4">
-                        <div class="h-px w-8 md:w-12 bg-cobalt"></div>
-                        <span class="text-xs md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-cobalt">Ecosistema Profesional</span>
-                        <div class="h-px w-8 md:w-12 bg-cobalt"></div>
+                        <div class="h-px w-8 md:w-12 bg-cobalt scale-x-0 animate-slide-in-left origin-right"></div>
+                        <span class="text-xs md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-cobalt animate-pulse">Ecosistema Profesional</span>
+                        <div class="h-px w-8 md:w-12 bg-cobalt scale-x-0 animate-slide-in-right origin-left"></div>
                     </div>
-                    <h2 class="font-headline text-3xl md:text-7xl font-bold text-navy-dark mb-3 md:mb-4">Nuestros <span class="text-cobalt">Servicios</span></h2>
-                    <p class="text-gray-600 text-sm md:text-lg mt-3 md:mt-4 max-w-2xl mx-auto">Soluciones integrales diseñadas para la era tecnológica</p>
+                    <h2 class="font-headline text-3xl md:text-7xl font-bold text-navy-dark mb-3 md:mb-4 animate-slide-in-up">Nuestros <span class="text-cobalt relative inline-block">Servicios</span></h2>
+                    <p class="text-gray-600 text-sm md:text-lg mt-3 md:mt-4 max-w-2xl mx-auto animate-fade-in">Soluciones integrales diseñadas para la era tecnológica</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 stagger-animation">
                     
                     <!-- Service 1: Capacitación -->
-                    <a href="apartadoSS.html?service=capacitacion" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <a href="apartadoSS.html?service=capacitacion" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">school</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Capacitación</h3>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Capacitación</h3>
                                     <p class="text-gray-500 text-xs md:text-base">Programas especializados para equipos de alto rendimiento.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Capacitación" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Capacitación" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Programas especializados en TI, gestión y habilidades blandas.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Programas especializados en TI, gestión y habilidades blandas para equipos de alto rendimiento.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
                     <!-- Service 2: Asesoría -->
-                    <a href="apartadoSS.html?service=asesoria" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <a href="apartadoSS.html?service=asesoria" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">business_center</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Asesoría</h3>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Asesoría</h3>
                                     <p class="text-gray-500 text-xs md:text-base">Consultoría estratégica para la optimización de procesos.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Asesoría" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Asesoría" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Consultoría estratégica para implementación de nuevas tecnologías.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Consultoría estratégica para la implementación de nuevas tecnologías y optimización de procesos.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
-                    <!-- Service 3: Desarrollo -->
-                    <a href="apartadoSS.html?service=desarrollo" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <!-- Service 3: Desarrollo de Software -->
+                    <a href="apartadoSS.html?service=desarrollo" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">code</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Desarrollo</h3>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Desarrollo</h3>
                                     <p class="text-gray-500 text-xs md:text-base">Soluciones personalizadas y plataformas móviles.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Desarrollo" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Desarrollo" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Apps web robustas y plataformas móviles innovadoras.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Soluciones personalizadas, desde aplicaciones web robustas hasta plataformas móviles innovadoras.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
                     <!-- Service 4: Mantenimiento -->
-                    <a href="apartadoSS.html?service=soporte" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <a href="apartadoSS.html?service=soporte" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">settings_suggest</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Soporte TI</h3>
-                                    <p class="text-gray-500 text-xs md:text-base">Garantizamos la continuidad operativa.</p>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Soporte TI</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Garantizamos la continuidad operativa de su hardware.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Soporte TI" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Soporte TI" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Soporte preventivo y correctivo para tu infraestructura.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Soporte preventivo y correctivo para garantizar la continuidad operativa de su infraestructura.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
                     <!-- Service 5: Seguridad -->
-                    <a href="apartadoSS.html?service=seguridad" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <a href="apartadoSS.html?service=seguridad" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">videocam</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Seguridad</h3>
-                                    <p class="text-gray-500 text-xs md:text-base">Sistemas de videovigilancia avanzados.</p>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Seguridad</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Sistemas de videovigilancia avanzados y equipo.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Seguridad" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/s1.png?updatedAt=1778875875093"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Seguridad" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/s1.png?updatedAt=1778875875093"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Venta e instalación de sistemas de videovigilancia.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Venta e instalación de sistemas de videovigilancia avanzados y equipo de cómputo corporativo.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
                     <!-- Service 6: Financiamiento -->
-                    <a href="apartadoSS.html?service=financiamiento" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <a href="apartadoSS.html?service=financiamiento" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">payments</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Financiamiento</h3>
-                                    <p class="text-gray-500 text-xs md:text-base">Préstamos prendatarios con mejores tasas.</p>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Financiamiento</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Préstamos prendatarios con las mejores tasas.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Financiamiento" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Financiamiento" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Financiamiento inmediato y seguro respaldado por activos.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Financiamiento inmediato y seguro respaldado por activos, con las mejores tasas del mercado.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
                     <!-- Service 7: Traducción -->
-                    <a href="apartadoSS.html?service=traduccion" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <a href="apartadoSS.html?service=traduccion" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">translate</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Traducción</h3>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Traducción</h3>
                                     <p class="text-gray-500 text-xs md:text-base">Servicios lingüísticos profesionales.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Traducción" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Traducción" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Inglés a español para documentos técnicos y legales.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Servicios lingüísticos expertos de inglés a español para documentos técnicos, legales y corporativos.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
                     </a>
 
-                    <!-- Service 8: Venta Laptops -->
-                    <a href="apartadoSS.html?service=laptops" class="brochure-container block group" style="cursor:pointer; text-decoration: none;">
+                    <!-- Service 8: Venta de Laptops -->
+                    <a href="apartadoSS.html?service=laptops" class="brochure-container block group transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-3 md:p-6 flex flex-col justify-between bg-white">
                                 <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
-                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-cobalt/10 flex items-center justify-center mb-2 md:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                         <span class="material-symbols-outlined text-cobalt text-2xl md:text-5xl">laptop_mac</span>
                                     </div>
-                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors">Venta Laptops</h3>
-                                    <p class="text-gray-500 text-xs md:text-base">Equipos tecnológicos de última generación.</p>
+                                    <h3 class="font-headline text-lg md:text-2xl font-semibold text-navy-dark mb-1 md:mb-3 group-hover:text-cobalt transition-colors duration-300">Venta Laptops</h3>
+                                    <p class="text-gray-500 text-xs md:text-base">Equipos tecnológicos para estudiantes y empresas.</p>
                                 </div>
-                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all">
+                                <div class="flex items-center text-cobalt font-bold text-sm justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border border-cobalt/20 group-hover:bg-cobalt group-hover:text-white transition-all duration-300">
                                     <span class="material-symbols-outlined text-xs md:text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-white p-3 md:p-6">
-                                <div class="w-full h-24 md:h-40 bg-gray-100 rounded-lg mb-2 md:mb-4 overflow-hidden">
-                                    <img alt="Laptops" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195"/>
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow bg-gradient-to-br from-gray-50 to-white p-3 md:p-6">
+                                <div class="w-full h-24 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-2 md:mb-4 overflow-hidden shadow-inner">
+                                    <img alt="Laptops" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195"/>
                                 </div>
-                                <p class="text-gray-600 text-xs md:text-base mb-auto">Laptops ideales para estudiantes, emprendedores y empresas.</p>
-                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base">
-                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+                                <p class="text-gray-600 text-xs md:text-base mb-auto">Venta de laptops y equipos tecnológicos ideales para estudiantes, emprendedores y empresas.</p>
+                                <div class="pt-2 md:pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold text-xs md:text-base group-hover:gap-2 transition-all duration-300">
+                                    Ver detalles <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
@@ -284,39 +297,61 @@
         </section>
 
         <!-- ================= STATS SECTION ================= -->
-        <section id="stats-section" class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 border-t border-gray-200">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
-                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
-                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">task_alt</span>
-                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt"><span class="counter" data-target="1500">0</span>+</div>
-                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Proyectos Finalizados</div>
+        <section id="stats-section" class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 border-t border-gray-200 relative overflow-hidden">
+            <canvas id="statsParticlesCanvas" style="position:absolute;inset:0;pointer-events:none;z-index:0;width:100%;height:100%;"></canvas>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center relative z-10" id="statsGrid">
+                <div class="stats-card group p-3 md:p-8" data-target="1500" data-suffix="+" data-static="false">
+                    <div class="stats-ring"></div>
+                    <span class="material-symbols-outlined stats-icon text-xl md:text-3xl">task_alt</span>
+                    <div class="font-headline text-xl md:text-5xl font-bold text-cobalt stats-number-wrap">
+                        <span class="stats-val">0</span><span class="stats-sfx">+</span>
+                    </div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider group-hover:text-cobalt transition-colors duration-300 mt-0.5 md:mt-1">Proyectos Finalizados</div>
                 </div>
-                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
-                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">history_edu</span>
-                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt"><span class="counter" data-target="25">0</span>+</div>
-                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Años de Experiencia</div>
+
+                <div class="stats-card group p-3 md:p-8" data-target="25" data-suffix="+" data-static="false">
+                    <div class="stats-ring"></div>
+                    <span class="material-symbols-outlined stats-icon text-xl md:text-3xl">history_edu</span>
+                    <div class="font-headline text-xl md:text-5xl font-bold text-cobalt stats-number-wrap">
+                        <span class="stats-val">0</span><span class="stats-sfx">+</span>
+                    </div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider group-hover:text-cobalt transition-colors duration-300 mt-0.5 md:mt-1">Años de Experiencia</div>
                 </div>
-                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
-                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">headset_mic</span>
-                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt">24/7</div>
-                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Soporte Técnico</div>
+
+                <div class="stats-card group p-3 md:p-8" data-target="0" data-suffix="" data-static="true">
+                    <div class="stats-ring"></div>
+                    <span class="material-symbols-outlined stats-icon text-xl md:text-3xl">headset_mic</span>
+                    <div class="font-headline text-xl md:text-5xl font-bold text-cobalt stats-number-wrap">
+                        <span class="stats-val">24/7</span>
+                    </div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider group-hover:text-cobalt transition-colors duration-300 mt-0.5 md:mt-1">Soporte Técnico</div>
                 </div>
-                <div class="stats-card p-3 md:p-8 text-center group transition-all duration-300 hover:-translate-y-2">
-                    <span class="material-symbols-outlined text-cobalt text-3xl md:text-4xl mb-2 md:mb-3 opacity-50 group-hover:opacity-100 transition-opacity">sentiment_very_satisfied</span>
-                    <div class="font-headline text-2xl md:text-5xl font-bold text-cobalt"><span class="counter" data-target="100">0</span>%</div>
-                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Satisfacción de Clientes</div>
+
+                <div class="stats-card group p-3 md:p-8" data-target="100" data-suffix="%" data-static="false">
+                    <div class="stats-ring"></div>
+                    <span class="material-symbols-outlined stats-icon text-xl md:text-3xl">sentiment_very_satisfied</span>
+                    <div class="font-headline text-xl md:text-5xl font-bold text-cobalt stats-number-wrap">
+                        <span class="stats-val">0</span><span class="stats-sfx">%</span>
+                    </div>
+                    <div class="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider group-hover:text-cobalt transition-colors duration-300 mt-0.5 md:mt-1">Satisfacción de Clientes</div>
                 </div>
             </div>
         </section>
 
         <!-- ================= SECCIÓN FINAL CTA ================= -->
-        <section id="contacto" class="relative flex items-center bg-white overflow-hidden py-16 md:py-32 border-t border-slate-200">
-            <div class="container mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-8 md:gap-24">
+        <section id="contacto" class="min-h-screen relative flex items-center bg-white overflow-hidden py-16 md:py-32 border-t border-slate-200">
+            <div class="absolute inset-0 opacity-30">
+                <div class="absolute top-1/4 left-1/4 w-48 h-48 md:w-96 md:h-96 bg-cobalt/10 rounded-full blur-3xl animate-spin-slow"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-96 md:h-96 bg-blue-900/10 rounded-full blur-3xl animate-spin-slow animation-delay-2000"></div>
+            </div>
+            
+            <div class="container mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-8 md:gap-24 relative z-10">
                 <div class="relative order-2 lg:order-1 group">
-                    <div class="w-full aspect-square bg-slate-100 rounded-[30px] md:rounded-[50px] transform -rotate-6 absolute top-0 left-0 shadow-2xl opacity-50 group-hover:rotate-0 transition-transform duration-500"></div>
+                    <div class="w-full aspect-square bg-gradient-to-br from-cobalt/20 to-blue-900/20 rounded-[30px] md:rounded-[50px] transform -rotate-6 absolute top-0 left-0 shadow-2xl opacity-50 group-hover:rotate-0 transition-transform duration-700"></div>
                     <img alt="Equipo de Trabajo" class="w-full aspect-square object-cover rounded-[30px] md:rounded-[50px] relative z-10 transform translate-x-3 md:translate-x-8 -translate-y-3 md:-translate-y-8 shadow-2xl group-hover:translate-x-2 group-hover:-translate-y-2 transition-all duration-500" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"/>
                 </div>
-                <div class="order-1 lg:order-2 space-y-4 md:space-y-12">
+                <div class="order-1 lg:order-2 space-y-4 md:space-y-12 fade-in-right">
                     <h2 class="font-headline text-3xl md:text-6xl lg:text-8xl font-black text-navy-dark leading-none tracking-tighter">
                         Donde la <span class="text-cobalt italic">Excelencia</span> se vuelve <span class="text-cobalt italic">Humana</span>.
                     </h2>
@@ -324,29 +359,33 @@
                         No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercanía, <span class="text-cobalt font-bold">calidad y calidez</span> que su visión merece.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-3 md:gap-8 pt-3 md:pt-8">
-                        <button class="px-6 md:px-14 py-3 md:py-7 bg-cobalt text-white font-black text-base md:text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 md:gap-4">
-                            INICIAR PROYECTO
-                            <span class="material-symbols-outlined text-base md:text-2xl">arrow_forward</span>
+                        <button class="group relative px-6 md:px-14 py-3 md:py-7 bg-cobalt text-white font-black text-base md:text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 md:gap-4 overflow-hidden">
+                            <span class="relative z-10">INICIAR PROYECTO</span>
+                            <span class="material-symbols-outlined text-base md:text-2xl relative z-10 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            <span class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                         </button>
-                        <button class="px-6 md:px-14 py-3 md:py-7 border-2 md:border-4 border-gray-400 text-gray-600 font-black text-base md:text-2xl rounded-full hover:border-cobalt hover:text-cobalt transition-all duration-300 active:scale-95 shadow-xl">
-                            CONTÁCTANOS
+                        <button class="group relative px-6 md:px-14 py-3 md:py-7 border-2 md:border-4 border-gray-400 text-gray-600 font-black text-base md:text-2xl rounded-full hover:border-cobalt hover:text-cobalt transition-all duration-300 active:scale-95 shadow-xl overflow-hidden">
+                            <span class="relative z-10">CONTÁCTANOS</span>
+                            <span class="absolute inset-0 bg-cobalt opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                         </button>
                     </div>
                 </div>
             </div>
-            <span class="absolute bottom-10 right-[-10%] text-[4rem] md:text-[30rem] font-black text-cobalt/5 opacity-[0.3] whitespace-nowrap select-none pointer-events-none uppercase">EDAPYMES</span>
+            <span class="absolute bottom-10 right-[-10%] text-[4rem] md:text-[30rem] font-black text-cobalt/5 opacity-[0.3] whitespace-nowrap select-none pointer-events-none uppercase animate-pulse-slow">EDAPYMES</span>
         </section>
     </main>
 </div>
 
 <style>
-    /* === ESTILOS BASE === */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* === ESTILOS EXISTENTES === */
+    .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); }
+    .scroll-mt-24 { scroll-margin-top: 100px; }
     
     .text-premium-outline {
         color: transparent;
         -webkit-text-stroke: 3px #034AB0;
         font-weight: 900;
+        transition: all 0.3s ease;
     }
     @media (max-width: 768px) {
         .text-premium-outline {
@@ -356,8 +395,9 @@
     
     /* === BROCHURE STYLES === */
     .brochure-container { perspective: 2000px; height: 380px; }
-    @media (min-width: 768px) { .brochure-container { height: 480px; } }
-    
+    @media (min-width: 768px) {
+        .brochure-container { height: 480px; }
+    }
     .brochure {
         position: relative; width: 100%; height: 100%;
         transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -367,12 +407,12 @@
         position: absolute; width: 100%; height: 100%; background: white;
         backface-visibility: hidden; z-index: 2; transform-origin: left;
         transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 2px 0 15px rgba(0,0,0,0.05);
+        box-shadow: 2px 0 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);
         border-left: 4px solid rgba(0,0,0,0.1);
     }
     .brochure-inside {
-        position: absolute; width: 100%; height: 100%; background: white;
-        z-index: 1;
+        position: absolute; width: 100%; height: 100%; background: #f8fafc;
+        z-index: 1; border: 1px solid rgba(0,0,0,0.05);
     }
     .brochure-container:hover .brochure-cover { transform: rotateY(-110deg); }
     .spine-shadow {
@@ -380,12 +420,66 @@
         background: linear-gradient(to right, rgba(0,0,0,0.05), transparent);
         z-index: 3; pointer-events: none;
     }
-    .brochure-shadow { box-shadow: 0px 4px 20px rgba(0,0,0,0.05); }
+    .brochure-shadow { box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05); }
     
-    /* === VIDEO RESPONSIVE === */
+    /* === ANIMACIONES === */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(-40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInLeft {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+    }
+    @keyframes slideInRight {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    @keyframes spinSlow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    @keyframes pulseSlow {
+        0%, 100% { opacity: 0.1; }
+        50% { opacity: 0.25; }
+    }
+    
+    .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+    .fade-in-right { animation: fadeInRight 0.8s ease-out forwards; }
+    .animate-slide-in-left { animation: slideInLeft 0.6s ease-out forwards; }
+    .animate-slide-in-right { animation: slideInRight 0.6s ease-out forwards; }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-spin-slow { animation: spinSlow 20s linear infinite; }
+    .animate-pulse-slow { animation: pulseSlow 4s ease-in-out infinite; }
+    .animation-delay-2000 { animation-delay: 2s; }
+    .animation-delay-3000 { animation-delay: 3s; }
+    
+    .stagger-animation > * {
+        opacity: 0;
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+    .stagger-animation > *:nth-child(1) { animation-delay: 0.1s; }
+    .stagger-animation > *:nth-child(2) { animation-delay: 0.2s; }
+    .stagger-animation > *:nth-child(3) { animation-delay: 0.3s; }
+    .stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
+    .stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
+    .stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
+    .stagger-animation > *:nth-child(7) { animation-delay: 0.7s; }
+    .stagger-animation > *:nth-child(8) { animation-delay: 0.8s; }
+    
+    /* === VIDEO RESPONSIVE - SIN FILTROS QUE AFECTEN CALIDAD === */
     @media (max-width: 768px) {
         .hero-video-desktop { display: none; }
         .hero-video-mobile { display: block !important; }
+        .hero-video-mobile { object-fit: cover; width: 100%; height: 100%; }
     }
     @media (min-width: 769px) {
         .hero-video-desktop { display: block; }
@@ -398,18 +492,78 @@
     }
     .animate-bounce-custom { animation: bounceCustom 2s infinite; cursor: pointer; }
     
-    /* === STATS CARD === */
+    @media (max-width: 768px) {
+        .container { padding-left: 1rem; padding-right: 1rem; }
+    }
+
+    /* === STATS SECTION === */
     .stats-card {
+        position: relative;
         border-radius: 16px;
-        border: 1px solid rgba(3,74,176,0.1);
-        background: white;
-        transition: all 0.3s ease;
+        border: 1px solid rgba(3,74,176,0.08);
+        background: #ffffff;
+        cursor: default;
+        transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        overflow: hidden;
     }
     .stats-card:hover {
         transform: translateY(-6px);
-        border-color: rgba(3,74,176,0.3);
-        box-shadow: 0 20px 40px rgba(3,74,176,0.1);
+        border-color: rgba(3,74,176,0.25);
+        box-shadow: 0 20px 40px rgba(3,74,176,0.10);
     }
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(circle at 50% 60%, rgba(3,74,176,0.06) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+    .stats-card.active::before { opacity: 1; }
+
+    .stats-ring {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 80px; height: 80px;
+        margin: -40px 0 0 -40px;
+        border-radius: 50%;
+        border: 2px solid rgba(3,74,176,0.3);
+        transform: scale(0);
+        opacity: 0;
+        pointer-events: none;
+    }
+    @media (min-width: 768px) {
+        .stats-ring { width: 100px; height: 100px; margin: -50px 0 0 -50px; }
+    }
+    .stats-card.do-ring .stats-ring {
+        animation: statsRingPulse 0.9s ease-out forwards;
+    }
+    @keyframes statsRingPulse {
+        0%   { transform: scale(0.4); opacity: 0.7; }
+        100% { transform: scale(2.6); opacity: 0; }
+    }
+
+    .stats-icon {
+        display: block;
+        color: rgba(3,74,176,0.22);
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .stats-card:hover .stats-icon {
+        color: rgba(3,74,176,0.65);
+        transform: scale(1.12) rotate(-6deg);
+    }
+
+    .stats-number-wrap {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 2px;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+    }
+    .stats-sfx { display: none; }
 </style>
 
 <script>
@@ -429,34 +583,147 @@
     window.addEventListener('resize', detectAndSwitchVideo);
     document.addEventListener('DOMContentLoaded', detectAndSwitchVideo);
 
-    /* CONTADORES */
-    const counters = document.querySelectorAll('.counter');
-    const speed = 200;
-    
-    function animateCounter(counter) {
-        const updateCount = () => {
-            const target = parseInt(counter.getAttribute('data-target'));
-            const count = parseInt(counter.innerText);
-            const increment = Math.ceil(target / speed);
-            if (count < target) {
-                counter.innerText = count + increment;
-                setTimeout(updateCount, 20);
-            } else {
-                counter.innerText = target;
-            }
-        };
-        updateCount();
+    /* STATS - PARTÍCULAS */
+    const statsCanvas = document.getElementById('statsParticlesCanvas');
+    const statsCtx = statsCanvas.getContext('2d');
+    const statsParticles = [];
+
+    function resizeStatsCanvas() {
+        const section = document.getElementById('stats-section');
+        if (section) {
+            statsCanvas.width = section.offsetWidth;
+            statsCanvas.height = section.offsetHeight;
+        }
     }
-    
-    const observerOptions = { threshold: 0.5 };
-    const observer = new IntersectionObserver((entries) => {
+    resizeStatsCanvas();
+    window.addEventListener('resize', resizeStatsCanvas);
+
+    function spawnStatsParticles(card) {
+        const sectionRect = statsCanvas.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const cx = cardRect.left - sectionRect.left + cardRect.width / 2;
+        const cy = cardRect.top - sectionRect.top + cardRect.height / 2;
+        const particleCount = window.innerWidth < 768 ? 12 : 22;
+        for (let i = 0; i < particleCount; i++) {
+            const angle = (Math.PI * 2 / particleCount) * i + Math.random() * 0.25;
+            const speed = 1.2 + Math.random() * 2.5;
+            statsParticles.push({
+                x: cx, y: cy,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 1,
+                decay: 0.018 + Math.random() * 0.012,
+                size: 2 + Math.random() * 3
+            });
+        }
+    }
+
+    function drawStatsParticles() {
+        statsCtx.clearRect(0, 0, statsCanvas.width, statsCanvas.height);
+        for (let i = statsParticles.length - 1; i >= 0; i--) {
+            const p = statsParticles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.04;
+            p.life -= p.decay;
+            if (p.life <= 0) { statsParticles.splice(i, 1); continue; }
+            statsCtx.beginPath();
+            statsCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            statsCtx.fillStyle = `rgba(3,74,176,${p.life * 0.8})`;
+            statsCtx.fill();
+        }
+        requestAnimationFrame(drawStatsParticles);
+    }
+    drawStatsParticles();
+
+    /* STATS - CONTADORES */
+    const DIGITS = '0123456789';
+    function rndDigit() { return DIGITS[Math.floor(Math.random() * DIGITS.length)]; }
+
+    function triggerRing(card) {
+        card.classList.remove('do-ring');
+        void card.offsetWidth;
+        card.classList.add('do-ring');
+        setTimeout(() => card.classList.remove('do-ring'), 950);
+    }
+
+    function animateStatCard(card) {
+        const isStatic = card.dataset.static === 'true';
+        card.classList.add('active');
+        triggerRing(card);
+
+        if (isStatic) {
+            spawnStatsParticles(card);
+            return;
+        }
+
+        const target = parseInt(card.dataset.target, 10);
+        const valEl = card.querySelector('.stats-val');
+        const sfxEl = card.querySelector('.stats-sfx');
+        if (sfxEl) sfxEl.style.display = 'none';
+        valEl.textContent = '0';
+
+        const duration = 1900;
+        const start = performance.now();
+
+        let scrambleTimer = setInterval(() => {
+            const digits = target >= 1000 ? 4 : target >= 100 ? 3 : target >= 10 ? 2 : 1;
+            let fake = '';
+            for (let d = 0; d < digits; d++) fake += rndDigit();
+            valEl.textContent = fake;
+        }, 55);
+
+        function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+
+        function tick(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = easeOutExpo(progress);
+            const current = Math.round(eased * target);
+
+            if (progress > 0.28) {
+                clearInterval(scrambleTimer);
+                valEl.textContent = current.toLocaleString();
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                valEl.textContent = target.toLocaleString();
+                if (sfxEl) sfxEl.style.display = '';
+                spawnStatsParticles(card);
+            }
+        }
+        requestAnimationFrame(tick);
+    }
+
+    let statsTriggered = false;
+    const statsGrid = document.getElementById('statsGrid');
+    const statsCards = document.querySelectorAll('.stats-card');
+
+    const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target);
-                observer.unobserve(entry.target);
+            if (entry.isIntersecting && !statsTriggered) {
+                statsTriggered = true;
+                statsCards.forEach((card, i) => {
+                    setTimeout(() => animateStatCard(card), i * 210);
+                });
             }
         });
-    }, observerOptions);
-    
-    counters.forEach(counter => observer.observe(counter));
+    }, { threshold: 0.4 });
+
+    if (statsGrid) statsObserver.observe(statsGrid);
+
+    statsCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const target = parseInt(card.dataset.target, 10);
+            const valEl = card.querySelector('.stats-val');
+            const sfxEl = card.querySelector('.stats-sfx');
+            if (!isNaN(target) && target > 0 && sfxEl) {
+                valEl.textContent = '0';
+                sfxEl.style.display = 'none';
+            }
+            animateStatCard(card);
+        });
+    });
 </script>
