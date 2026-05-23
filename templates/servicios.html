@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     
                     <!-- Service 1: Capacitación -->
-                    <a href="/EDAPyme/templates/apartadoSS.html?service=capacitacion" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -75,7 +75,7 @@
                     </a>
 
                     <!-- Service 2: Asesoría -->
-                    <a href="apartadoSS.html?service=asesoria" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -101,7 +101,7 @@
                     </a>
 
                     <!-- Service 3: Desarrollo de Software -->
-                    <a href="apartadoSS.html?service=desarrollo" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -127,7 +127,7 @@
                     </a>
 
                     <!-- Service 4: Mantenimiento -->
-                    <a href="apartadoSS.html?service=soporte" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -153,7 +153,7 @@
                     </a>
 
                     <!-- Service 5: Seguridad -->
-                    <a href="apartadoSS.html?service=seguridad" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -179,7 +179,7 @@
                     </a>
 
                     <!-- Service 6: Financiamiento -->
-                    <a href="apartadoSS.html?service=financiamiento" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -205,7 +205,7 @@
                     </a>
 
                     <!-- Service 7: Traducción -->
-                    <a href="apartadoSS.html?service=traduccion" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -231,7 +231,7 @@
                     </a>
 
                     <!-- Service 8: Venta de Laptops -->
-                    <a href="apartadoSS.html?service=laptops" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <a href="javascript:void(0)" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -357,3 +357,17 @@
         animation: bounce 2s infinite;
     }
 </style>
+<script>
+/**
+ * Navega a la página de detalle del servicio conservando diseño y funcionalidades.
+ * @param {string} servicioId - Identificador del servicio (ej: 'asesoria', 'capacitacion', 'desarrollo', etc.)
+ */
+function abrirDetalleServicio(servicioId) {
+    if (!servicioId) {
+        console.warn("Se debe proporcionar un identificador de servicio válido.");
+        return;
+    }
+    // Redirige a apartadoSS.html con el parámetro de servicio codificado
+    window.location.href = `apartadoSS.html?service=${encodeURIComponent(servicioId)}`;
+}
+</script>
