@@ -34,5 +34,8 @@
     "nodemailer": "^8.0.4",
     "pg": "^8.20.0",
     "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.3.0"
   }
 }
