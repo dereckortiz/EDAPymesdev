@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     
                     <!-- Service 1: Capacitación -->
-                    <a href="apartadoSS.html?service=capacitacion" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('capacitacion')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -72,10 +72,10 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
                     <!-- Service 2: Asesoría -->
-                    <a href="apartadoSS.html?service=asesoria" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('asesoria')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -98,10 +98,10 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
                     <!-- Service 3: Desarrollo de Software -->
-                    <a href="apartadoSS.html?service=desarrollo" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('desarrollo')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -124,10 +124,10 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
                     <!-- Service 4: Mantenimiento -->
-                    <a href="apartadoSS.html?service=soporte" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('soporte')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -150,10 +150,10 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
                     <!-- Service 5: Seguridad -->
-                    <a href="apartadoSS.html?service=seguridad" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('seguridad')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -176,10 +176,10 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
                     <!-- Service 6: Financiamiento -->
-                    <a href="apartadoSS.html?service=financiamiento" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('financiamiento')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -202,10 +202,10 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
                     <!-- Service 7: Traducción -->
-                    <a href="apartadoSS.html?service=traduccion" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('traduccion')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -228,10 +228,10 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
 
                     <!-- Service 8: Venta de Laptops -->
-                    <a href="apartadoSS.html?service=laptops" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
+                    <div onclick="verDetalleServicio('laptops')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -254,13 +254,13 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- ================= STATS SECTION ================= -->
-        <section id="stats-section" class="max-w-7xl mx-auto px-6 py-16 border-t border-gray-200">
+        <section class="max-w-7xl mx-auto px-6 py-16 border-t border-gray-200">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div class="space-y-2">
                     <div class="font-headline text-4xl md:text-5xl font-bold text-cobalt">1500+</div>
@@ -282,7 +282,7 @@
         </section>
 
         <!-- ================= SECCIÓN FINAL CTA ================= -->
-        <section id="contacto" class="min-h-screen relative flex items-center bg-white overflow-hidden py-32 border-t border-slate-200">
+        <section class="min-h-screen relative flex items-center bg-white overflow-hidden py-32 border-t border-slate-200">
             <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-24">
                 <div class="relative order-2 lg:order-1">
                     <div class="w-full aspect-square bg-slate-100 rounded-[50px] transform -rotate-6 absolute top-0 left-0 shadow-2xl opacity-50"></div>
@@ -296,11 +296,11 @@
                         No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercanía, <span class="text-cobalt font-bold">calidad y calidez</span> que su visión merece.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-8 pt-8">
-                        <button class="px-14 py-7 bg-cobalt text-white font-black text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-transform flex items-center gap-4">
+                        <button onclick="window.location.href='index.html#contacto'" class="px-14 py-7 bg-cobalt text-white font-black text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-transform flex items-center gap-4">
                             INICIAR PROYECTO
                             <span class="material-symbols-outlined">arrow_forward</span>
                         </button>
-                        <button class="px-14 py-7 border-4 border-gray-400 text-gray-600 font-black text-2xl rounded-full hover:bg-gray-400 hover:text-white transition-all active:scale-95 shadow-xl">
+                        <button onclick="window.location.href='index.html#contacto'" class="px-14 py-7 border-4 border-gray-400 text-gray-600 font-black text-2xl rounded-full hover:bg-gray-400 hover:text-white transition-all active:scale-95 shadow-xl">
                             CONTÁCTANOS
                         </button>
                     </div>
@@ -310,6 +310,40 @@
         </section>
     </main>
 </div>
+
+<script>
+    // Función para ver detalle del servicio usando el sistema SPA
+    function verDetalleServicio(servicioId) {
+        // Mapeo de servicios a nombres de archivo
+        const serviceMap = {
+            'capacitacion': 'capacitacion',
+            'asesoria': 'asesoria', 
+            'desarrollo': 'desarrollo',
+            'soporte': 'soporte',
+            'seguridad': 'seguridad',
+            'financiamiento': 'financiamiento',
+            'traduccion': 'traduccion',
+            'laptops': 'laptops'
+        };
+        
+        const serviceFile = serviceMap[servicioId] || servicioId;
+        
+        // Usar la navegación SPA existente
+        if (typeof window.parent.cargarSeccion === 'function') {
+            // Si estamos dentro del iframe/index principal
+            window.parent.cargarSeccion(`apartadoSS.html?service=${servicioId}`, null);
+        } else if (typeof window.cargarSeccion === 'function') {
+            // Si la función está disponible globalmente
+            window.cargarSeccion(`apartadoSS.html?service=${servicioId}`, null);
+        } else {
+            // Fallback: navegación directa
+            window.location.href = `apartadoSS.html?service=${servicioId}`;
+        }
+    }
+    
+    // También exponer la función globalmente
+    window.verDetalleServicio = verDetalleServicio;
+</script>
 
 <style>
     .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); }
