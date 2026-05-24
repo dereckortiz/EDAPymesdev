@@ -1769,6 +1769,203 @@ function verDetalleServicio(servicioId) {
     cargarSeccion(`apartadoSS.html?service=${servicioId}`, document.querySelectorAll('.nav-link')[1]);
 }
 
+// ============================================
+// FUNCIONES GLOBALES PARA DETALLE DE SERVICIOS
+// ============================================
+
+const serviceDataGlobal = {
+    capacitacion: {
+        image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Capacitación Profesional',
+        descVisual: 'Formación especializada para potenciar el talento humano de su empresa.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Capacitación y Formación Empresarial',
+        description: 'En EDAPYMES brindamos capacitaciones orientadas al fortalecimiento de las pequeñas y medianas empresas nicaragüenses, enfocándonos en el desarrollo de habilidades tecnológicas y empresariales. Nuestros programas combinan teoría y práctica para que los participantes puedan aplicar los conocimientos en situaciones reales dentro de sus negocios.',
+        benefits: [
+            { title: 'Programas Personalizados', desc: 'Contenido adaptado a las necesidades específicas de su equipo y sector empresarial.' },
+            { title: 'Certificación Oficial', desc: 'Obtenga certificados que respaldan las competencias adquiridas por sus colaboradores.' },
+            { title: 'Seguimiento Post-Capacitación', desc: 'Acompañamiento continuo para asegurar la aplicación efectiva de lo aprendido.' }
+        ]
+    },
+    asesoria: {
+        image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Consultoría Estratégica',
+        descVisual: 'Impulsando la transformación digital y la excelencia operativa en organizaciones globales.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Optimización y Escalamiento Empresarial',
+        description: 'Nuestra división de consultoría en TechConsult ofrece una visión experta para navegar los desafíos tecnológicos actuales. No solo implementamos soluciones; rediseñamos procesos para garantizar que su infraestructura soporte el crecimiento a largo plazo y la agilidad competitiva.',
+        benefits: [
+            { title: 'Análisis Predictivo', desc: 'Modelado de escenarios para decisiones basadas en datos reales.' },
+            { title: 'Arquitectura Escalable', desc: 'Diseños modulares que crecen junto con su base de usuarios.' },
+            { title: 'Seguridad por Diseño', desc: 'Protocolos integrados de protección desde la fase de planificación.' }
+        ]
+    },
+    desarrollo: {
+        image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Desarrollo de Software',
+        descVisual: 'Soluciones tecnológicas a medida para su negocio.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Desarrollo de Sistemas Personalizados',
+        description: 'Desarrollamos sistemas personalizados adaptados a las necesidades de cada empresa, con el objetivo de mejorar la organización, automatización y control de sus procesos. Creamos sistemas administrativos, páginas web y aplicaciones funcionales, modernas y escalables.',
+        benefits: [
+            { title: 'Software a Medida', desc: 'Aplicaciones diseñadas específicamente para sus procesos y flujos de trabajo.' },
+            { title: 'Tecnología Moderna', desc: 'Utilizamos las últimas tecnologías para garantizar rendimiento y compatibilidad.' },
+            { title: 'Escalabilidad Garantizada', desc: 'Sistemas que crecen con su empresa sin necesidad de reemplazo total.' }
+        ]
+    },
+    soporte: {
+        image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Soporte Técnico TI',
+        descVisual: 'Mantenimiento preventivo y correctivo para su infraestructura.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Mantenimiento y Soporte Técnico',
+        description: 'Brindamos servicios de mantenimiento preventivo y correctivo para computadoras, laptops y equipos tecnológicos. Realizamos limpieza interna y externa, optimización de sistemas, revisión de componentes e instalación de programas para garantizar la continuidad operativa.',
+        benefits: [
+            { title: 'Mantenimiento Preventivo', desc: 'Programas regulares para prevenir fallas y prolongar la vida útil de sus equipos.' },
+            { title: 'Soporte Remoto', desc: 'Asistencia técnica inmediata sin necesidad de desplazamiento físico.' },
+            { title: 'Respuesta Rápida', desc: 'Tiempos de respuesta optimizados para minimizar interrupciones en su operación.' }
+        ]
+    },
+    seguridad: {
+        image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/S1.jpg?updatedAt=1778875881238',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Seguridad Electrónica',
+        descVisual: 'Protección integral para sus instalaciones y activos.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Sistemas de Seguridad y Vigilancia',
+        description: 'Ofrecemos la venta de cámaras de seguridad y equipos de vigilancia para hogares, negocios y empresas. Contamos con soluciones modernas y accesibles que permiten fortalecer la seguridad de las instalaciones y mejorar el control visual de diferentes áreas.',
+        benefits: [
+            { title: 'Monitoreo 24/7', desc: 'Vigilancia continua con acceso remoto desde cualquier dispositivo.' },
+            { title: 'Instalación Profesional', desc: 'Equipo técnico certificado para una instalación óptima y segura.' },
+            { title: 'Alta Definición', desc: 'Equipos de última generación con resolución HD y visión nocturna.' }
+        ]
+    },
+    financiamiento: {
+        image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Financiamiento Rápido',
+        descVisual: 'Soluciones financieras accesibles y seguras.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Préstamos Prendatarios',
+        description: 'Brindamos servicios de préstamos prendatarios de manera rápida, segura y accesible para personas y pequeños negocios que necesitan apoyo financiero. Facilitamos procesos confiables utilizando artículos de valor como garantía, con atención transparente.',
+        benefits: [
+            { title: 'Proceso Rápido', desc: 'Aprobación y desembolso en tiempo récord para sus necesidades urgentes.' },
+            { title: 'Tasas Competitivas', desc: 'Las mejores condiciones del mercado con total transparencia.' },
+            { title: 'Confidencialidad', desc: 'Manejo discreto y profesional de toda su información financiera.' }
+        ]
+    },
+    traduccion: {
+        image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Traducción Profesional',
+        descVisual: 'Precisión lingüística para documentos corporativos.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Traducción Inglés – Español',
+        description: 'Ofrecemos servicios de traducción de inglés a español para empresas y emprendedores. Realizamos traducción de documentos, contenidos empresariales, material corporativo y textos digitales, manteniendo la coherencia y el significado original de la información.',
+        benefits: [
+            { title: 'Precisión Terminológica', desc: 'Traducciones especializadas que mantienen el significado técnico y profesional.' },
+            { title: 'Entrega Puntual', desc: 'Cumplimos con los plazos establecidos sin comprometer la calidad.' },
+            { title: 'Adaptación Cultural', desc: 'Contenido adaptado al contexto cultural de su audiencia objetivo.' }
+        ]
+    },
+    laptops: {
+        image: 'https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195',
+        badge: 'SERVICIO DESTACADO',
+        titleVisual: 'Venta de Laptops',
+        descVisual: 'Equipos tecnológicos de calidad para cada necesidad.',
+        portafolio: 'PORTAFOLIO PROFESIONAL',
+        heading: 'Venta de Laptops y Equipos',
+        description: 'Ofrecemos venta de laptops y equipos tecnológicos ideales para estudiantes, emprendedores y empresas. Contamos con diferentes modelos y especificaciones que se adaptan a las necesidades de trabajo, estudio y uso profesional con equipos funcionales y accesibles.',
+        benefits: [
+            { title: 'Variedad de Modelos', desc: 'Amplio catálogo para diferentes necesidades y presupuestos.' },
+            { title: 'Garantía Extendida', desc: 'Respaldo completo en todos nuestros equipos vendidos.' },
+            { title: 'Asesoría Técnica', desc: 'Le ayudamos a elegir el equipo ideal según sus requerimientos.' }
+        ]
+    }
+};
+
+function mostrarDetalleServicioGlobal(serviceKey) {
+    console.log('mostrarDetalleServicioGlobal llamado con:', serviceKey);
+    const data = serviceDataGlobal[serviceKey];
+    if (!data) {
+        console.error('Servicio no encontrado:', serviceKey);
+        return;
+    }
+
+    const contenido = document.getElementById('contenido');
+    if (!contenido) return;
+
+    const detalleContainer = contenido.querySelector('#detalle-servicio-container');
+    const listaContainer = contenido.querySelector('#lista-servicios-container');
+
+    if (!detalleContainer) {
+        console.error('No se encontró detalle-servicio-container');
+        return;
+    }
+
+    // Actualizar contenido
+    const img = detalleContainer.querySelector('#detalle-image');
+    const badge = detalleContainer.querySelector('#detalle-badge');
+    const titleVisual = detalleContainer.querySelector('#detalle-title-visual');
+    const descVisual = detalleContainer.querySelector('#detalle-desc-visual');
+    const portafolio = detalleContainer.querySelector('#detalle-portafolio');
+    const heading = detalleContainer.querySelector('#detalle-heading');
+    const description = detalleContainer.querySelector('#detalle-description');
+    const benefitsList = detalleContainer.querySelector('#detalle-benefits-list');
+
+    if (img) img.src = data.image;
+    if (badge) badge.textContent = data.badge;
+    if (titleVisual) titleVisual.textContent = data.titleVisual;
+    if (descVisual) descVisual.textContent = data.descVisual;
+    if (portafolio) portafolio.textContent = data.portafolio;
+    if (heading) heading.textContent = data.heading;
+    if (description) description.textContent = data.description;
+
+    if (benefitsList) {
+        benefitsList.innerHTML = '';
+        data.benefits.forEach(benefit => {
+            const li = document.createElement('li');
+            li.className = 'flex items-start gap-4';
+            li.innerHTML = `
+                <div class="bg-blue-50 p-1 rounded-full text-cobalt shrink-0">
+                    <span class="material-icons-round text-[20px]">check</span>
+                </div>
+                <div>
+                    <span class="font-medium text-sm text-navy-dark font-bold block">${benefit.title}</span>
+                    <span class="text-xs text-gray-500">${benefit.desc}</span>
+                </div>
+            `;
+            benefitsList.appendChild(li);
+        });
+    }
+
+    // Ocultar lista, mostrar detalle
+    if (listaContainer) listaContainer.classList.add('hidden');
+    detalleContainer.classList.remove('hidden');
+    
+    // Scroll al detalle
+    detalleContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function ocultarDetalleServicioGlobal() {
+    const contenido = document.getElementById('contenido');
+    if (!contenido) return;
+    
+    const detalleContainer = contenido.querySelector('#detalle-servicio-container');
+    const listaContainer = contenido.querySelector('#lista-servicios-container');
+    
+    if (detalleContainer) detalleContainer.classList.add('hidden');
+    if (listaContainer) listaContainer.classList.remove('hidden');
+    
+    if (listaContainer) listaContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+
+
 // Exponerla globalmente
 // ============================================
 // MANEJADOR MENÚ MÓVIL
@@ -1836,6 +2033,10 @@ window.abrirModalProducto = abrirModalProducto;
 window.cerrarModalProducto = cerrarModalProducto;
 window.initServicesCarousel3D = initServicesCarousel3D;
 window.verDetalleServicio = verDetalleServicio;
+// Exponer funciones globalmente
+window.mostrarDetalleServicioGlobal = mostrarDetalleServicioGlobal;
+window.ocultarDetalleServicioGlobal = ocultarDetalleServicioGlobal;
+window.serviceDataGlobal = serviceDataGlobal;
 </script>
 </body>
 </html>
