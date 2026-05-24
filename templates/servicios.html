@@ -1,172 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>EDAPymes - Servicios Premium | Tecnología con Calidad y Calidez</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'cobalt': '#034AB0',
-                        'navy-dark': '#001a3d',
-                    },
-                    fontFamily: {
-                        'headline': ['Manrope', 'sans-serif'],
-                        'body': ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background-color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-        }
-        
-        .material-symbols-outlined {
-            vertical-align: middle;
-        }
-        
-        .text-premium-outline {
-            color: transparent;
-            -webkit-text-stroke: 3px #034AB0;
-            font-weight: 900;
-        }
-        
-        @media (max-width: 768px) {
-            .text-premium-outline {
-                -webkit-text-stroke: 2px #034AB0;
-            }
-        }
-        
-        /* ===== ESTILOS DE LOS BROCHURES CON ANIMACIÓN AL HOVER ===== */
-        .brochure-container { 
-            perspective: 2000px; 
-            height: 480px; 
-            cursor: pointer;
-        }
-        
-        .brochure {
-            position: relative; 
-            width: 100%; 
-            height: 100%;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        
-        .brochure-cover {
-            position: absolute; 
-            width: 100%; 
-            height: 100%; 
-            background: white;
-            backface-visibility: hidden; 
-            z-index: 2; 
-            transform-origin: left;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 2px 0 15px rgba(0,0,0,0.05); 
-            border: 1px solid rgba(0,0,0,0.05);
-            border-left: 4px solid rgba(0,0,0,0.1);
-            border-radius: 0 12px 12px 0;
-        }
-        
-        .brochure-inside {
-            position: absolute; 
-            width: 100%; 
-            height: 100%; 
-            background: #f8fafc;
-            z-index: 1; 
-            border: 1px solid rgba(0,0,0,0.05); 
-            padding: 1.5rem;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* ANIMACIÓN: al hacer hover, la tapa se abre (rota) */
-        .brochure-container:hover .brochure-cover { 
-            transform: rotateY(-110deg); 
-        }
-        
-        .spine-shadow {
-            position: absolute; 
-            left: 0; 
-            top: 0; 
-            bottom: 0; 
-            width: 10px;
-            background: linear-gradient(to right, rgba(0,0,0,0.05), transparent);
-            z-index: 3; 
-            pointer-events: none;
-            border-radius: 4px 0 0 4px;
-        }
-        
-        .brochure-shadow { 
-            box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05); 
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(10px); }
-        }
-        
-        .animate-bounce {
-            animation: bounce 2s infinite;
-        }
-        
-        /* Ajuste responsive para los brochures */
-        @media (max-width: 768px) {
-            .brochure-container { 
-                height: 420px; 
-            }
-            .brochure-inside {
-                padding: 1rem;
-            }
-            .brochure-inside .w-full.h-40 {
-                height: 120px;
-            }
-        }
-        
-        @media (max-width: 640px) {
-            .brochure-container { 
-                height: 380px; 
-            }
-            .brochure-inside {
-                padding: 0.75rem;
-            }
-            .brochure-inside .w-full.h-40 {
-                height: 100px;
-            }
-            .brochure-cover .text-5xl {
-                font-size: 2.5rem;
-            }
-            .brochure-cover h3 {
-                font-size: 1.25rem;
-            }
-        }
-    </style>
-</head>
-<body class="bg-white text-navy-dark font-body selection:bg-cobalt selection:text-white overflow-x-hidden">
-
+<div class="bg-white text-navy-dark font-body selection:bg-cobalt selection:text-white overflow-x-hidden">
     <main>
-        <!-- ================= HERO SECTION CON VIDEO HD ================= -->
+        <!-- ================= HERO SECTION CON VIDEO HD - ESTILO ORIGINAL ================= -->
         <section class="relative min-h-screen flex items-center overflow-hidden bg-white">
             <div class="absolute inset-0 z-0">
                 <video autoplay muted loop playsinline class="w-full h-full object-cover">
@@ -215,10 +49,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     
                     <!-- Service 1: Capacitación -->
-                    <div class="brochure-container" data-servicio="capacitaciones">
+                    <a href="apartadoSS.html?service=capacitacion" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">school</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Capacitación</h3>
@@ -228,23 +62,23 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Capacitación" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop">
+                                    <img alt="Capacitación" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Programas especializados en TI, gestión y habilidades blandas para equipos de alto rendimiento.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Service 2: Asesoría -->
-                    <div class="brochure-container" data-servicio="asesorias">
+                    <a href="apartadoSS.html?service=asesoria" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">business_center</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Asesoría</h3>
@@ -254,23 +88,23 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Asesoría" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop">
+                                    <img alt="Asesoría" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Consultoría estratégica para la implementación de nuevas tecnologías y optimización de procesos.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Service 3: Desarrollo de Software -->
-                    <div class="brochure-container" data-servicio="desarrollo">
+                    <a href="apartadoSS.html?service=desarrollo" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">code</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Desarrollo</h3>
@@ -280,23 +114,23 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Desarrollo" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg">
+                                    <img alt="Desarrollo" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/d1.jpg"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Soluciones personalizadas, desde aplicaciones web robustas hasta plataformas móviles innovadoras.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Service 4: Mantenimiento -->
-                    <div class="brochure-container" data-servicio="soporte">
+                    <a href="apartadoSS.html?service=soporte" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">settings_suggest</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Soporte TI</h3>
@@ -306,23 +140,23 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Soporte TI" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg">
+                                    <img alt="Soporte TI" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/m1.jpg"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Soporte preventivo y correctivo para garantizar la continuidad operativa de su infraestructura.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Service 5: Seguridad -->
-                    <div class="brochure-container" data-servicio="seguridad">
+                    <a href="apartadoSS.html?service=seguridad" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">videocam</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Seguridad</h3>
@@ -332,23 +166,23 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Seguridad" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/s1.png?updatedAt=1778875875093">
+                                    <img alt="Seguridad" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/s1.png?updatedAt=1778875875093"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Venta e instalación de sistemas de videovigilancia avanzados y equipo de cómputo corporativo.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Service 6: Financiamiento -->
-                    <div class="brochure-container" data-servicio="financiamiento">
+                    <a href="apartadoSS.html?service=financiamiento" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">payments</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Financiamiento</h3>
@@ -358,23 +192,23 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Financiamiento" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814">
+                                    <img alt="Financiamiento" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/p1.jpg?updatedAt=1778875874814"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Financiamiento inmediato y seguro respaldado por activos, con las mejores tasas del mercado.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Service 7: Traducción -->
-                    <div class="brochure-container" data-servicio="traduccion">
+                    <a href="apartadoSS.html?service=traduccion" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">translate</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Traducción</h3>
@@ -384,23 +218,23 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Traducción" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704">
+                                    <img alt="Traducción" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/t3.jpg?updatedAt=1778875879704"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Servicios lingüísticos expertos de inglés a español para documentos técnicos, legales y corporativos.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Service 8: Venta de Laptops -->
-                    <div class="brochure-container" data-servicio="laptops">
+                    <a href="apartadoSS.html?service=laptops" class="brochure-container block" style="cursor:pointer; text-decoration: none;">
                         <div class="brochure">
-                            <div class="brochure-cover p-6 flex flex-col justify-between">
-                                <div class="spine-shadow"></div>
+                            <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
+                                <div class="spine-shadow rounded-l-lg"></div>
                                 <div>
                                     <span class="material-symbols-outlined text-cobalt text-5xl mb-4">laptop_mac</span>
                                     <h3 class="font-headline text-2xl font-semibold text-navy-dark mb-3">Venta Laptops</h3>
@@ -410,17 +244,17 @@
                                     <span class="material-symbols-outlined text-sm">keyboard_arrow_right</span>
                                 </div>
                             </div>
-                            <div class="brochure-inside brochure-shadow">
+                            <div class="brochure-inside rounded-lg flex flex-col brochure-shadow">
                                 <div class="w-full h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                                    <img alt="Laptops" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195">
+                                    <img alt="Laptops" class="w-full h-full object-cover" src="https://ik.imagekit.io/y52skklsrw/edapymes/imagen/v1.jpg?updatedAt=1778875881195"/>
                                 </div>
                                 <p class="text-gray-600 mb-auto">Venta de laptops y equipos tecnológicos ideales para estudiantes, emprendedores y empresas.</p>
-                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold mt-3">
+                                <div class="pt-4 border-t border-gray-200 flex items-center text-cobalt font-bold">
                                     Ver detalles <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -452,7 +286,7 @@
             <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-24">
                 <div class="relative order-2 lg:order-1">
                     <div class="w-full aspect-square bg-slate-100 rounded-[50px] transform -rotate-6 absolute top-0 left-0 shadow-2xl opacity-50"></div>
-                    <img alt="Equipo de Trabajo" class="w-full aspect-square object-cover rounded-[50px] relative z-10 transform translate-x-8 -translate-y-8 shadow-2xl" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop">
+                    <img alt="Equipo de Trabajo" class="w-full aspect-square object-cover rounded-[50px] relative z-10 transform translate-x-8 -translate-y-8 shadow-2xl" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"/>
                 </div>
                 <div class="order-1 lg:order-2 space-y-12">
                     <h2 class="font-headline text-6xl md:text-8xl font-black text-navy-dark leading-none tracking-tighter">
@@ -462,11 +296,11 @@
                         No solo ofrecemos servicios; construimos el futuro de su Pyme con la cercanía, <span class="text-cobalt font-bold">calidad y calidez</span> que su visión merece.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-8 pt-8">
-                        <button class="btn-contacto-action px-14 py-7 bg-cobalt text-white font-black text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-transform flex items-center gap-4">
+                        <button class="px-14 py-7 bg-cobalt text-white font-black text-2xl rounded-full shadow-2xl shadow-cobalt/40 hover:scale-105 transition-transform flex items-center gap-4">
                             INICIAR PROYECTO
                             <span class="material-symbols-outlined">arrow_forward</span>
                         </button>
-                        <button class="btn-contacto-action px-14 py-7 border-4 border-gray-400 text-gray-600 font-black text-2xl rounded-full hover:bg-gray-400 hover:text-white transition-all active:scale-95 shadow-xl">
+                        <button class="px-14 py-7 border-4 border-gray-400 text-gray-600 font-black text-2xl rounded-full hover:bg-gray-400 hover:text-white transition-all active:scale-95 shadow-xl">
                             CONTÁCTANOS
                         </button>
                     </div>
@@ -475,76 +309,51 @@
             <span class="absolute bottom-10 right-[-10%] text-[30rem] font-black text-cobalt/5 opacity-[0.3] whitespace-nowrap select-none pointer-events-none uppercase">EDAPYMES</span>
         </section>
     </main>
+</div>
 
-    <script>
-        // Función para manejar el clic en servicios - llama a la función global del index
-        function manejarClicServicio(servicioId) {
-            // Mapeo de IDs de servicio para coincidir con los IDs en el index
-            const serviceIdMap = {
-                'capacitaciones': 'capacitaciones',
-                'asesorias': 'asesorias',
-                'desarrollo': 'desarrollo',
-                'soporte': 'soporte',
-                'seguridad': 'seguridad',
-                'financiamiento': 'financiamiento',
-                'traduccion': 'traduccion',
-                'laptops': 'laptops'
-            };
-            
-            const targetId = serviceIdMap[servicioId] || servicioId;
-            
-            // Intentar usar la función global irAServicioEspecifico
-            if (typeof window.irAServicioEspecifico === 'function') {
-                window.irAServicioEspecifico(targetId);
-            } 
-            // Si no está en window, intentar en parent
-            else if (typeof window.parent !== 'undefined' && typeof window.parent.irAServicioEspecifico === 'function') {
-                window.parent.irAServicioEspecifico(targetId);
-            }
-            // Fallback: redirigir al index con el hash
-            else {
-                window.location.href = 'index.html#' + targetId;
-            }
+<style>
+    .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); }
+    .scroll-mt-24 { scroll-margin-top: 100px; }
+    .text-premium-outline {
+        color: transparent;
+        -webkit-text-stroke: 3px #034AB0;
+        font-weight: 900;
+    }
+    @media (max-width: 768px) {
+        .text-premium-outline {
+            -webkit-text-stroke: 2px #034AB0;
         }
-        
-        // Función para manejar el clic en contacto
-        function manejarClicContacto() {
-            if (typeof window.irAContactoDesdeCualquierLado === 'function') {
-                window.irAContactoDesdeCualquierLado();
-            } else if (typeof window.parent !== 'undefined' && typeof window.parent.irAContactoDesdeCualquierLado === 'function') {
-                window.parent.irAContactoDesdeCualquierLado();
-            } else {
-                window.location.href = 'index.html#contacto';
-            }
-        }
-        
-        // Asignar eventos cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            // Asignar eventos de clic a cada brochure-container
-            const servicios = document.querySelectorAll('.brochure-container');
-            servicios.forEach(function(servicio) {
-                const servicioId = servicio.getAttribute('data-servicio');
-                if (servicioId) {
-                    servicio.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        manejarClicServicio(servicioId);
-                    });
-                }
-            });
-            
-            // Asignar eventos de clic a los botones de contacto
-            const botonesContacto = document.querySelectorAll('.btn-contacto-action');
-            botonesContacto.forEach(function(boton) {
-                boton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    manejarClicContacto();
-                });
-            });
-        });
-        
-        // Exponer funciones globalmente
-        window.manejarClicServicio = manejarClicServicio;
-        window.manejarClicContacto = manejarClicContacto;
-    </script>
-</body>
-</html>
+    }
+    .brochure-container { perspective: 2000px; height: 480px; }
+    .brochure {
+        position: relative; width: 100%; height: 100%;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+    }
+    .brochure-cover {
+        position: absolute; width: 100%; height: 100%; background: white;
+        backface-visibility: hidden; z-index: 2; transform-origin: left;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 2px 0 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);
+        border-left: 4px solid rgba(0,0,0,0.1);
+    }
+    .brochure-inside {
+        position: absolute; width: 100%; height: 100%; background: #f8fafc;
+        z-index: 1; border: 1px solid rgba(0,0,0,0.05); padding: 1.5rem;
+    }
+    .brochure-container:hover .brochure-cover { transform: rotateY(-110deg); }
+    .spine-shadow {
+        position: absolute; left: 0; top: 0; bottom: 0; width: 10px;
+        background: linear-gradient(to right, rgba(0,0,0,0.05), transparent);
+        z-index: 3; pointer-events: none;
+    }
+    .brochure-shadow { box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05); }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(10px); }
+    }
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+</style>
