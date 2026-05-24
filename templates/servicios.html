@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     
                     <!-- Service 1: Capacitación -->
-                    <div onclick="verDetalleServicio('capacitacion')" class="brochure-container block" style="cursor:pointer;">
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('capacitacion')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -75,7 +75,7 @@
                     </div>
 
                     <!-- Service 2: Asesoría -->
-                    <div onclick="verDetalleServicio('asesoria')" class="brochure-container block" style="cursor:pointer;">
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('asesoria')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -100,8 +100,8 @@
                         </div>
                     </div>
 
-                    <!-- Service 3: Desarrollo de Software -->
-                    <div onclick="verDetalleServicio('desarrollo')" class="brochure-container block" style="cursor:pointer;">
+                    <!-- Service 3: Desarrollo -->
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('desarrollo')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -126,8 +126,8 @@
                         </div>
                     </div>
 
-                    <!-- Service 4: Mantenimiento -->
-                    <div onclick="verDetalleServicio('soporte')" class="brochure-container block" style="cursor:pointer;">
+                    <!-- Service 4: Soporte TI -->
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('soporte')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -153,7 +153,7 @@
                     </div>
 
                     <!-- Service 5: Seguridad -->
-                    <div onclick="verDetalleServicio('seguridad')" class="brochure-container block" style="cursor:pointer;">
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('seguridad')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -179,7 +179,7 @@
                     </div>
 
                     <!-- Service 6: Financiamiento -->
-                    <div onclick="verDetalleServicio('financiamiento')" class="brochure-container block" style="cursor:pointer;">
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('financiamiento')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -205,7 +205,7 @@
                     </div>
 
                     <!-- Service 7: Traducción -->
-                    <div onclick="verDetalleServicio('traduccion')" class="brochure-container block" style="cursor:pointer;">
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('traduccion')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -230,8 +230,8 @@
                         </div>
                     </div>
 
-                    <!-- Service 8: Venta de Laptops -->
-                    <div onclick="verDetalleServicio('laptops')" class="brochure-container block" style="cursor:pointer;">
+                    <!-- Service 8: Venta Laptops -->
+                    <div onclick="(window.parent.verDetalleServicio || window.verDetalleServicio || function(s){ window.location.href='apartadoSS.html?service='+s; })('laptops')" class="brochure-container block" style="cursor:pointer;">
                         <div class="brochure">
                             <div class="brochure-cover rounded-r-lg p-6 flex flex-col justify-between">
                                 <div class="spine-shadow rounded-l-lg"></div>
@@ -310,40 +310,6 @@
         </section>
     </main>
 </div>
-
-<script>
-    // Función para ver detalle del servicio usando el sistema SPA
-    function verDetalleServicio(servicioId) {
-        // Mapeo de servicios a nombres de archivo
-        const serviceMap = {
-            'capacitacion': 'capacitacion',
-            'asesoria': 'asesoria', 
-            'desarrollo': 'desarrollo',
-            'soporte': 'soporte',
-            'seguridad': 'seguridad',
-            'financiamiento': 'financiamiento',
-            'traduccion': 'traduccion',
-            'laptops': 'laptops'
-        };
-        
-        const serviceFile = serviceMap[servicioId] || servicioId;
-        
-        // Usar la navegación SPA existente
-        if (typeof window.parent.cargarSeccion === 'function') {
-            // Si estamos dentro del iframe/index principal
-            window.parent.cargarSeccion(`apartadoSS.html?service=${servicioId}`, null);
-        } else if (typeof window.cargarSeccion === 'function') {
-            // Si la función está disponible globalmente
-            window.cargarSeccion(`apartadoSS.html?service=${servicioId}`, null);
-        } else {
-            // Fallback: navegación directa
-            window.location.href = `apartadoSS.html?service=${servicioId}`;
-        }
-    }
-    
-    // También exponer la función globalmente
-    window.verDetalleServicio = verDetalleServicio;
-</script>
 
 <style>
     .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); }

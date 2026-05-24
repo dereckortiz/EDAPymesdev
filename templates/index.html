@@ -1762,6 +1762,14 @@ function obtenerHTMLInicio() {
 `;
 }
 
+// Agrega esta función en el script principal de index.html (después de cargarSeccion)
+function verDetalleServicio(servicioId) {
+    console.log('Ver detalle de servicio:', servicioId);
+    // Cargar apartadoSS.html con el parámetro del servicio
+    cargarSeccion(`apartadoSS.html?service=${servicioId}`, document.querySelectorAll('.nav-link')[1]);
+}
+
+// Exponerla globalmente
 // ============================================
 // MANEJADOR MENÚ MÓVIL
 // ============================================
@@ -1827,6 +1835,7 @@ window.cargarProductosDestacados = cargarProductosDestacados;
 window.abrirModalProducto = abrirModalProducto;
 window.cerrarModalProducto = cerrarModalProducto;
 window.initServicesCarousel3D = initServicesCarousel3D;
+window.verDetalleServicio = verDetalleServicio;
 </script>
 </body>
 </html>
