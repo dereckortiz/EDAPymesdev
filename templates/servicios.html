@@ -31,45 +31,6 @@
             </div>
         </section>
 
-        <!-- ================= CONTENEDOR DE DETALLE DE SERVICIO (INICIALMENTE OCULTO) ================= -->
-        <div id="detalle-servicio-container" class="hidden">
-            <div class="bg-white rounded-xl brochure-shadow overflow-hidden max-w-6xl mx-auto my-8">
-                <div class="flex flex-col lg:flex-row">
-                    <div class="w-full lg:w-1/2 relative bg-navy-dark overflow-hidden min-h-[500px] lg:min-h-[700px]">
-                        <img id="detalle-image" alt="Servicio" class="absolute inset-0 w-full h-full object-cover opacity-70" src="">
-                        <div class="absolute top-0 right-0 h-full w-4 spine-gradient hidden lg:block z-10"></div>
-                        <div id="detalle-badge" class="absolute top-8 left-8 bg-cobalt text-white px-6 py-2 rounded-lg font-headline text-sm font-bold shadow-lg z-20">SERVICIO DESTACADO</div>
-                        <div class="absolute bottom-12 left-12 right-12 z-20">
-                            <h2 id="detalle-title-visual" class="font-headline text-4xl md:text-5xl text-white mb-4 font-bold"></h2>
-                            <p id="detalle-desc-visual" class="text-white/80 text-lg max-w-md"></p>
-                        </div>
-                    </div>
-                    <div class="w-full lg:w-1/2 bg-white p-8 lg:p-16 flex flex-col justify-center relative">
-                        <div class="space-y-8">
-                            <div>
-                                <span id="detalle-portafolio" class="text-gray-500 font-medium text-sm tracking-widest uppercase mb-2 block">PORTAFOLIO DE SERVICIOS</span>
-                                <h1 id="detalle-heading" class="font-headline text-3xl lg:text-4xl text-navy-dark mb-6 font-bold"></h1>
-                                <p id="detalle-description" class="text-gray-600 leading-relaxed text-base lg:text-lg"></p>
-                            </div>
-                            <div class="space-y-4">
-                                <h3 class="font-headline text-2xl text-navy-dark font-semibold">Beneficios Clave</h3>
-                                <ul id="detalle-benefits-list" class="space-y-4"></ul>
-                            </div>
-                            <div class="pt-8 flex flex-col sm:flex-row gap-4">
-                                <button onclick="window.parent.location.href='index.html#contacto'" class="bg-cobalt hover:bg-blue-700 text-white rounded-full font-headline text-base font-bold transition-all shadow-md flex items-center justify-center gap-2 group px-8 py-4 cursor-pointer">
-                                    Solicitar Asesoría
-                                    <span class="material-icons-round group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                                </button>
-                                <button onclick="window.parent.ocultarDetalleServicioGlobal()" class="border-2 border-gray-300 text-gray-600 rounded-full font-headline text-base font-bold transition-all hover:bg-gray-100 px-8 py-4 cursor-pointer">
-                                    Volver a Servicios
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- ================= SECCIÓN DE SERVICIOS CON BROCHURES ================= -->
         <div id="lista-servicios-container">
             <section class="bg-slate-50 py-16 overflow-hidden">
@@ -395,6 +356,4 @@
     .animate-bounce {
         animation: bounce 2s infinite;
     }
-    
-    .hidden { display: none; }
 </style>
