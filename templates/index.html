@@ -1896,7 +1896,7 @@ function mostrarDetalleServicioGlobal(serviceKey) {
         return;
     }
 
-    // Crear HTML completo del detalle (pantalla completa)
+    // Crear HTML completo del detalle (pantalla completa) - VERSIÓN CORREGIDA CON ÍCONOS HTML
     const detalleHTML = `
     <div class="bg-gray-50 min-h-screen">
         <!-- Breadcrumb -->
@@ -1904,10 +1904,14 @@ function mostrarDetalleServicioGlobal(serviceKey) {
             <div class="container mx-auto px-6 py-4">
                 <div class="flex items-center gap-2 text-sm text-gray-500">
                     <a href="#" onclick="window.ocultarDetalleServicioGlobal(); return false;" class="flex items-center gap-1 hover:text-cobalt transition-colors">
-                        <span class="material-icons-round text-[18px]">arrow_back</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
                         Volver a Servicios
                     </a>
-                    <span class="material-icons-round text-[14px] text-gray-300">chevron_right</span>
+                    <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
                     <span class="text-cobalt font-medium">${data.heading.split(' ').slice(0, 3).join(' ')}</span>
                 </div>
             </div>
@@ -1942,7 +1946,9 @@ function mostrarDetalleServicioGlobal(serviceKey) {
                                     ${data.benefits.map(b => `
                                         <li class="flex items-start gap-3">
                                             <div class="bg-blue-50 p-1 rounded-full text-cobalt shrink-0 mt-0.5">
-                                                <span class="material-icons-round text-[18px]">check</span>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
                                             </div>
                                             <div>
                                                 <span class="font-bold text-navy-dark block">${b.title}</span>
@@ -1955,7 +1961,9 @@ function mostrarDetalleServicioGlobal(serviceKey) {
                             <div class="pt-4">
                                 <a href="#" onclick="window.location.href='index.html#contacto'; return false;" class="inline-flex items-center gap-2 bg-cobalt hover:bg-blue-700 text-white rounded-full px-8 py-3 font-bold transition-all">
                                     Solicitar Asesoría
-                                    <span class="material-icons-round text-[18px]">arrow_forward</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                    </svg>
                                 </a>
                             </div>
                         </div>
@@ -1978,7 +1986,6 @@ function ocultarDetalleServicioGlobal() {
     // Volver a cargar la página de servicios
     cargarSeccion('servicios.html', document.querySelectorAll('.nav-link')[1]);
 }
-
 
 
 
